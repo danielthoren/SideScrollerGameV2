@@ -7,21 +7,35 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class SideScrollerGameV2 extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
+	 private static Map currentMap;
 	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
 	}
+
+	/**
+	 * Converts the input meters (world coordinates) to pixels (java Fx coordinates) using the scale factor loaded in
+	 * the 'MapLoader' singgelton.
+	 * @param meters The amount of meters to be converted
+	 * @return The amount of pixels the meters corresponds to
+	 */
+	public static float metersToPix(float meters){
+	}
+
+
+	/**
+	 * Converts the input pixels (java Fx coordinates) to meters (world coordinates) using the scale factor loaded in
+	 * the 'MapLoader' singgelton.
+	 * @param pix The amount of pixels to be converted
+	 * @return The amount of meters the pixels corresponds to
+	 */
+	public static float pixToMeters(float pix){
+		return pix;
+	}
+
+	public static Map getCurrentMap() {return currentMap;}
 }
