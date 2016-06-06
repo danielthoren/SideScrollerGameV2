@@ -3,9 +3,7 @@ package com.sidescroller.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.sidescroller.com.sidescroller.objects.StaticShape;
+import com.sidescroller.objects.StaticShape;
 import javafx.scene.image.Image;
 import sun.applet.Main;
 
@@ -46,10 +44,10 @@ public final class LoadMap {
             Map map = new Map(GRAVITY, true);
 
             //Do add items to map here:
-            StaticShape floor = new StaticShape(map.getObjectID(), map.getWorld(), new Vector2(0,0), "test.json", new Texture(Gdx.files.internal("texture.png")), 2f);
+            StaticShape floor = new StaticShape(map.getObjectID(), "floor",  map.getWorld(), new Vector2(-3,0), "test.json", 2f, 5f);
             map.addDrawObject(floor);
-
-            System.out.println(map.getDrawObjects());
+            StaticShape bottle = new StaticShape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0,-2), "bottle.json", 2f, 4f);
+            map.addDrawObject(bottle);
 
 
             maps.put(mapNumber, map);
