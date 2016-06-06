@@ -1,5 +1,6 @@
 package com.sidescroller.game;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -9,7 +10,7 @@ public interface Draw extends GameObject
 {
     /**
      * The function that draws the object every frame
-     * @param gc The GraphicsContext with wich to draw
+     * @param batch The SpriteBatch with wich to draw
      */
-    void draw(GraphicsContext gc);
+    void draw(SpriteBatch batch);
 }

@@ -18,7 +18,7 @@ public class ContactListenerGame implements ContactListener
      * @param contact An object containing information about the collision.
      */
     public void beginContact(Contact contact) {
-	Iterable<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getCollisionListenerList();
+	Iterable<CollisionListener> listeners = SideScrollerGameV2.getCurrentMap().getCollisionListenerList();
 	for (CollisionListener obj : listeners){
 	    if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
 		obj.beginContact(contact);
@@ -31,7 +31,7 @@ public class ContactListenerGame implements ContactListener
      * @param contact An object containing information about the collision.
      */
     public void endContact(Contact contact){
-	Iterable<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getCollisionListenerList();
+	Iterable<CollisionListener> listeners = SideScrollerGameV2.getCurrentMap().getCollisionListenerList();
 	for (CollisionListener obj : listeners){
 	    if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
 		obj.endContact(contact);
