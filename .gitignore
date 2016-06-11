@@ -2,7 +2,6 @@ SideScrollerGameV2.iws
 local.properties
 
 ## Java
-
 *.class
 *.war
 *.ear
@@ -58,8 +57,14 @@ nbactions.xml
 nb-configuration.xml
 
 ## Gradle
-
 .gradle
 build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+gradle/wrapper/gradle-wrapper.properties
 
+#/buildSrc/build
+#/subprojects/*/build
+#/subprojects/docs/src/samples/*/*/build
      

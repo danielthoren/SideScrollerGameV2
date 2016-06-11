@@ -1400,6 +1400,9 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
@@ -1421,6 +1424,16 @@
       <SOURCES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.box2dlights/box2dlights/1.4/57a1f15112328706c648a430bd19574118e2d8f4/box2dlights-1.4-sources.jar!/" />
       </SOURCES>
+    </library>
+    <library name="core.core-1.0">
+      <CLASSES />
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="desktop.desktop-1.0">
+      <CLASSES />
+      <JAVADOC />
+      <SOURCES />
     </library>
     <library name="gdx-1.9.3">
       <CLASSES>
@@ -1445,7 +1458,9 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-android/1.9.3/c45573bf68b55442990936f007e7d6823d259c1f/gdx-backend-android-1.9.3.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-android/1.9.3/a6d510614c8b930ca931a72841c81b91c045012/gdx-backend-android-1.9.3-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="gdx-backend-headless-1.9.3">
       <CLASSES>
@@ -1511,7 +1526,9 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-controllers-android/1.9.3/cb2bbe1ebe00c8721b6d1bed817012595fb2a4f/gdx-controllers-android-1.9.3.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-controllers-android/1.9.3/d4ed09e32242f85d1040909d0beb9b8cddd85443/gdx-controllers-android-1.9.3-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="gdx-controllers-desktop-1.9.3">
       <CLASSES>
