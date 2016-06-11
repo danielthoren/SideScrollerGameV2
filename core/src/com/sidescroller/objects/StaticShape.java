@@ -62,6 +62,7 @@ public class StaticShape implements Draw {
     public void draw(SpriteBatch batch){
         sprite.setPosition(body.getPosition().x, body.getPosition().y);
         sprite.setOrigin(spriteOrigin.x, spriteOrigin.y);
+        sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
         sprite.draw(batch);
     }
 

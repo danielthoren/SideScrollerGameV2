@@ -47,8 +47,8 @@ public final class LoadMap {
             //Do add items to map here:
             StaticShape floor = new StaticShape(map.getObjectID(), "floor",  map.getWorld(), new Vector2(0,0), "test.json", 2f, 15f);
             map.addDrawObject(floor);
-            //StaticShape bottle = new StaticShape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0,-2), "bottle.json", 2f, 4f);
-            //map.addDrawObject(bottle);
+            StaticShape bottle = new StaticShape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0,-2), "bottle.json", 2f, 4f);
+            map.addDrawObject(bottle);
 
             DynamicCircle circle = new DynamicCircle(map.getObjectID(), map.getWorld(), new Vector2(2f, 10f), 0.5f, 1f, 1f, 0.1f, new Texture(Gdx.files.internal("texture.png")));
             map.addDrawObject(circle);

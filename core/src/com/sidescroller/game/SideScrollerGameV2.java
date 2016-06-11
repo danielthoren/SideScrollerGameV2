@@ -27,6 +27,8 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
     public static final Vector2 windowView = new Vector2(16f, 9f);  //The constant camera size (the window in to the world)
     public static final int NANOS_PER_SECOND = 1000000000;
 
+    private static final boolean DEBUGRENDERER = true;
+
     @Override
     public void create () {
 	nanoTimeLastUpdate = System.nanoTime();
@@ -36,6 +38,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	viewport = new FillViewport(16, 9, camera);
 	viewport.apply();
 
+	box2DDebugRenderer = new Box2DDebugRenderer();
 	batch = new SpriteBatch();
 	aspectRatio = (float)Gdx.graphics.getHeight() / (float)Gdx.graphics.getWidth();
 	inputHandler = new InputHandler();
@@ -70,6 +73,10 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 
 	for (Draw obj : currentMap.getDrawObjects()){
 	    obj.draw(batch);
+	}
+
+	if (DEBUGRENDERER){
+	    box2DDebugRenderer.render(currentMap.getWorld(), getCamera().combined);
 	}
 
 	batch.end();
