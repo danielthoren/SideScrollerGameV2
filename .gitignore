@@ -62,9 +62,7 @@ build/
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache
-gradle/wrapper/gradle-wrapper.properties
 
 #/buildSrc/build
 #/subprojects/*/build
 #/subprojects/docs/src/samples/*/*/build
-     
