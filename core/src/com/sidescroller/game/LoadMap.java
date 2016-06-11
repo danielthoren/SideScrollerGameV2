@@ -3,6 +3,7 @@ package com.sidescroller.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.sidescroller.objects.DynamicCircle;
 import com.sidescroller.objects.StaticShape;
 import javafx.scene.image.Image;
 import sun.applet.Main;
@@ -29,7 +30,7 @@ public final class LoadMap {
         return INSTANCE;
     }
     //Todo Read value from file
-    private static final Vector2 GRAVITY = new Vector2(0, 20);
+    private static final Vector2 GRAVITY = new Vector2(0, -10);
 
     /**
      * Function loading specified map. At the moment it only instantiates hardcoded objects.
@@ -44,10 +45,13 @@ public final class LoadMap {
             Map map = new Map(GRAVITY, true);
 
             //Do add items to map here:
-            StaticShape floor = new StaticShape(map.getObjectID(), "floor",  map.getWorld(), new Vector2(-3,0), "test.json", 2f, 5f);
+            StaticShape floor = new StaticShape(map.getObjectID(), "floor",  map.getWorld(), new Vector2(0,0), "test.json", 2f, 15f);
             map.addDrawObject(floor);
-            StaticShape bottle = new StaticShape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0,-2), "bottle.json", 2f, 4f);
-            map.addDrawObject(bottle);
+            //StaticShape bottle = new StaticShape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0,-2), "bottle.json", 2f, 4f);
+            //map.addDrawObject(bottle);
+
+            DynamicCircle circle = new DynamicCircle(map.getObjectID(), map.getWorld(), new Vector2(2f, 10f), 0.5f, 1f, 1f, 0.1f, new Texture(Gdx.files.internal("texture.png")));
+            map.addDrawObject(circle);
 
 
             maps.put(mapNumber, map);

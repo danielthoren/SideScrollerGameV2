@@ -12,5 +12,5 @@ public interface Draw extends GameObject
      * The function that draws the object every frame
      * @param batch The SpriteBatch with wich to draw
      */
-    void draw(SpriteBatch batch);
+    public void draw(SpriteBatch batch);
 }
