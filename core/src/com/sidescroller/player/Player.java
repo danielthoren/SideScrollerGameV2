@@ -37,6 +37,7 @@ public class Player implements Draw, Update, InputListener {
         sprite = new Sprite(texture);
         float bodyHeight = bodyWidth * ((float) texture.getHeight()/texture.getWidth());
         sprite.setSize(bodyWidth, bodyHeight);
+        sprite.setOrigin(bodyWidth/2, bodyHeight/2);
         createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, 0.1f);
     }
 

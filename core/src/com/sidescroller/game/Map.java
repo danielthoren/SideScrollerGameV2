@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Map
 {
-    private List<Draw> drawObjects;
+    private List<List<Draw>> drawObjects;
     private List<Update> updateObjects;
     private List<InputListener> inputListenerList;
     private List<CollisionListener> collisionListenerList;
@@ -25,12 +25,15 @@ public class Map
     private List<CollisionListener> collisionListenersStagedForRemoval;
     private List<Body> bodiesStagedForRemoval;
 
-    private List<Draw> drawObjectsStagedForAddition;
+    private List<List<Draw>> drawObjectsStagedForAddition;
     private List<Update> updateObjectsStagedForAddition;
     private List<InputListener> inputListenersStagedForAddition;
     private List<CollisionListener> collisionListenersStagedForAddition;
 
     private long objectID;
+
+    // TODO: 6/12/16 Load layer depth from file
+    private static final int layers = 2;
 
     private World world;
 
@@ -41,7 +44,7 @@ public class Map
     public Map(Vector2 gravity, boolean doSleep) {
         world = new World(gravity, doSleep);
         objectID = 0;
-        drawObjects = new ArrayList<Draw>(10);
+        drawObjects = new ArrayList<List<Draw>>(layers);
         updateObjects = new ArrayList<Update>(10);
         collisionListenerList = new ArrayList<CollisionListener>(10);
         inputListenerList = new ArrayList<InputListener>(10);
@@ -50,10 +53,16 @@ public class Map
         inputListenersStagedForRemoval = new ArrayList<InputListener>(2);
         collisionListenersStagedForRemoval = new ArrayList<CollisionListener>(2);
         bodiesStagedForRemoval = new ArrayList<Body>(2);
-        drawObjectsStagedForAddition = new ArrayList<Draw>(2);
+        drawObjectsStagedForAddition = new ArrayList<List<Draw>>(layers);
         updateObjectsStagedForAddition = new ArrayList<Update>(2);
         inputListenersStagedForAddition = new ArrayList<InputListener>(2);
         collisionListenersStagedForAddition = new ArrayList<CollisionListener>(2);
+
+        for (int x = 0; x < layers; x++){
+            drawObjects.add(new ArrayList<Draw>());
+            drawObjectsStagedForAddition.add(new ArrayList<Draw>());
+        }
+
     }
 
     /**
@@ -73,15 +82,27 @@ public class Map
                 world.destroyBody(body);
             }
         }
-        //Removing all of the 'Draw' objects from the maps global list
-        for (Draw objectRemove : drawObjectsStagedForRemoval){
-            for (Iterator<Draw> iterator = drawObjects.iterator(); iterator.hasNext();){
-                Draw object = iterator.next();
-                if (objectRemove.getId() == object.getId()){
-                    iterator.remove();
+        //Removing all of the 'Draw' objects from each individual layer in the 'drawObjects' list
+        //Iterates through each object in each layer and looks it up in the corresponding layer in the
+        //'drawObjects' list, then removes that object.
+        for (int drawObjectRemove = 0; drawObjectRemove < drawObjectsStagedForRemoval.size(); drawObjectRemove++) {
+
+            Draw removeDrawObject = drawObjectsStagedForRemoval.get(drawObjectRemove);
+            boolean hasRemoved = false;
+            int currentLayer = 0;
+
+            while (!hasRemoved || !(currentLayer < drawObjects.size())) {
+                for (Iterator<Draw> iterator = drawObjects.get(currentLayer).iterator(); iterator.hasNext(); ) {
+                    Draw object = iterator.next();
+
+                    if (removeDrawObject.getId() == object.getId()) {
+                        iterator.remove();
+                        hasRemoved = true;
+                    }
                 }
             }
         }
+
         //Removing all of the 'Update' objects from the maps global list
         for (Update objectRemove : updateObjectsStagedForRemoval){
             for (Iterator<Update> iterator = updateObjects.iterator(); iterator.hasNext();){
@@ -123,9 +144,13 @@ public class Map
      * objects or during the world step then the program would crash.
      */
     public void addStagedObjects (){
-        //Adding all of the staged 'Draw' objects to the maps global list
-        for (Draw object : drawObjectsStagedForAddition){
-            drawObjects.add(object);
+        //Adding all of the staged 'Draw' objects of each layer to each corresponding layer in the 'drawObjects' list.
+        for (int layer = 0; layer < drawObjectsStagedForAddition.size(); layer++){
+            int sizeOfLayer = drawObjectsStagedForAddition.get(layer).size();
+            for (int drawObjectNum = 0; drawObjectNum < sizeOfLayer; drawObjectNum++) {
+                Draw drawObject = drawObjectsStagedForAddition.get(layer).get(drawObjectNum);
+                drawObjects.get(layer).add(drawObject);
+            }
         }
         //Adding all of the staged 'Update' objects to the maps global list
         for (Update object : updateObjectsStagedForAddition){
@@ -161,7 +186,7 @@ public class Map
 
     public void removeUpdateObject(Update object){updateObjectsStagedForRemoval.add(object);}
 
-    public void addDrawObject(Draw object) {drawObjectsStagedForAddition.add(object);}
+    public void addDrawObject(Draw object, int layer) {drawObjectsStagedForAddition.get(layer).add(object);}
 
     public void addUpdateObject(Update object) {updateObjectsStagedForAddition.add(object);}
 
@@ -169,7 +194,7 @@ public class Map
 
     public void addCollisionListener(CollisionListener object) { collisionListenersStagedForAddition.add(object);}
 
-    public List<Draw> getDrawObjects() {return drawObjects;}
+    public List<Draw> getDrawLayer(int layer) {return drawObjects.get(layer);}
 
     public List<Update> getUpdateObjects() {return updateObjects;}
 
@@ -178,4 +203,6 @@ public class Map
     public Iterable<CollisionListener> getCollisionListenerList() {return collisionListenerList;}
 
     public World getWorld() {return world;}
+
+    public static int getAmountOfLayers() {return layers;}
 }

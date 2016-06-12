@@ -45,15 +45,15 @@ public final class LoadMap {
 
             //Do add items to map here:
             StaticShape floor = new StaticShape(map.getObjectID(), "floor",  map.getWorld(), new Vector2(0,0), "test.json", 2f, 15f);
-            map.addDrawObject(floor);
-            StaticShape bottle = new StaticShape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0,-2), "bottle.json", 2f, 4f);
-            map.addDrawObject(bottle);
+            map.addDrawObject(floor, 1);
+            StaticShape bottle = new StaticShape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0,3), "bottle.json", 2f, 4f);
+            map.addDrawObject(bottle, 0);
 
-            DynamicCircle circle = new DynamicCircle(map.getObjectID(), map.getWorld(), new Vector2(2f, 10f), 0.5f, 1f, 1f, 0.1f, new Texture(Gdx.files.internal("texture.png")));
-            map.addDrawObject(circle);
+            DynamicCircle circle = new DynamicCircle(map.getObjectID(), map.getWorld(), new Vector2(2f, 10f), 0.5f, 1f, 1f, 0.1f, new Texture(Gdx.files.internal("Coin.png")));
+            map.addDrawObject(circle, 0);
 
-            Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,4), new Texture(Gdx.files.internal("bottle.png")), 2f, 3f, 0.5f, 1f);
-            map.addDrawObject(player);
+            Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,4), new Texture(Gdx.files.internal("badlogic.jpg")), 2f, 3f, 0.5f, 1f);
+            map.addDrawObject(player, 1);
             map.addUpdateObject(player);
             map.addInputListener(player);
 

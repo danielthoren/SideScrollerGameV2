@@ -11,6 +11,8 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.List;
+
 public class SideScrollerGameV2 extends ApplicationAdapter {
     private static Map currentMap;
     private SpriteBatch batch;
@@ -75,8 +77,13 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	    obj.update();
 	}
 
-	for (Draw obj : currentMap.getDrawObjects()){
-	    obj.draw(batch);
+	//Drawing all layers with the lowest index in front.
+	for (int layerNum = currentMap.getAmountOfLayers() - 1; layerNum >= 0; layerNum--){
+	    List<Draw> layer = currentMap.getDrawLayer(layerNum);
+
+	    for (Draw object : layer){
+		object.draw(batch);
+	    }
 	}
 
 	if (DEBUGRENDERER){

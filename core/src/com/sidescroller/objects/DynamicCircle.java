@@ -26,7 +26,7 @@ public class DynamicCircle implements Draw
 
 	Sprite sprite = new Sprite(texture);
 	sprite.setSize(radious*2, radious*2);
-	sprite.setOrigin(radious,radious);
+	sprite.setOrigin(radious, radious);
 	this.sprite = sprite;
 
 	createbody(world, position, radious, density, friction, restitution);
@@ -53,7 +53,7 @@ public class DynamicCircle implements Draw
     }
 
     public void draw(SpriteBatch batch){
-	sprite.setPosition(body.getPosition().x/2, body.getPosition().y/2);
+	sprite.setPosition(body.getPosition().x - radious, body.getPosition().y - radious);
 	sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
 	sprite.draw(batch);
     }
