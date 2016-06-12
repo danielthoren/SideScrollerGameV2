@@ -1,6 +1,7 @@
 package com.sidescroller.game;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
 /**
  * This interface listens to key events.
@@ -18,10 +19,4 @@ public interface InputListener extends GameObject
      * @param keycode one of the constants in {@link Keys}
      * @return whether the input was processed */
     public void keyUp (int keycode);
-
-    /** Called when a key was typed
-     *
-     * @param character The character
-     * @return whether the input was processed */
-    public void keyTyped (char character);
 }

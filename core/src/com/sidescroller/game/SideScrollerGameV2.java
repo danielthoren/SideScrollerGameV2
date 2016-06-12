@@ -71,6 +71,10 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	batch.setProjectionMatrix(camera.combined);
 	batch.begin();
 
+	for (Update obj : currentMap.getUpdateObjects()){
+	    obj.update();
+	}
+
 	for (Draw obj : currentMap.getDrawObjects()){
 	    obj.draw(batch);
 	}
@@ -95,27 +99,6 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
      */
     public static float radToDeg(float rad){
 	return (float) (rad * (180/Math.PI));
-    }
-
-    /**
-     * Converts the input meters (world coordinates) to pixels (java Fx coordinates) using the scale factor loaded in
-     * the 'MapLoader' singgelton.
-     * @param meters The amount of meters to be converted
-     * @return The amount of pixels the meters corresponds to
-     */
-    public static float metersToPix(float meters){
-	return meters * pixPerMeter;
-    }
-
-
-    /**
-     * Converts the input pixels (java Fx coordinates) to meters (world coordinates) using the scale factor loaded in
-     * the 'MapLoader' singgelton.
-     * @param pix The amount of pixels to be converted
-     * @return The amount of meters the pixels corresponds to
-     */
-    public static float pixToMeters(float pix){
-	return pix / pixPerMeter;
     }
 
     public static Map getCurrentMap() {return currentMap;}

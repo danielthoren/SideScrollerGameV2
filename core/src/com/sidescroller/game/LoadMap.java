@@ -5,8 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.sidescroller.objects.DynamicCircle;
 import com.sidescroller.objects.StaticShape;
-import javafx.scene.image.Image;
-import sun.applet.Main;
+import com.sidescroller.player.Player;
 
 import java.util.*;
 
@@ -53,31 +52,14 @@ public final class LoadMap {
             DynamicCircle circle = new DynamicCircle(map.getObjectID(), map.getWorld(), new Vector2(2f, 10f), 0.5f, 1f, 1f, 0.1f, new Texture(Gdx.files.internal("texture.png")));
             map.addDrawObject(circle);
 
+            Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,4), new Texture(Gdx.files.internal("bottle.png")), 2f, 3f, 0.5f, 1f);
+            map.addDrawObject(player);
+            map.addUpdateObject(player);
+            map.addInputListener(player);
+
 
             maps.put(mapNumber, map);
         }
-    }
-
-    /**
-     * Tries to load images, if the path is invalid then load errortexture.
-     * @param path The path to load from.
-     * @param size The imSize of the image, if the vector is (0,0) then it loads the default imSize.
-     * @return Returns a javafx image.
-     */
-    public Image loadImage(String path, Vector2 size){
-        Image image;
-        try{
-            if (size.x == 0 || size.y == 0){
-                image = new Image(Main.class.getResourceAsStream(path));
-            }
-            else {
-                image = new Image(Main.class.getResourceAsStream(path), SideScrollerGameV2.metersToPix(size.x), SideScrollerGameV2.metersToPix(size.y), false, false);
-            }
-        }
-        catch (NullPointerException e ){
-            image = new Image(Main.class.getResourceAsStream("/textures/squareTextures/ErrorSquare.png"), SideScrollerGameV2.metersToPix(size.x), SideScrollerGameV2.metersToPix(size.y), false, false);
-        }
-        return image;
     }
 
     public float getPixPerMeter(){return PIX_PER_METER;}

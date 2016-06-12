@@ -33,15 +33,4 @@ public class InputHandler extends InputAdapter {
         }
         return true;
     }
-
-    /** Called when a key was typed
-     *
-     * @param character The character
-     * @return whether the input was processed */
-    public boolean keyTyped (char character){
-        for (InputListener listener : SideScrollerGameV2.getCurrentMap().getInputListenerList()){
-            listener.keyTyped(character);
-        }
-        return true;
-    }
 }
