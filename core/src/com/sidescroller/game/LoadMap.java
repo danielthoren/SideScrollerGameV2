@@ -44,19 +44,20 @@ public final class LoadMap {
             Map map = new Map(GRAVITY, true);
 
             //Do add items to map here:
-            Shape floor = new Shape(map.getObjectID(), "floor", map.getWorld(), new Vector2(0, 0), true, "test.json", 2f, 15f);
-            map.addDrawObject(floor, 1);
+            Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,4), new Texture(Gdx.files.internal("badlogic.jpg")), 2f, 3f, 0.5f, 1f);
+            map.addDrawObject(player, 0);
+            map.addUpdateObject(player);
+            map.addInputListener(player);
+
             Shape bottle = new Shape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0, 3), true, "bottle.json", 2f, 4f);
             map.addDrawObject(bottle, 0);
 
             Circle circle = new Circle(map.getObjectID(), map.getWorld(), new Vector2(2f, 10f), false, 0.5f, 1f, 1f, 0.1f, new Texture(Gdx.files.internal("Coin.png")));
             map.addDrawObject(circle, 0);
 
-            Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,4), new Texture(Gdx.files.internal("badlogic.jpg")), 2f, 3f, 0.5f, 1f);
-            map.addDrawObject(player, 0);
-            map.addUpdateObject(player);
-            map.addInputListener(player);
 
+            Shape floor = new Shape(map.getObjectID(), "floor", map.getWorld(), new Vector2(0, 0), true, "test.json", 2f, 15f);
+            map.addDrawObject(floor, 1);
 
             maps.put(mapNumber, map);
         }

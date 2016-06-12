@@ -20,20 +20,22 @@ public class Player implements Draw, Update, InputListener {
 
     private Body body;
     private Sprite sprite;
+    private Direction direction;
 
-    private Vector2 acceleration;
-    private Vector2 maxVelocity;
+    private Vector2 acceleration, maxVelocity, deceleration;
     private final long iD;
 
-    private boolean isBottomSensor;
-    private boolean isLeftSensor;
-    private boolean isRightSensor;
+    private boolean isBottomSensor, isRightSensor, isLeftSensor;
+    private boolean isRunning, grounded;
 
     public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
         this.iD = iD;
         isBottomSensor = false;
         isLeftSensor = false;
         isRightSensor = false;
+        isRunning = false;
+        grounded = false;
+        direction = Direction.RIGHT;
         sprite = new Sprite(texture);
         float bodyHeight = bodyWidth * ((float) texture.getHeight()/texture.getWidth());
         sprite.setSize(bodyWidth, bodyHeight);
@@ -183,6 +185,43 @@ public class Player implements Draw, Update, InputListener {
         }
         else if (keycode == Input.Keys.RIGHT){
             System.out.println("walk right");
+        }
+
+    }
+
+    /**
+     * Handles the acceleration and deceleration of the character
+     */
+    private void runHandler(){
+        //Decelerating the player from running to a stop
+        if (!isRunning && grounded){
+            if (body.getLinearVelocity().x > deceleration.x / 4){
+                body.applyForceToCenter(new Vec2(-deceleration.x, 0));
+            }
+            else if (body.getLinearVelocity().x < -deceleration.x / 4){
+                body.applyForceToCenter(new Vec2(deceleration.x, 0));
+            }
+            else{
+                body.setLinearVelocity(new Vec2(0f, body.getLinearVelocity().y));
+            }
+        }
+        if (isRunning && grounded){
+            //Code for smooth acceleration when on the ground
+            if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
+                body.applyForceToCenter(new Vec2(acceleration.x, 0));
+            }
+            else if (direction == Direction.LEFT && body.getLinearVelocity().x > -maxVelocity.x){
+                body.applyForceToCenter(new Vec2(-acceleration.x, 0));
+            }
+        }
+        else if (isRunning && !grounded){
+            //Code for smooth acceleration when in the air
+            if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
+                body.applyForceToCenter(new Vec2(acceleration.x / 10, 0));
+            }
+            else if (direction == Direction.LEFT && body.getLinearVelocity().x > -maxVelocity.x){
+                body.applyForceToCenter(new Vec2(-acceleration.x / 10, 0));
+            }
         }
     }
 
