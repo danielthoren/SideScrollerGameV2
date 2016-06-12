@@ -20,14 +20,14 @@ import com.badlogic.gdx.utils.JsonReader;
 /**
  * Created by daniel on 2016-06-06.
  */
-public class StaticShape implements Draw {
+public class Shape implements Draw {
 
     private Sprite sprite;
     private Body body;
     private final long iD;
     private final Vector2 spriteOrigin;
 
-    public StaticShape(long iD, String nameOfBodyInJson, World world, Vector2 position, String pathToJSON, float friction, float bodyWidth)throws NullPointerException {
+    public Shape(long iD, String nameOfBodyInJson, World world, Vector2 position, boolean isStatic, String pathToJSON, float friction, float bodyWidth)throws NullPointerException {
         this.iD = iD;
         BodyEditorLoader bodyEditorLoader = new BodyEditorLoader(Gdx.files.internal(pathToJSON));
         spriteOrigin = bodyEditorLoader.getOrigin(nameOfBodyInJson, bodyWidth);
@@ -38,14 +38,19 @@ public class StaticShape implements Draw {
         //Sizing the sprite so that it fits on the body.
         sprite.setSize(bodyWidth, bodyWidth * ((float)texture.getHeight() / (float)texture.getWidth()));
 
-        createBody(bodyEditorLoader, position, friction, world, bodyWidth, nameOfBodyInJson);
+        createBody(bodyEditorLoader, position, friction, world, bodyWidth, nameOfBodyInJson, isStatic);
     }
 
-    private void createBody(BodyEditorLoader bodyEditorLoader, Vector2 position, float friction, World world, float bodyWidth, String nameOfBdyInJson){
+    private void createBody(BodyEditorLoader bodyEditorLoader, Vector2 position, float friction, World world, float bodyWidth, String nameOfBdyInJson, boolean isStatic){
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(position);
-        bodyDef.type = BodyDef.BodyType.StaticBody;
+        if (isStatic) {
+            bodyDef.type = BodyDef.BodyType.StaticBody;
+        }
+        else{
+            bodyDef.type = BodyDef.BodyType.DynamicBody;
+        }
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.friction = friction;

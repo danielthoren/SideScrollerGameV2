@@ -12,7 +12,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.SideScrollerGameV2;
 
-public class DynamicCircle implements Draw
+public class Circle implements Draw
 {
     private Body body;
     private Sprite sprite;
@@ -20,7 +20,7 @@ public class DynamicCircle implements Draw
     private float radious;
 
 
-    public DynamicCircle(final long iD, World world, Vector2 position, float radious, float density, float friction, float restitution, Texture texture) {
+    public Circle(final long iD, World world, Vector2 position, boolean isStatic, float radious, float density, float friction, float restitution, Texture texture) {
 	this.iD = iD;
 	this.radious = radious;
 
@@ -29,10 +29,10 @@ public class DynamicCircle implements Draw
 	sprite.setOrigin(radious, radious);
 	this.sprite = sprite;
 
-	createbody(world, position, radious, density, friction, restitution);
+	createbody(world, position, radious, density, friction, restitution, isStatic);
     }
 
-    private void createbody(World world, Vector2 position, float radious, float density, float friction, float restitution){
+    private void createbody(World world, Vector2 position, float radious, float density, float friction, float restitution, boolean isStatic){
 	FixtureDef fixtureDef = new FixtureDef();
 	CircleShape circleShape = new CircleShape();
 	circleShape.setRadius(radious);
@@ -45,7 +45,12 @@ public class DynamicCircle implements Draw
 	BodyDef bodyDef = new BodyDef();
 	bodyDef.position.set(position);
 	bodyDef.allowSleep = true;
-	bodyDef.type = BodyDef.BodyType.DynamicBody;
+	if (isStatic){
+	    bodyDef.type = BodyDef.BodyType.StaticBody;
+	}
+	else {
+	    bodyDef.type = BodyDef.BodyType.DynamicBody;
+	}
 	bodyDef.active = true;
 
 	body = world.createBody(bodyDef);

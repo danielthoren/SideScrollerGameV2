@@ -3,8 +3,8 @@ package com.sidescroller.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.sidescroller.objects.DynamicCircle;
-import com.sidescroller.objects.StaticShape;
+import com.sidescroller.objects.Circle;
+import com.sidescroller.objects.Shape;
 import com.sidescroller.player.Player;
 
 import java.util.*;
@@ -44,16 +44,16 @@ public final class LoadMap {
             Map map = new Map(GRAVITY, true);
 
             //Do add items to map here:
-            StaticShape floor = new StaticShape(map.getObjectID(), "floor",  map.getWorld(), new Vector2(0,0), "test.json", 2f, 15f);
+            Shape floor = new Shape(map.getObjectID(), "floor", map.getWorld(), new Vector2(0, 0), true, "test.json", 2f, 15f);
             map.addDrawObject(floor, 1);
-            StaticShape bottle = new StaticShape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0,3), "bottle.json", 2f, 4f);
+            Shape bottle = new Shape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0, 3), true, "bottle.json", 2f, 4f);
             map.addDrawObject(bottle, 0);
 
-            DynamicCircle circle = new DynamicCircle(map.getObjectID(), map.getWorld(), new Vector2(2f, 10f), 0.5f, 1f, 1f, 0.1f, new Texture(Gdx.files.internal("Coin.png")));
+            Circle circle = new Circle(map.getObjectID(), map.getWorld(), new Vector2(2f, 10f), false, 0.5f, 1f, 1f, 0.1f, new Texture(Gdx.files.internal("Coin.png")));
             map.addDrawObject(circle, 0);
 
             Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,4), new Texture(Gdx.files.internal("badlogic.jpg")), 2f, 3f, 0.5f, 1f);
-            map.addDrawObject(player, 1);
+            map.addDrawObject(player, 0);
             map.addUpdateObject(player);
             map.addInputListener(player);
 
