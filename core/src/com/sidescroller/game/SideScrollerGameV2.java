@@ -73,18 +73,18 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	batch.setProjectionMatrix(camera.combined);
 	batch.begin();
 
-	for (Update obj : currentMap.getUpdateObjects()){
-	    obj.update();
-	}
+		for (Update obj : currentMap.getUpdateObjects()){
+			obj.update();
+		}
 
-	//Drawing all layers with the lowest index in front.
-	for (int layerNum = currentMap.getAmountOfLayers() - 1; layerNum >= 0; layerNum--){
-	    List<Draw> layer = currentMap.getDrawLayer(layerNum);
+		//Drawing all layers with the lowest index in front.
+		for (int layerNum = currentMap.getAmountOfLayers() - 1; layerNum >= 0; layerNum--){
+			List<Draw> layer = currentMap.getDrawLayer(layerNum);
 
-	    for (Draw object : layer){
-		object.draw(batch);
-	    }
-	}
+			for (Draw object : layer){
+				object.draw(batch);
+			}
+		}
 
 	if (DEBUGRENDERER){
 	    box2DDebugRenderer.render(currentMap.getWorld(), getCamera().combined);

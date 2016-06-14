@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.sidescroller.game.BodyEditorLoader;
 import com.sidescroller.game.Draw;
+import com.sidescroller.game.GameObject;
 import com.sidescroller.game.SideScrollerGameV2;
 import com.badlogic.gdx.utils.JsonReader;
 
@@ -73,5 +74,22 @@ public class Shape implements Draw {
 
     public long getId(){
         return iD;
+    }
+
+    /**
+     * Overridden version of Equals that ensures that both object pointers are the exact same instantiation of
+     * its class.
+     * @param obj The object to compare to.
+     * @return True if they are equal, else false.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        try{
+            GameObject gameObject = (GameObject) obj;
+            return gameObject.getId() == this.getId();
+        }
+        catch (Exception e){
+            return false;
+        }
     }
 }

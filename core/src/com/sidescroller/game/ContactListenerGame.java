@@ -21,7 +21,7 @@ public class ContactListenerGame implements ContactListener
 	Iterable<CollisionListener> listeners = SideScrollerGameV2.getCurrentMap().getCollisionListenerList();
 	for (CollisionListener obj : listeners){
 	    if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
-		obj.beginContact(contact);
+			obj.beginContact(contact);
 	    }
 	}
     }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.sidescroller.game.Draw;
+import com.sidescroller.game.GameObject;
 import com.sidescroller.game.SideScrollerGameV2;
 
 public class Circle implements Draw
@@ -64,4 +65,21 @@ public class Circle implements Draw
     }
 
     public long getId(){return iD; }
+
+	/**
+	 * Overridden version of Equals that ensures that both object pointers are the exact same instantiation of
+	 * its class.
+	 * @param obj The object to compare to.
+	 * @return True if they are equal, else false.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		try{
+			GameObject gameObject = (GameObject) obj;
+			return gameObject.getId() == this.getId();
+		}
+		catch (Exception e){
+			return false;
+		}
+	}
 }
