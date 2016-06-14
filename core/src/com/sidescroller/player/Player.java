@@ -46,6 +46,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         maxVelocity = DEFAULT_MAX_VELOCITY;
         acceleration = new Vector2(50f, 800f);
         deceleration = new Vector2(100f, 0f);
+
+        body.setUserData(this);
     }
 
     /**

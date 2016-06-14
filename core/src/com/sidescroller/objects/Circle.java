@@ -56,6 +56,7 @@ public class Circle implements Draw
 
 	body = world.createBody(bodyDef);
 	body.createFixture(fixtureDef);
+		body.setUserData(this);
     }
 
     public void draw(SpriteBatch batch){

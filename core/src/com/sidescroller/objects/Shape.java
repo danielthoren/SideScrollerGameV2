@@ -40,10 +40,11 @@ public class Shape implements Draw {
         sprite.setSize(bodyWidth, bodyWidth * ((float)texture.getHeight() / (float)texture.getWidth()));
 
         createBody(bodyEditorLoader, position, friction, world, bodyWidth, nameOfBodyInJson, isStatic);
+
+        body.setUserData(this);
     }
 
     private void createBody(BodyEditorLoader bodyEditorLoader, Vector2 position, float friction, World world, float bodyWidth, String nameOfBdyInJson, boolean isStatic){
-
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(position);
         if (isStatic) {
