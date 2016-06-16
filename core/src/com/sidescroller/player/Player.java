@@ -1,6 +1,5 @@
 package com.sidescroller.player;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -21,31 +20,35 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private Vector2 acceleration, maxVelocity, deceleration;
     private final long iD;
 
+    private long groundResetTimer;
+
     private boolean isBottomSensor, isRightSensor, isLeftSensor;
-    private boolean isRunning, grounded, collisionLeft, collisionRight;
+    private boolean isRunning, isGrounded, isCollisionLeft, isCollisionRight;
 
     //Default values
     private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(10f, 20f);
+    private static final float GROUNDED_THRESHOLD = 0.01f;
+    private static final int GROUNDED_RESET_THRESHOLD = 50;
 
     public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
         this.iD = iD;
+        direction = Direction.RIGHT;
+        maxVelocity = DEFAULT_MAX_VELOCITY;
+        acceleration = new Vector2(50f, 800f);
+        deceleration = new Vector2(100f, 0f);
+        groundResetTimer = -1;
         isBottomSensor = false;
         isLeftSensor = false;
         isRightSensor = false;
         isRunning = false;
-        grounded = false;
-        collisionLeft = false;
-        collisionRight = false;
-        direction = Direction.RIGHT;
+        isGrounded = false;
+        isCollisionLeft = false;
+        isCollisionRight = false;
         sprite = new Sprite(texture);
         float bodyHeight = bodyWidth * ((float) texture.getHeight()/texture.getWidth());
         sprite.setSize(bodyWidth, bodyHeight);
         sprite.setOrigin(bodyWidth/2, bodyHeight/2);
         createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, 0.1f);
-
-        maxVelocity = DEFAULT_MAX_VELOCITY;
-        acceleration = new Vector2(50f, 800f);
-        deceleration = new Vector2(100f, 0f);
 
         body.setUserData(this);
     }
@@ -152,6 +155,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          //Creating the body using the fixtureDef and the BodyDef created beneath
          BodyDef bodyDef = new BodyDef();
          bodyDef.position.set(position);
+         bodyDef.type = BodyDef.BodyType.DynamicBody;
          body = world.createBody(bodyDef);
          if (middleBoxSize.y > 0){body.createFixture(middleBox);}
          body.createFixture(upperCircle);
@@ -159,7 +163,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          body.createFixture(bottomSensor).setUserData(Direction.DOWN);
          body.createFixture(rightSensor).setUserData(Direction.RIGHT);
          body.createFixture(leftSensor).setUserData(Direction.LEFT);
-         body.setType(BodyDef.BodyType.DynamicBody);
          body.setFixedRotation(true);
          body.setUserData(this);
          body.setActive(true);
@@ -171,6 +174,18 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      */
     public void update() {
         runHandler();
+
+        //Ensures that the sensorvalue is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
+        if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !isGrounded){
+            if (groundResetTimer == -1){groundResetTimer = System.currentTimeMillis();}
+            else if (System.currentTimeMillis() - groundResetTimer >= GROUNDED_RESET_THRESHOLD){
+                groundResetTimer = -1;
+                isGrounded = true;
+            }
+        }
+        else{
+            groundResetTimer = -1;
+        }
     }
     /**
      * The function that draws the object every frame
@@ -203,7 +218,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         if(!isRunning && playerContact) {
             contact.setFriction(100);
         }
-        System.out.println("begincontact");
     }
 
     /**
@@ -230,13 +244,12 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private void sensorSwitch(Fixture fixture, boolean setValue){
         //The cases beneath are the only ones that are going to be sent to this function due to how the body is built up. More might
         //be added later though.
-        //noinspection EnumSwitchStatementWhichMissesCases
         switch ((Direction) fixture.getUserData()){
-            case DOWN : grounded = setValue;
+            case DOWN :isGrounded = setValue;
                 break;
-            case LEFT: collisionLeft = setValue;
+            case LEFT:isCollisionLeft = setValue;
                 break;
-            case RIGHT: collisionRight = setValue;
+            case RIGHT:isCollisionRight = setValue;
                 break;
         }
     }
@@ -272,7 +285,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      */
     private void runHandler(){
         //Decelerating the player from running to a stop
-        if (!isRunning && grounded){
+        if (!isRunning && isGrounded){
             if (body.getLinearVelocity().x > deceleration.x / 4){
                 body.applyForceToCenter(-deceleration.x, 0f, true);
             }
@@ -283,7 +296,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 body.setLinearVelocity(0f, body.getLinearVelocity().y);
             }
         }
-        if (isRunning && grounded){
+        if (isRunning && isGrounded){
             //Code for smooth acceleration when on the ground
             if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
                 body.applyForceToCenter(acceleration.x, 0f, true);
@@ -292,7 +305,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 body.applyForceToCenter(-acceleration.x, 0f, true);
             }
         }
-        else if (isRunning && !grounded){
+        else if (isRunning && !isGrounded){
             //Code for smooth acceleration when in the air
             if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
                 body.applyForceToCenter(acceleration.x / 10, 0f, true);
