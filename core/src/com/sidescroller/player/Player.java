@@ -34,7 +34,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         this.iD = iD;
         direction = Direction.RIGHT;
         maxVelocity = DEFAULT_MAX_VELOCITY;
-        acceleration = new Vector2(30f, 800f);
+        acceleration = new Vector2(30f, 50f);
         deceleration = new Vector2(100f, 0f);
         groundResetTimer = -1;
         isBottomSensor = false;
@@ -322,9 +322,12 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         }
     }
 
+    /**
+     * Function that makes the player jump
+     */
     private void jump(){
+        //Impuls is calculated by F = m * g (Force = mass * gravity) where g = 9.82
         Vector2 impuls = new Vector2(0, (float) (9.82 * body.getMass()));
-
         body.applyLinearImpulse(impuls, body.getLocalCenter(), true);
     }
 

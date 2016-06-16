@@ -33,7 +33,7 @@ public class Map
     private long objectID;
 
     // TODO: 6/12/16 Load layer depth from file
-    private static final int layers = 2;
+    private static final int layers = 3;
 
     private World world;
 
@@ -59,8 +59,8 @@ public class Map
         collisionListenersStagedForAddition = new ArrayList<CollisionListener>(2);
 
         for (int x = 0; x < layers; x++){
-            drawObjects.add(new ArrayList<Draw>());
-            drawObjectsStagedForAddition.add(new ArrayList<Draw>());
+            drawObjects.add(new ArrayList<Draw>(5));
+            drawObjectsStagedForAddition.add(new ArrayList<Draw>(2));
         }
 
     }

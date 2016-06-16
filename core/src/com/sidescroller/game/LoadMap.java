@@ -29,7 +29,7 @@ public final class LoadMap {
         return INSTANCE;
     }
     //Todo Read value from file
-    private static final Vector2 GRAVITY = new Vector2(0, -9.82f);
+    private static final Vector2 GRAVITY = new Vector2(0, -30f);
 
     /**
      * Function loading specified map. At the moment it only instantiates hardcoded objects.
@@ -44,20 +44,20 @@ public final class LoadMap {
             Map map = new Map(GRAVITY, true);
 
             //Do add items to map here:
-            Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,6), new Texture(Gdx.files.internal("badlogic.jpg")), 1f, 0.5f, 0.01f, 0.5f);
+            Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,6), new Texture(Gdx.files.internal("badlogic.jpg")), 1f, 1f, 0.01f, 0.7f);
             map.addDrawObject(player, 0);
             map.addUpdateObject(player);
             map.addInputListener(player);
             map.addCollisionListener(player);
 
-            Shape bottle = new Shape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0, 3), true, "bottle.json", 2f, 4f);
+            Shape bottle = new Shape(map.getObjectID(), "test01", map.getWorld(), new Vector2(0, 1), true, "bottle.json", 2f, 4f);
             map.addDrawObject(bottle, 0);
-
-            Circle circle = new Circle(map.getObjectID(), map.getWorld(), new Vector2(2f, 10f), false, 0.5f, 1f, 1f, 0.1f, new Texture(Gdx.files.internal("Coin.png")));
-            map.addDrawObject(circle, 0);
 
             Shape floor = new Shape(map.getObjectID(), "floor", map.getWorld(), new Vector2(0, 0), true, "test.json", 2f, 15f);
             map.addDrawObject(floor, 1);
+
+            Circle circle = new Circle(map.getObjectID(), map.getWorld(), new Vector2(2f, 10f), false, 0.5f, 1f, 1f, 0.1f, new Texture(Gdx.files.internal("Coin.png")));
+            map.addDrawObject(circle, 0);
 
             maps.put(mapNumber, map);
         }

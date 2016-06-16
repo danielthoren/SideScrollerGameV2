@@ -34,6 +34,7 @@ public class Shape implements Draw {
         sprite = new Sprite(texture);
         //Sizing the sprite so that it fits on the body.
         sprite.setSize(bodyWidth, bodyWidth * ((float)texture.getHeight() / (float)texture.getWidth()));
+        sprite.setOrigin(0,0);
 
         createBody(bodyEditorLoader, position, friction, world, bodyWidth, nameOfBodyInJson, isStatic);
 
@@ -64,7 +65,6 @@ public class Shape implements Draw {
      */
     public void draw(SpriteBatch batch){
         sprite.setPosition(body.getPosition().x, body.getPosition().y);
-        sprite.setOrigin(spriteOrigin.x, spriteOrigin.y);
         sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
         sprite.draw(batch);
     }
