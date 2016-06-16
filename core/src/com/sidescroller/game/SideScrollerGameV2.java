@@ -59,9 +59,8 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
     public void render () {
 	float deltaTime = System.nanoTime() - nanoTimeLastUpdate;
 	nanoTimeLastUpdate = System.nanoTime();
-
-	//currentMap.getWorld().step(1/60, velocityIterations, positionIterations);
-	currentMap.getWorld().step(deltaTime / NANOS_PER_SECOND, velocityIterations, positionIterations);
+	currentMap.getWorld().step(1f/60f, velocityIterations, positionIterations);
+	//currentMap.getWorld().step(deltaTime / NANOS_PER_SECOND, velocityIterations, positionIterations);
 
 	currentMap.removeStagedOBjects();
 	currentMap.addStagedObjects();

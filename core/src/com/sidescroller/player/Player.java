@@ -26,7 +26,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private boolean isRunning, isGrounded, isCollisionLeft, isCollisionRight;
 
     //Default values
-    private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(10f, 20f);
+    private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(5f, 20f);
     private static final float GROUNDED_THRESHOLD = 0.01f;
     private static final int GROUNDED_RESET_THRESHOLD = 50;
 
@@ -34,7 +34,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         this.iD = iD;
         direction = Direction.RIGHT;
         maxVelocity = DEFAULT_MAX_VELOCITY;
-        acceleration = new Vector2(50f, 800f);
+        acceleration = new Vector2(30f, 800f);
         deceleration = new Vector2(100f, 0f);
         groundResetTimer = -1;
         isBottomSensor = false;
@@ -268,6 +268,11 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             isRunning = true;
             direction = Direction.RIGHT;
         }
+        else if (keycode == Input.Keys.UP){
+            if(isGrounded) {
+                jump();
+            }
+        }
 
     }
 
@@ -316,6 +321,14 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             }
         }
     }
+
+    private void jump(){
+        Vector2 impuls = new Vector2(0, (float) (9.82 * body.getMass()));
+
+        body.applyLinearImpulse(impuls, body.getLocalCenter(), true);
+    }
+
+
     public long getId(){return iD;}
 
     /**

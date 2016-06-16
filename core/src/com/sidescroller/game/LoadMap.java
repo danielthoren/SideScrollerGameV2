@@ -29,7 +29,7 @@ public final class LoadMap {
         return INSTANCE;
     }
     //Todo Read value from file
-    private static final Vector2 GRAVITY = new Vector2(0, -10);
+    private static final Vector2 GRAVITY = new Vector2(0, -9.82f);
 
     /**
      * Function loading specified map. At the moment it only instantiates hardcoded objects.
@@ -44,7 +44,7 @@ public final class LoadMap {
             Map map = new Map(GRAVITY, true);
 
             //Do add items to map here:
-            Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,6), new Texture(Gdx.files.internal("badlogic.jpg")), 1f, 0.5f, 0.01f, 2f);
+            Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,6), new Texture(Gdx.files.internal("badlogic.jpg")), 1f, 0.5f, 0.01f, 0.5f);
             map.addDrawObject(player, 0);
             map.addUpdateObject(player);
             map.addInputListener(player);
