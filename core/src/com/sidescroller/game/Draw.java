@@ -1,5 +1,6 @@
 package com.sidescroller.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import javafx.scene.canvas.GraphicsContext;
 

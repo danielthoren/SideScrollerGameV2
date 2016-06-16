@@ -1,7 +1,6 @@
 package com.sidescroller.objects;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,13 +9,10 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
 import com.sidescroller.game.BodyEditorLoader;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.GameObject;
 import com.sidescroller.game.SideScrollerGameV2;
-import com.badlogic.gdx.utils.JsonReader;
 
 /**
  * Created by daniel on 2016-06-06.
@@ -72,10 +68,7 @@ public class Shape implements Draw {
         sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
         sprite.draw(batch);
     }
-
-    public long getId(){
-        return iD;
-    }
+    public long getId(){return iD;}
 
     /**
      * Overridden version of Equals that ensures that both object pointers are the exact same instantiation of

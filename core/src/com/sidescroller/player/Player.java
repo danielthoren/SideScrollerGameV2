@@ -302,10 +302,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             }
         }
     }
-
-    public long getId(){
-        return iD;
-    }
+    public long getId(){return iD;}
 
     /**
      * Overridden version of Equals that ensures that both object pointers are the exact same instantiation of
