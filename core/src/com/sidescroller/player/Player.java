@@ -47,7 +47,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         sprite = new Sprite(texture);
         float bodyHeight = bodyWidth * ((float) texture.getHeight()/texture.getWidth());
         sprite.setSize(bodyWidth, bodyHeight);
-        sprite.setOrigin(bodyWidth/2, bodyHeight/2);
+        sprite.setOrigin(0,0);
         createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, 0.1f);
 
         body.setUserData(this);
@@ -91,7 +91,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          if (size.y / size.x >= 1) {
              radious = size.x/2;
              //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
-             //noinspection MagicNumber
              middleBoxSize = new Vector2(size.x - size.x / 50 , radious * 2);
              bottomCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ? -((size.y - radious * 4) / 2) - radious : -radious));
              upperCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ? (size.y - radious * 4) / 2 + radious : radious));
@@ -99,7 +98,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          else{
              radious = size.y/2;
              //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
-             //noinspection MagicNumber
              middleBoxSize = new Vector2(size.y - size.y / 50, size.y);
              bottomCirclePos = (new Vector2((size.x - radious * 4) / 2 > 0 ? -((size.x - radious * 4) / 2) - radious : -radious, 0));
              upperCirclePos = (new Vector2((size.x - radious * 4) / 2 > 0 ? (size.x - radious * 4) / 2 + radious : radious, 0));
@@ -193,7 +191,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      */
     @Override
     public void draw(SpriteBatch batch){
-        sprite.setPosition(body.getPosition().x, body.getPosition().y);
+        sprite.setPosition(body.getPosition().x - (sprite.getWidth()/2), body.getPosition().y - (sprite.getHeight()/2));
         sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
         sprite.draw(batch);
     }
@@ -315,10 +313,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             }
         }
     }
-
-    public long getId(){
-        return iD;
-    }
+    public long getId(){return iD;}
 
     /**
      * Overridden version of Equals that ensures that both object pointers are the exact same instantiation of
