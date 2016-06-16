@@ -44,7 +44,7 @@ public final class LoadMap {
             Map map = new Map(GRAVITY, true);
 
             //Do add items to map here:
-            Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,6), new Texture(Gdx.files.internal("badlogic.jpg")), 1f, 0.5f, 0.01f, 1f);
+            Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,6), new Texture(Gdx.files.internal("badlogic.jpg")), 1f, 0.5f, 0.01f, 2f);
             map.addDrawObject(player, 0);
             map.addUpdateObject(player);
             map.addInputListener(player);

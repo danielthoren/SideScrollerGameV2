@@ -85,22 +85,25 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          //out on both sides of the centerpoint (bodyposition). The height of each element is first divided by two
          //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
          float radious;
+         boolean useMiddleBox;
          Vector2 middleBoxSize;
          Vector2 upperCirclePos;
          Vector2 bottomCirclePos;
-         if (size.y / size.x >= 1) {
+         if (size.y >= size.x) {
              radious = size.x/2;
+             useMiddleBox = (size.y/size.x > 2) ? true : false;
              //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
-             middleBoxSize = new Vector2(size.x - size.x / 50 , radious * 2);
-             bottomCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ? -((size.y - radious * 4) / 2) - radious : -radious));
-             upperCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ? (size.y - radious * 4) / 2 + radious : radious));
+             middleBoxSize = new Vector2(size.x - size.x / 50 , size.y - 2*radious);
+             bottomCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ? -((size.y - radious * 4) / 2) - radious : -((size.y - 2*radious)/2)));
+             upperCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ? (size.y - radious * 4) / 2 + radious : (size.y - 2*radious)/2));
          }
          else{
              radious = size.y/2;
+             useMiddleBox = (size.x/size.y > 2) ? true : false;
              //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
-             middleBoxSize = new Vector2(size.y - size.y / 50, size.y);
-             bottomCirclePos = (new Vector2((size.x - radious * 4) / 2 > 0 ? -((size.x - radious * 4) / 2) - radious : -radious, 0));
-             upperCirclePos = (new Vector2((size.x - radious * 4) / 2 > 0 ? (size.x - radious * 4) / 2 + radious : radious, 0));
+             middleBoxSize = new Vector2(size.y - size.y / 50, size.x - 2*radious);
+             bottomCirclePos = (new Vector2((size.x - radious * 4) / 2 > 0 ? -((size.x - radious * 4) / 2) - radious : -((size.x - 2*radious)/2), 0));
+             upperCirclePos = (new Vector2((size.x - radious * 4) / 2 > 0 ? (size.x - radious * 4) / 2 + radious : ((size.x - 2*radious)/2), 0));
          }
          Vector2 bottomSensorPos = new Vector2(0, bottomCirclePos.y - radious);
          Vector2 bottomSensorSize = new Vector2(size.x - size.x / 4, sensorThickness * 2);
@@ -155,7 +158,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          bodyDef.position.set(position);
          bodyDef.type = BodyDef.BodyType.DynamicBody;
          body = world.createBody(bodyDef);
-         if (middleBoxSize.y > 0){body.createFixture(middleBox);}
+         if (useMiddleBox){body.createFixture(middleBox);}
          body.createFixture(upperCircle);
          body.createFixture(bottomCircle);
          body.createFixture(bottomSensor).setUserData(Direction.DOWN);
