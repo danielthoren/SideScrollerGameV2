@@ -174,8 +174,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * The function that updates the object every frame
      */
     public void update() {
+        System.out.println("hello");
         runHandler();
-
         //Ensures that the sensorvalue is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
         if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !isGrounded){
             if (groundResetTimer == -1){groundResetTimer = System.currentTimeMillis();}
