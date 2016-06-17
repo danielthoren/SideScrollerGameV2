@@ -9,6 +9,6 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280; //test
 		config.height = 720; //hej
-		new LwjglApplication(new SideScrollerGameV2(), config);
+		new LwjglApplication(new SideScrollerGameV2(), config); //test igen
 	}
 }
