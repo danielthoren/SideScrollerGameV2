@@ -1,4 +1,4 @@
-package com.sidescroller.game;
+package com.sidescroller.MapLoader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,12 +18,12 @@ public final class LoadMap {
 
 
     private final static LoadMap INSTANCE = new LoadMap();
-    private AbstractMap<Integer, Map> maps;
+    private AbstractMap<Integer, com.sidescroller.game.Map> maps;
 
     private final static float PIX_PER_METER = 100;
 
     private LoadMap() {
-        maps = new HashMap<Integer, Map>();}
+        maps = new HashMap<Integer, com.sidescroller.game.Map>();}
 
     public static LoadMap getInstance(){
         return INSTANCE;
@@ -41,7 +41,7 @@ public final class LoadMap {
 
         if (!maps.containsKey(mapNumber)){
 
-            Map map = new Map(GRAVITY, true);
+            com.sidescroller.game.Map map = new com.sidescroller.game.Map(GRAVITY, true);
 
             //Do add items to map here:
             Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,6), new Texture(Gdx.files.internal("badlogic.jpg")), 1f, 1f, 0.01f, 0.7f);
@@ -65,7 +65,7 @@ public final class LoadMap {
 
     public float getPixPerMeter(){return PIX_PER_METER;}
 
-    public Map getMap(int mapNumber){return maps.get(mapNumber);}
+    public com.sidescroller.game.Map getMap(int mapNumber){return maps.get(mapNumber);}
 
 
 }
