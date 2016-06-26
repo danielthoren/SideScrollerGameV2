@@ -1,4 +1,4 @@
-package com.sidescroller.MapLoader.RubeLoader.gushikustudios.loader;
+package com.sidescroller.Map.RubeLoader.gushikustudios.loader;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.sidescroller.MapLoader.RubeLoader.gushikustudios.RubeScene;
+import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 
 public class RubeSceneAsyncLoader extends AsynchronousAssetLoader<RubeScene, RubeSceneAsyncLoader.RubeSceneParameters>
 {

@@ -1,11 +1,11 @@
-package com.sidescroller.MapLoader.RubeLoader.gushikustudios.loader;
+package com.sidescroller.Map.RubeLoader.gushikustudios.loader;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
-import com.sidescroller.MapLoader.RubeLoader.gushikustudios.RubeScene;
-import com.sidescroller.MapLoader.RubeLoader.gushikustudios.loader.serializers.RubeWorldSerializer;
+import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
+import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.RubeWorldSerializer;
 
 /**
  * Loads a json file and returns a {@link RubeScene}.

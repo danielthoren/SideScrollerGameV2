@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sidescroller.Map.Map;
+import com.sidescroller.Map.MapLoader;
 
 import java.util.List;
 
@@ -45,8 +47,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	aspectRatio = (float)Gdx.graphics.getHeight() / (float)Gdx.graphics.getWidth();
 	inputHandler = new InputHandler();
 	Gdx.input.setInputProcessor(inputHandler);
-	LoadMap.getInstance().loadMap(0);
-	currentMap = LoadMap.getInstance().getMap(0);
+		currentMap = MapLoader.getInstance().loadMap("world1.json");
 	//Setting the worlds contactlistener
 	ContactListenerGame contactListenerGame = new ContactListenerGame();
 	currentMap.getWorld().setContactListener(contactListenerGame);

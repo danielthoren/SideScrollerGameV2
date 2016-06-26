@@ -1,4 +1,4 @@
-package com.sidescroller.MapLoader.RubeLoader.gushikustudios.loader.serializers.utils;
+package com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils;
 
 import com.badlogic.gdx.math.Vector2;
 

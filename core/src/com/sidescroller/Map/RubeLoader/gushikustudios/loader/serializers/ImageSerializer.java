@@ -1,4 +1,4 @@
-package com.sidescroller.MapLoader.RubeLoader.gushikustudios.loader.serializers;
+package com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -6,10 +6,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Json.ReadOnlySerializer;
-import com.sidescroller.MapLoader.RubeLoader.gushikustudios.RubeDefaults;
-import com.sidescroller.MapLoader.RubeLoader.gushikustudios.RubeScene;
-import com.sidescroller.MapLoader.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
-import com.sidescroller.MapLoader.RubeLoader.gushikustudios.loader.serializers.utils.RubeVertexArray;
+import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
+import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
+import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
+import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeVertexArray;
 
 public class ImageSerializer extends ReadOnlySerializer<RubeImage>
 {

@@ -1,4 +1,4 @@
-package com.sidescroller.MapLoader.RubeLoader.gushikustudios;
+package com.sidescroller.Map.RubeLoader.gushikustudios;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
-import com.sidescroller.MapLoader.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
+import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 
 /**
  * A simple encapsulation of a {@link World}. Plus the data needed to run the simulation.

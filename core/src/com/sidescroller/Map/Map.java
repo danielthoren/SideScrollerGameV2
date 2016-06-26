@@ -1,8 +1,9 @@
-package com.sidescroller.game;
+package com.sidescroller.Map;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.sidescroller.game.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,8 +42,8 @@ public class Map
      * Creates an instance of 'Map' wich is a container for all of the world objects. It also contains an abstractionlayer
      * for removing and adding new objects to the world, preventing the program from crashing.
      */
-    public Map(Vector2 gravity, boolean doSleep) {
-        world = new World(gravity, doSleep);
+    public Map(World world, boolean doSleep) {
+        this.world = world;
         objectID = 0;
         drawObjects = new ArrayList<List<Draw>>(layers);
         updateObjects = new ArrayList<Update>(10);
