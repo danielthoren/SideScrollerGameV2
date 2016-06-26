@@ -1,4 +1,4 @@
-package com.sidescroller.MapLoader;
+package com.sidescroller.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,7 +7,8 @@ import com.sidescroller.objects.Circle;
 import com.sidescroller.objects.Shape;
 import com.sidescroller.player.Player;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.HashMap;
 
 /**
  * The singelton that loads and holds the map. This is a singelton since there is no need for more than one maploader.
@@ -18,12 +19,12 @@ public final class LoadMap {
 
 
     private final static LoadMap INSTANCE = new LoadMap();
-    private AbstractMap<Integer, com.sidescroller.game.Map> maps;
+    private AbstractMap<Integer, Map> maps;
 
     private final static float PIX_PER_METER = 100;
 
     private LoadMap() {
-        maps = new HashMap<Integer, com.sidescroller.game.Map>();}
+        maps = new HashMap<Integer, Map>();}
 
     public static LoadMap getInstance(){
         return INSTANCE;
@@ -41,7 +42,7 @@ public final class LoadMap {
 
         if (!maps.containsKey(mapNumber)){
 
-            com.sidescroller.game.Map map = new com.sidescroller.game.Map(GRAVITY, true);
+            Map map = new Map(GRAVITY, true);
 
             //Do add items to map here:
             Player player = new Player(map.getObjectID(), map.getWorld(), new Vector2(4,6), new Texture(Gdx.files.internal("badlogic.jpg")), 1f, 1f, 0.01f, 0.7f);
@@ -65,7 +66,7 @@ public final class LoadMap {
 
     public float getPixPerMeter(){return PIX_PER_METER;}
 
-    public com.sidescroller.game.Map getMap(int mapNumber){return maps.get(mapNumber);}
+    public Map getMap(int mapNumber){return maps.get(mapNumber);}
 
 
 }
