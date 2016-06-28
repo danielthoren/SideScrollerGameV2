@@ -37,7 +37,8 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
     public void create () {
 	nanoTimeLastUpdate = System.nanoTime();
 	camera = new OrthographicCamera(windowView.x, windowView.y);
-	camera.position.set(windowView.x/2, windowView.y/2, 0f);
+		camera.position.set(-1, -1, 0f);
+	//camera.position.set(windowView.x/2, windowView.y/2, 0f);
 	//camera.translate(camera.viewportWidth/2, camera.viewportHeight/2);
 	viewport = new FillViewport(16, 9, camera);
 	viewport.apply();

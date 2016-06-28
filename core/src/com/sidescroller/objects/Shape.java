@@ -47,6 +47,13 @@ public class Shape implements Draw {
      */
     public void draw(SpriteBatch batch){
         if (rubeSpriteMap != null) {
+            for (RubeSprite rubeSprite : rubeSpriteMap.get(1)){
+                rubeSprite.getSprite().setSize(1f, 1f);
+                rubeSprite.getSprite().setPosition(0f, 0f);
+                rubeSprite.getSprite().draw(batch);
+            }
+
+            /*
             for (int layers = 0; layers < 16; layers++) {
                 Array<RubeSprite> rubeSprites = rubeSpriteMap.get(layers);
 
@@ -63,6 +70,7 @@ public class Shape implements Draw {
                     sprite.draw(batch);
                 }
             }
+            */
         }
     }
 
