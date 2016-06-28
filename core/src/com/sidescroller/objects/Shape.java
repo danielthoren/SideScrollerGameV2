@@ -47,30 +47,27 @@ public class Shape implements Draw {
      */
     public void draw(SpriteBatch batch){
         if (rubeSpriteMap != null) {
-            for (RubeSprite rubeSprite : rubeSpriteMap.get(1)){
-                rubeSprite.getSprite().setSize(1f, 1f);
-                rubeSprite.getSprite().setPosition(0f, 0f);
-                rubeSprite.getSprite().draw(batch);
-            }
-
-            /*
-            for (int layers = 0; layers < 16; layers++) {
+            //TODO: Create function that checks wich is the lowest level so that no arrays before that is needed.
+            for (int layers = 0; layers < rubeSpriteMap.size(); layers++) {
                 Array<RubeSprite> rubeSprites = rubeSpriteMap.get(layers);
 
                 for (RubeSprite rubeSprite : rubeSprites) {
                     Sprite sprite = rubeSprite.getSprite();
                     RubeImage rubeImage = rubeSprite.getRubeImage();
 
-                    sprite.setOrigin(body.getPosition().x, body.getPosition().y);
+                    sprite.setOrigin(rubeImage.width/2, rubeImage.height/2);
                     sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle() + rubeImage.angleInRads));
-                    sprite.setPosition(body.getPosition().x + rubeImage.center.x, body.getPosition().y + rubeImage.center.y);
+                    sprite.setSize(rubeImage.width, rubeImage.height);
+                    //rubeImage.center is the variable given by the RUBE enviroment. This does not completely work with
+                    //openGL since images in openGL is drawn with their bottom left corner as center.
+                    //sprite.setPosition(body.getPosition().x + rubeImage.center.x - (rubeImage.width/2), body.getPosition().y + rubeImage.center.y - (rubeImage.height/2));
+                    sprite.setPosition(body.getPosition().x - rubeImage.width/2, body.getPosition().y - rubeImage.height/2);
                     if (rubeImage.flip) {
                         sprite.flip(true, false);
                     }
                     sprite.draw(batch);
                 }
             }
-            */
         }
     }
 

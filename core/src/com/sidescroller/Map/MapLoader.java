@@ -41,6 +41,7 @@ public class MapLoader {
             for (Body body : scene.getBodies()){
                 Array<RubeImage> rubeImages = scene.getMappedImage(body);
                 HashMap<Integer, Array<RubeSprite>> rubeSpriteMap = new HashMap<Integer, Array<RubeSprite>>(LAYERS);
+                //TODO: optimize the creation of hashmaps so that only as many layers as is needed is created.
                 //Creating the arrays for the hashmap and adding images to the map if there are images
                 Shape shape;
                 if (rubeImages != null) {

@@ -23,6 +23,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
     private Box2DDebugRenderer box2DDebugRenderer;
     private InputHandler inputHandler;
     private Viewport viewport;
+	private Vector2 cameraPosition;
 
     private long nanoTimeLastUpdate;
     private int velocityIterations, positionIterations;             //Values deciding the accuracy of velocity and position
@@ -36,10 +37,8 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
     @Override
     public void create () {
 	nanoTimeLastUpdate = System.nanoTime();
+		cameraPosition = new Vector2(0,0);
 	camera = new OrthographicCamera(windowView.x, windowView.y);
-		camera.position.set(-1, -1, 0f);
-	//camera.position.set(windowView.x/2, windowView.y/2, 0f);
-	//camera.translate(camera.viewportWidth/2, camera.viewportHeight/2);
 	viewport = new FillViewport(16, 9, camera);
 	viewport.apply();
 
@@ -97,7 +96,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
     @Override
     public void resize (int width, int height) {
 	viewport.update(width,height);
-	camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0);
+	camera.position.set(cameraPosition, 0);
     }
 
     /**
