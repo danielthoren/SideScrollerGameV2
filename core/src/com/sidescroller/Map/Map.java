@@ -220,7 +220,5 @@ public class Map
 
     public List<CollisionListener> getCollisionListenerList() {return collisionListenerList;}
 
-    public World getWorld() {return world;}
-
     public static int getAmountOfLayers() {return layers;}
 }
