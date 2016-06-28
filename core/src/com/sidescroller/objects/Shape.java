@@ -52,6 +52,7 @@ public class Shape implements Draw {
                 Array<RubeSprite> rubeSprites = rubeSpriteMap.get(layers);
 
                 for (RubeSprite rubeSprite : rubeSprites) {
+
                     Sprite sprite = rubeSprite.getSprite();
                     RubeImage rubeImage = rubeSprite.getRubeImage();
 
@@ -60,8 +61,7 @@ public class Shape implements Draw {
                     sprite.setSize(rubeImage.width, rubeImage.height);
                     //rubeImage.center is the variable given by the RUBE enviroment. This does not completely work with
                     //openGL since images in openGL is drawn with their bottom left corner as center.
-                    //sprite.setPosition(body.getPosition().x + rubeImage.center.x - (rubeImage.width/2), body.getPosition().y + rubeImage.center.y - (rubeImage.height/2));
-                    sprite.setPosition(body.getPosition().x - rubeImage.width/2, body.getPosition().y - rubeImage.height/2);
+                    sprite.setPosition(body.getPosition().x + rubeImage.center.x - (rubeImage.width/2), body.getPosition().y + rubeImage.center.y - (rubeImage.height/2));
                     if (rubeImage.flip) {
                         sprite.flip(true, false);
                     }

@@ -38,7 +38,9 @@ public class MapLoader {
             Map map = new Map(scene.getWorld(), true);
 
             //Adding all of the bodies to the map
-            for (Body body : scene.getBodies()){
+            int p = 0;
+            for (int x = 0; x < scene.getBodies().size; x++){
+                Body body = scene.getBodies().get(x);
                 Array<RubeImage> rubeImages = scene.getMappedImage(body);
                 HashMap<Integer, Array<RubeSprite>> rubeSpriteMap = new HashMap<Integer, Array<RubeSprite>>(LAYERS);
                 //TODO: optimize the creation of hashmaps so that only as many layers as is needed is created.
