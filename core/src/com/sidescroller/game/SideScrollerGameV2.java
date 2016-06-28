@@ -50,7 +50,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		currentMap = MapLoader.getInstance().loadMap("world1.json");
 	//Setting the worlds contactlistener
 	ContactListenerGame contactListenerGame = new ContactListenerGame();
-	currentMap.getWorld().setContactListener(contactListenerGame);
+		currentMap.setContactListener(contactListenerGame);
 
 	velocityIterations = 6;  //Accuracy of jbox2d velocity simulation
 	positionIterations = 3;  //Accuracy of jbox2d position simulation
@@ -60,7 +60,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
     public void render () {
 	float deltaTime = System.nanoTime() - nanoTimeLastUpdate;
 	nanoTimeLastUpdate = System.nanoTime();
-	currentMap.getWorld().step(1f/60f, velocityIterations, positionIterations);
+		currentMap.stepWorld(1f/60f);
 	//currentMap.getWorld().step(deltaTime / NANOS_PER_SECOND, velocityIterations, positionIterations);
 
 	currentMap.removeStagedOBjects();
@@ -73,21 +73,17 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	batch.setProjectionMatrix(camera.combined);
 	batch.begin();
 
+		//Updating the updateobjects
 		for (Update obj : currentMap.getUpdateObjects()){
 			obj.update();
 		}
-
-		//Drawing all layers with the lowest index in front.
-		for (int layerNum = currentMap.getAmountOfLayers() - 1; layerNum >= 0; layerNum--){
-			List<Draw> layer = currentMap.getDrawLayer(layerNum);
-
-			for (Draw object : layer){
-				object.draw(batch);
-			}
+		//Drawing the drawobjects
+		for (Draw obj : currentMap.getDrawObjects()){
+			obj.draw(batch);
 		}
 
 	if (DEBUGRENDERER){
-	    box2DDebugRenderer.render(currentMap.getWorld(), getCamera().combined);
+	    currentMap.debugDraw(camera);
 	}
 
 	batch.end();

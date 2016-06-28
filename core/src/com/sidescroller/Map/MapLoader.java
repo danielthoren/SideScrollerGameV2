@@ -35,7 +35,7 @@ public class MapLoader {
         if (!loadedMaps.containsKey(mapPath)){
             RubeScene scene = loader.loadScene(Gdx.files.internal(mapPath));
 
-            Map map = new Map(scene.getWorld(), true);
+            Map map = new Map(scene.getWorld(), true, scene.velocityIterations, scene.positionIterations);
 
             //Adding all of the bodies to the map
             int p = 0;
