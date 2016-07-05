@@ -17,26 +17,27 @@ import com.sidescroller.game.GameObject;
 import com.sidescroller.game.SideScrollerGameV2;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by daniel on 2016-06-06.
  */
 public class Shape implements Draw {
 
-    private HashMap<Integer, Array<RubeSprite>> rubeSpriteMap;
+    private Array<RubeSprite> rubeSprites;
     private Body body;
     private final long iD;
 
-    public Shape(long iD, Body body, HashMap<Integer, Array<RubeSprite>> rubeSpriteMap) {
+    public Shape(long iD, Body body, HashMap<Integer, Array<RubeSprite> rubeSprites) {
         this.iD = iD;
-        this.rubeSpriteMap = rubeSpriteMap;
+        this.rubeSprites = rubeSprites;
         body.setUserData(this);
         this.body = body;
     }
 
     public Shape(long iD, Body body) {
         this.iD = iD;
-        rubeSpriteMap = null;
+        rubeSprites = null;
         body.setUserData(this);
         this.body = body;
     }
@@ -45,30 +46,20 @@ public class Shape implements Draw {
      * The function that draws the object every frame
      * @param batch The SpriteBatch with wich to draw
      */
-    public void draw(SpriteBatch batch){
-        if (rubeSpriteMap != null) {
-            //TODO: Create function that checks wich is the lowest level so that no arrays before that is needed.
-            for (int layers = 0; layers < rubeSpriteMap.size(); layers++) {
-                Array<RubeSprite> rubeSprites = rubeSpriteMap.get(layers);
-
-                for (RubeSprite rubeSprite : rubeSprites) {
-
-                    Sprite sprite = rubeSprite.getSprite();
-                    RubeImage rubeImage = rubeSprite.getRubeImage();
-
-                    sprite.setOrigin(rubeImage.width/2, rubeImage.height/2);
-                    sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle() + rubeImage.angleInRads));
-                    sprite.setSize(rubeImage.width, rubeImage.height);
-                    //rubeImage.center is the variable given by the RUBE enviroment. This does not completely work with
-                    //openGL since images in openGL is drawn with their bottom left corner as center.
-                    sprite.setPosition(body.getPosition().x + rubeImage.center.x - (rubeImage.width/2), body.getPosition().y + rubeImage.center.y - (rubeImage.height/2));
-                    if (rubeImage.flip) {
-                        sprite.flip(true, false);
-                    }
-                    sprite.draw(batch);
+    public void draw(SpriteBatch batch, int layer){
+        if ()
+            for (RubeSprite rubeSprite : rubeSprites) {
+                Sprite sprite = rubeSprite.getSprite();
+                RubeImage rubeImage = rubeSprite.getRubeImage();
+                //rubeImage.center is <></>he variable given by the RUBE enviroment. This does not completely work with
+                //openGL since images in openGL is drawn with their bottom left corner as center.
+                sprite.setPosition(body.getPosition().x + rubeImage.center.x - (rubeImage.width / 2),
+                                   body.getPosition().y + rubeImage.center.y - (rubeImage.height / 2));
+                if (rubeImage.flip) {
+                    sprite.flip(true, false);
                 }
+                sprite.draw(batch);
             }
-        }
     }
 
     public long getId(){return iD;}

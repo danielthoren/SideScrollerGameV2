@@ -39,9 +39,7 @@ public class Map
     private final int positionIterations;
 
     private long objectID;
-
-    // TODO: 6/12/16 Load layer depth from file
-    private static final int layers = 3;
+    private int layers;
 
     private World world;
 
@@ -54,6 +52,7 @@ public class Map
         this.velocityIterations = velocityIterations;
         this.positionIterations = positionIterations;
         objectID = 0;
+        layers = 1;
         debugRenderer = new Box2DDebugRenderer();
         drawObjects = new ArrayList<Draw>(layers);
         updateObjects = new ArrayList<Update>(10);
@@ -96,6 +95,7 @@ public class Map
                     iterator.remove();
                 }
             }
+
         }
 
         //Removing all of the 'Update' objects from the maps global list
@@ -220,5 +220,7 @@ public class Map
 
     public List<CollisionListener> getCollisionListenerList() {return collisionListenerList;}
 
-    public static int getAmountOfLayers() {return layers;}
+    public int getLayers() {return layers;}
+
+    public void setLayers(final int layers) {this.layers = layers;}
 }

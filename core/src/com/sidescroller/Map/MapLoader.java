@@ -42,26 +42,18 @@ public class MapLoader {
             for (int x = 0; x < scene.getBodies().size; x++){
                 Body body = scene.getBodies().get(x);
                 Array<RubeImage> rubeImages = scene.getMappedImage(body);
-                HashMap<Integer, Array<RubeSprite>> rubeSpriteMap = new HashMap<Integer, Array<RubeSprite>>(LAYERS);
-                //TODO: optimize the creation of hashmaps so that only as many layers as is needed is created.
                 //Creating the arrays for the hashmap and adding images to the map if there are images
                 Shape shape;
                 if (rubeImages != null) {
-                    for (int layers = 0; layers < LAYERS; layers++) {
-                        rubeSpriteMap.put(layers, new Array<RubeSprite>(0));
+                    Array<RubeSprite> rubeSprites = new Array<RubeSprite>(1);
+                    for (RubeImage rubeImage : rubeImages){
+                        rubeSprites.add(new RubeSprite(rubeImage));
                     }
-
-                    for (RubeImage rubeImage : rubeImages) {
-                        RubeSprite rubeSprite = new RubeSprite(rubeImage);
-                        rubeSpriteMap.get(rubeImage.filter).add(rubeSprite);
-                    }
-                    shape = new Shape(map.getObjectID(), body, rubeSpriteMap);
+                    shape = new Shape(map.getObjectID(), body, rubeSprites);
                 }
                 else{
                     shape = new Shape(map.getObjectID(), body);
                 }
-                //TODO Load drawlayer from custom properties
-                map.addDrawObject(shape, 1);
             }
 
             loadedMaps.put(mapPath, map);
