@@ -673,7 +673,7 @@
 						]
 					},
 					"file" : "world1.png",
-					"filter" : 2,
+					"filter" : 3,
 					"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
 					"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
 					"glVertexPointer" :
