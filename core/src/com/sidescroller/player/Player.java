@@ -303,6 +303,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         }
         else if(keycode == Input.Keys.I){
             System.out.println(Arrays.toString(inventory.getItems()));
+            System.out.println(inventory.getSpaceUsed());
         }
         else if(keycode == Input.Keys.O){
             createDummyItem();
@@ -402,25 +403,15 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 
 
     private void createDummyItem(){
+
         InventoryItem dummyItem = new TestItem(2,2,"test item");
-        inventory.addToInventory(dummyItem);
 
-    }
-
-    /**
-     * Toggles the current item equipped to the next item in the inventory.
-     * This should not be used in final version!
-     */
-    private  void toggleItems(){
-        int currentItemID = inventory.getItemID(currentItem);
-
-
-        //Switches to the first item in the inventory whe the last one is equipped.
-        if (currentItemID == inventory.getItems().length - 1){
-            currentItem = inventory.getItem(0);
-        } else{
-            currentItem = inventory.getItem(currentItemID + 1);
+        try{
+            inventory.addToInventory(dummyItem);
+        } catch (InventoryFullException e){
+            e.printStackTrace();
         }
+
     }
 
 

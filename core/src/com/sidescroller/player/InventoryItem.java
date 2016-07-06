@@ -25,6 +25,10 @@ public class InventoryItem implements Draw{
         this.isMovable = isMovable;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public String toString() {
         return "InventoryItem{" + description +'}';
