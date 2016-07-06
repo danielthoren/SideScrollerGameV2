@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
+import com.sidescroller.game.SideScrollerGameV2;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
 
@@ -49,10 +50,13 @@ public class MapLoader {
                     for (RubeImage rubeImage : rubeImages){
                         rubeSprites.add(new RubeSprite(rubeImage));
                     }
+                    map.updateLayerDepth(rubeSprites);
                     shape = new Shape(map.getObjectID(), body, rubeSprites);
+                    map.addDrawObject(shape);
                 }
                 else{
                     shape = new Shape(map.getObjectID(), body);
+                    map.addDrawObject(shape);
                 }
             }
 

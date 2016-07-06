@@ -17,9 +17,6 @@ public class RubeSprite {
 
         sprite = new Sprite(new Texture(Gdx.files.internal(rubeImage.file)));
         sprite.setSize(rubeImage.width, rubeImage.height);
-        System.out.print(rubeImage.width);
-        System.out.print("       ");
-        System.out.println(rubeImage.height);
     }
 
     public RubeImage getRubeImage() {return rubeImage;}

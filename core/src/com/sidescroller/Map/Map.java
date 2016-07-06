@@ -5,7 +5,9 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
 import com.sidescroller.game.*;
+import com.sidescroller.objects.RubeSprite;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -39,7 +41,7 @@ public class Map
     private final int positionIterations;
 
     private long objectID;
-    private int layers;
+    private int layerCount;
 
     private World world;
 
@@ -52,9 +54,9 @@ public class Map
         this.velocityIterations = velocityIterations;
         this.positionIterations = positionIterations;
         objectID = 0;
-        layers = 1;
+        layerCount = 1;
         debugRenderer = new Box2DDebugRenderer();
-        drawObjects = new ArrayList<Draw>(layers);
+        drawObjects = new ArrayList<Draw>(layerCount);
         updateObjects = new ArrayList<Update>(10);
         collisionListenerList = new ArrayList<CollisionListener>(10);
         inputListenerList = new ArrayList<InputListener>(10);
@@ -63,7 +65,7 @@ public class Map
         inputListenersStagedForRemoval = new ArrayList<InputListener>(2);
         collisionListenersStagedForRemoval = new ArrayList<CollisionListener>(2);
         bodiesStagedForRemoval = new ArrayList<Body>(2);
-        drawObjectsStagedForAddition = new ArrayList<Draw>(layers);
+        drawObjectsStagedForAddition = new ArrayList<Draw>(layerCount);
         updateObjectsStagedForAddition = new ArrayList<Update>(2);
         inputListenersStagedForAddition = new ArrayList<InputListener>(2);
         collisionListenersStagedForAddition = new ArrayList<CollisionListener>(2);
@@ -204,7 +206,7 @@ public class Map
 
     public void removeUpdateObject(Update object){updateObjectsStagedForRemoval.add(object);}
 
-    public void addDrawObject(Draw object, int layer) {drawObjectsStagedForAddition.add(object);}
+    public void addDrawObject(Draw object) {drawObjectsStagedForAddition.add(object);}
 
     public void addUpdateObject(Update object) {updateObjectsStagedForAddition.add(object);}
 
@@ -220,7 +222,13 @@ public class Map
 
     public List<CollisionListener> getCollisionListenerList() {return collisionListenerList;}
 
-    public int getLayers() {return layers;}
+    public int getLayerCount() {return layerCount;}
 
-    public void setLayers(final int layers) {this.layers = layers;}
+    public void updateLayerDepth(Array<RubeSprite> rubeSprites){
+        for (RubeSprite rubeSprite : rubeSprites){
+            if (rubeSprite.getRubeImage().filter > layerCount){
+                layerCount = rubeSprite.getRubeImage().filter;
+            }
+        }
+    }
 }

@@ -28,7 +28,7 @@ public class Shape implements Draw {
     private Body body;
     private final long iD;
 
-    public Shape(long iD, Body body, HashMap<Integer, Array<RubeSprite> rubeSprites) {
+    public Shape(long iD, Body body, Array<RubeSprite> rubeSprites) {
         this.iD = iD;
         this.rubeSprites = rubeSprites;
         body.setUserData(this);
@@ -47,19 +47,23 @@ public class Shape implements Draw {
      * @param batch The SpriteBatch with wich to draw
      */
     public void draw(SpriteBatch batch, int layer){
-        if ()
+        if (rubeSprites != null) {
             for (RubeSprite rubeSprite : rubeSprites) {
                 Sprite sprite = rubeSprite.getSprite();
                 RubeImage rubeImage = rubeSprite.getRubeImage();
-                //rubeImage.center is <></>he variable given by the RUBE enviroment. This does not completely work with
-                //openGL since images in openGL is drawn with their bottom left corner as center.
-                sprite.setPosition(body.getPosition().x + rubeImage.center.x - (rubeImage.width / 2),
-                                   body.getPosition().y + rubeImage.center.y - (rubeImage.height / 2));
-                if (rubeImage.flip) {
-                    sprite.flip(true, false);
+                //If the current RubeSprite is on the layer that is being drawn then draw it
+                if (rubeImage.filter == layer) {
+                    //rubeImage.center is <></>he variable given by the RUBE enviroment. This does not completely work with
+                    //openGL since images in openGL is drawn with their bottom left corner as center.
+                    sprite.setPosition(body.getPosition().x + rubeImage.center.x - (rubeImage.width / 2),
+                                       body.getPosition().y + rubeImage.center.y - (rubeImage.height / 2));
+                    if (rubeImage.flip) {
+                        sprite.flip(true, false);
+                    }
+                    sprite.draw(batch);
                 }
-                sprite.draw(batch);
             }
+        }
     }
 
     public long getId(){return iD;}

@@ -13,8 +13,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sidescroller.Map.Map;
 import com.sidescroller.Map.MapLoader;
 
-import java.util.List;
-
 public class SideScrollerGameV2 extends ApplicationAdapter {
     private static Map currentMap;
     private SpriteBatch batch;
@@ -79,7 +77,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		}
 		//Drawing the drawobjects
 		for (Draw obj : currentMap.getDrawObjects()){
-		    for(int layer = currentMap.getLayers(); layer >= 0; layer--) {
+		    for(int layer = currentMap.getLayerCount(); layer >= 0; layer--) {
 			obj.draw(batch, layer);
 		    }
 		}
