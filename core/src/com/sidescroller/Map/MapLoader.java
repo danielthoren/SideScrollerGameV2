@@ -3,6 +3,7 @@ package com.sidescroller.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
@@ -11,6 +12,7 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.R
 import com.sidescroller.game.SideScrollerGameV2;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
+import com.sidescroller.player.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +61,12 @@ public class MapLoader {
                     map.addDrawObject(shape);
                 }
             }
+
+            Player player = new Player(map.getObjectID(), scene.getWorld(), new Vector2(2f, 2f), new Texture(Gdx.files.internal("body.png")), 1f, 1f, 0.1f, 0.2f);
+            map.addInputListener(player);
+            map.addUpdateObject(player);
+            map.addDrawObject(player);
+            map.addCollisionListener(player);
 
             loadedMaps.put(mapPath, map);
         }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sidescroller.Map.Map;
 import com.sidescroller.Map.MapLoader;
+import com.sidescroller.player.Player;
 
 public class SideScrollerGameV2 extends ApplicationAdapter {
     private static Map currentMap;
@@ -21,7 +22,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
     private Box2DDebugRenderer box2DDebugRenderer;
     private InputHandler inputHandler;
     private Viewport viewport;
-	private Vector2 cameraPosition;
+    private Vector2 cameraPosition;
 
     private long nanoTimeLastUpdate;
     private int velocityIterations, positionIterations;             //Values deciding the accuracy of velocity and position
@@ -35,7 +36,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
     @Override
     public void create () {
 	nanoTimeLastUpdate = System.nanoTime();
-		cameraPosition = new Vector2(0,0);
+	cameraPosition = new Vector2(0,0);
 	camera = new OrthographicCamera(windowView.x, windowView.y);
 	viewport = new FillViewport(16, 9, camera);
 	viewport.apply();
@@ -45,10 +46,10 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	aspectRatio = (float)Gdx.graphics.getHeight() / (float)Gdx.graphics.getWidth();
 	inputHandler = new InputHandler();
 	Gdx.input.setInputProcessor(inputHandler);
-		currentMap = MapLoader.getInstance().loadMap("world1.json");
+	currentMap = MapLoader.getInstance().loadMap("world1.json");
 	//Setting the worlds contactlistener
 	ContactListenerGame contactListenerGame = new ContactListenerGame();
-		currentMap.setContactListener(contactListenerGame);
+	currentMap.setContactListener(contactListenerGame);
 
 	velocityIterations = 6;  //Accuracy of jbox2d velocity simulation
 	positionIterations = 3;  //Accuracy of jbox2d position simulation
@@ -58,7 +59,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
     public void render () {
 	float deltaTime = System.nanoTime() - nanoTimeLastUpdate;
 	nanoTimeLastUpdate = System.nanoTime();
-		currentMap.stepWorld(1f/60f);
+	currentMap.stepWorld(1f/60f);
 	//currentMap.getWorld().step(deltaTime / NANOS_PER_SECOND, velocityIterations, positionIterations);
 
 	currentMap.removeStagedOBjects();
@@ -71,16 +72,16 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	batch.setProjectionMatrix(camera.combined);
 	batch.begin();
 
-		//Updating the updateobjects
-		for (Update obj : currentMap.getUpdateObjects()){
-			obj.update();
-		}
-		//Drawing the drawobjects
-		for (Draw obj : currentMap.getDrawObjects()){
-		    for(int layer = currentMap.getLayerCount(); layer >= 0; layer--) {
-			obj.draw(batch, layer);
-		    }
-		}
+	//Updating the updateobjects
+	for (Update obj : currentMap.getUpdateObjects()){
+	    obj.update();
+	}
+	//Drawing the drawobjects
+	for (Draw obj : currentMap.getDrawObjects()){
+	    for(int layer = currentMap.getLayerCount(); layer >= 0; layer--) {
+		obj.draw(batch, layer);
+	    }
+	}
 
 	if (DEBUGRENDERER){
 	    currentMap.debugDraw(camera);

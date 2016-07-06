@@ -224,6 +224,10 @@ public class Map
 
     public int getLayerCount() {return layerCount;}
 
+    /**
+     * Sets the drawLayerCount variable to the highest value found in the list, if any exceeds the one already in the map.
+     * @param rubeSprites A list of RubeSprite objects
+     */
     public void updateLayerDepth(Array<RubeSprite> rubeSprites){
         for (RubeSprite rubeSprite : rubeSprites){
             if (rubeSprite.getRubeImage().filter > layerCount){

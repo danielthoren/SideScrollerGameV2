@@ -194,9 +194,12 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      */
     @Override
     public void draw(SpriteBatch batch, int layer){
-        sprite.setPosition(body.getPosition().x - (sprite.getWidth()/2), body.getPosition().y - (sprite.getHeight()/2));
-        sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
-        sprite.draw(batch);
+        //TODO Fix so that player layer is loaded from file
+        if (layer == 0) {
+            sprite.setPosition(body.getPosition().x - (sprite.getWidth() / 2), body.getPosition().y - (sprite.getHeight() / 2));
+            sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
+            sprite.draw(batch);
+        }
     }
 
     /**
