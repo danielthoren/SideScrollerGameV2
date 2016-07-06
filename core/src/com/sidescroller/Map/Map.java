@@ -1,8 +1,13 @@
-package com.sidescroller.game;
+package com.sidescroller.Map;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
+import com.sidescroller.game.*;
+import com.sidescroller.objects.RubeSprite;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,7 +19,9 @@ import java.util.List;
  */
 public class Map
 {
-    private List<List<Draw>> drawObjects;
+    private Box2DDebugRenderer debugRenderer;
+
+    private List<Draw> drawObjects;
     private List<Update> updateObjects;
     private List<InputListener> inputListenerList;
     private List<CollisionListener> collisionListenerList;
@@ -25,15 +32,16 @@ public class Map
     private List<CollisionListener> collisionListenersStagedForRemoval;
     private List<Body> bodiesStagedForRemoval;
 
-    private List<List<Draw>> drawObjectsStagedForAddition;
+    private List<Draw> drawObjectsStagedForAddition;
     private List<Update> updateObjectsStagedForAddition;
     private List<InputListener> inputListenersStagedForAddition;
     private List<CollisionListener> collisionListenersStagedForAddition;
 
-    private long objectID;
+    private final int velocityIterations;
+    private final int positionIterations;
 
-    // TODO: 6/12/16 Load layer depth from file
-    private static final int layers = 3;
+    private long objectID;
+    private int layerCount;
 
     private World world;
 
@@ -41,10 +49,14 @@ public class Map
      * Creates an instance of 'Map' wich is a container for all of the world objects. It also contains an abstractionlayer
      * for removing and adding new objects to the world, preventing the program from crashing.
      */
-    public Map(Vector2 gravity, boolean doSleep) {
-        world = new World(gravity, doSleep);
+    public Map(World world, boolean doSleep, int velocityIterations, int positionIterations) {
+        this.world = world;
+        this.velocityIterations = velocityIterations;
+        this.positionIterations = positionIterations;
         objectID = 0;
-        drawObjects = new ArrayList<List<Draw>>(layers);
+        layerCount = 1;
+        debugRenderer = new Box2DDebugRenderer();
+        drawObjects = new ArrayList<Draw>(layerCount);
         updateObjects = new ArrayList<Update>(10);
         collisionListenerList = new ArrayList<CollisionListener>(10);
         inputListenerList = new ArrayList<InputListener>(10);
@@ -53,16 +65,10 @@ public class Map
         inputListenersStagedForRemoval = new ArrayList<InputListener>(2);
         collisionListenersStagedForRemoval = new ArrayList<CollisionListener>(2);
         bodiesStagedForRemoval = new ArrayList<Body>(2);
-        drawObjectsStagedForAddition = new ArrayList<List<Draw>>(layers);
+        drawObjectsStagedForAddition = new ArrayList<Draw>(layerCount);
         updateObjectsStagedForAddition = new ArrayList<Update>(2);
         inputListenersStagedForAddition = new ArrayList<InputListener>(2);
         collisionListenersStagedForAddition = new ArrayList<CollisionListener>(2);
-
-        for (int x = 0; x < layers; x++){
-            drawObjects.add(new ArrayList<Draw>(5));
-            drawObjectsStagedForAddition.add(new ArrayList<Draw>(2));
-        }
-
     }
 
     /**
@@ -82,25 +88,16 @@ public class Map
                 world.destroyBody(body);
             }
         }
-        //Removing all of the 'Draw' objects from each individual layer in the 'drawObjects' list
-        //Iterates through each object in each layer and looks it up in the corresponding layer in the
-        //'drawObjects' list, then removes that object.
-        for (int drawObjectRemove = 0; drawObjectRemove < drawObjectsStagedForRemoval.size(); drawObjectRemove++) {
 
-            Draw removeDrawObject = drawObjectsStagedForRemoval.get(drawObjectRemove);
-            boolean hasRemoved = false;
-            int currentLayer = 0;
-
-            while (!hasRemoved || !(currentLayer < drawObjects.size())) {
-                for (Iterator<Draw> iterator = drawObjects.get(currentLayer).iterator(); iterator.hasNext(); ) {
-                    Draw object = iterator.next();
-
-                    if (removeDrawObject.getId() == object.getId()) {
-                        iterator.remove();
-                        hasRemoved = true;
-                    }
+        //Removing all of the 'Draw' objects from the maps global list
+        for (Draw drawObjectRemove : drawObjectsStagedForRemoval){
+            for (Iterator<Draw> iterator = drawObjects.iterator(); iterator.hasNext();){
+                Draw object = iterator.next();
+                if (drawObjectRemove.getId() == object.getId()){
+                    iterator.remove();
                 }
             }
+
         }
 
         //Removing all of the 'Update' objects from the maps global list
@@ -144,13 +141,9 @@ public class Map
      * objects or during the world step then the program would crash.
      */
     public void addStagedObjects (){
-        //Adding all of the staged 'Draw' objects of each layer to each corresponding layer in the 'drawObjects' list.
-        for (int layer = 0; layer < drawObjectsStagedForAddition.size(); layer++){
-            int sizeOfLayer = drawObjectsStagedForAddition.get(layer).size();
-            for (int drawObjectNum = 0; drawObjectNum < sizeOfLayer; drawObjectNum++) {
-                Draw drawObject = drawObjectsStagedForAddition.get(layer).get(drawObjectNum);
-                drawObjects.get(layer).add(drawObject);
-            }
+        //Adding all of the staged 'Draw' objects to the maps global list
+        for (Draw object : drawObjectsStagedForAddition){
+            drawObjects.add(object);
         }
         //Adding all of the staged 'Update' objects to the maps global list
         for (Update object : updateObjectsStagedForAddition){
@@ -171,9 +164,36 @@ public class Map
         collisionListenersStagedForAddition.clear();
     }
 
+    /**
+     * Draws the outlinings of all of the worlds fixtures.
+     * @param camera The camera with wich matrix to draw.
+     */
+    public void debugDraw(Camera camera){
+        debugRenderer.render(world, camera.combined);
+    }
+
+    /**
+     * Sets the contactlistener of the world.
+     * @param contactListener The contactlistener.
+     */
+    public void setContactListener(ContactListener contactListener){
+        world.setContactListener(contactListener);
+    }
+
+    /**
+     * @return Returns a unique id.
+     */
     public long getObjectID() {
         objectID++;
         return objectID;
+    }
+
+    /**
+     * Steps the world, moving the simulation forward.
+     * @param timeParam The timeparameter to send to the world.
+     */
+    public void stepWorld(float timeParam){
+        world.step(timeParam, velocityIterations, positionIterations);
     }
 
     public void removeBody(Body body){bodiesStagedForRemoval.add(body);}
@@ -186,7 +206,7 @@ public class Map
 
     public void removeUpdateObject(Update object){updateObjectsStagedForRemoval.add(object);}
 
-    public void addDrawObject(Draw object, int layer) {drawObjectsStagedForAddition.get(layer).add(object);}
+    public void addDrawObject(Draw object) {drawObjectsStagedForAddition.add(object);}
 
     public void addUpdateObject(Update object) {updateObjectsStagedForAddition.add(object);}
 
@@ -194,15 +214,25 @@ public class Map
 
     public void addCollisionListener(CollisionListener object) { collisionListenersStagedForAddition.add(object);}
 
-    public List<Draw> getDrawLayer(int layer) {return drawObjects.get(layer);}
+    public List<Draw> getDrawObjects() {return drawObjects;}
 
     public List<Update> getUpdateObjects() {return updateObjects;}
 
-    public Iterable<InputListener> getInputListenerList() {return inputListenerList;}
+    public List<InputListener> getInputListenerList() {return inputListenerList;}
 
-    public Iterable<CollisionListener> getCollisionListenerList() {return collisionListenerList;}
+    public List<CollisionListener> getCollisionListenerList() {return collisionListenerList;}
 
-    public World getWorld() {return world;}
+    public int getLayerCount() {return layerCount;}
 
-    public static int getAmountOfLayers() {return layers;}
+    /**
+     * Sets the drawLayerCount variable to the highest value found in the list, if any exceeds the one already in the map.
+     * @param rubeSprites A list of RubeSprite objects
+     */
+    public void updateLayerDepth(Array<RubeSprite> rubeSprites){
+        for (RubeSprite rubeSprite : rubeSprites){
+            if (rubeSprite.getRubeImage().filter > layerCount){
+                layerCount = rubeSprite.getRubeImage().filter;
+            }
+        }
+    }
 }
