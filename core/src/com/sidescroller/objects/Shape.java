@@ -9,65 +9,63 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.game.BodyEditorLoader;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.GameObject;
 import com.sidescroller.game.SideScrollerGameV2;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by daniel on 2016-06-06.
  */
 public class Shape implements Draw {
 
-    private Sprite sprite;
+    private Array<RubeSprite> rubeSprites;
     private Body body;
     private final long iD;
-    private final Vector2 spriteOrigin;
 
-    public Shape(long iD, String nameOfBodyInJson, World world, Vector2 position, boolean isStatic, String pathToJSON, float friction, float bodyWidth)throws NullPointerException {
+    public Shape(long iD, Body body, Array<RubeSprite> rubeSprites) {
         this.iD = iD;
-        BodyEditorLoader bodyEditorLoader = new BodyEditorLoader(Gdx.files.internal(pathToJSON));
-        spriteOrigin = bodyEditorLoader.getOrigin(nameOfBodyInJson, bodyWidth);
-
-        String pathToImage = bodyEditorLoader.getImagePath(nameOfBodyInJson);
-        Texture texture = new Texture(Gdx.files.internal(pathToImage));
-        sprite = new Sprite(texture);
-        //Sizing the sprite so that it fits on the body.
-        sprite.setSize(bodyWidth, bodyWidth * ((float)texture.getHeight() / (float)texture.getWidth()));
-        sprite.setOrigin(0,0);
-
-        createBody(bodyEditorLoader, position, friction, world, bodyWidth, nameOfBodyInJson, isStatic);
-
+        this.rubeSprites = rubeSprites;
         body.setUserData(this);
+        this.body = body;
     }
 
-    private void createBody(BodyEditorLoader bodyEditorLoader, Vector2 position, float friction, World world, float bodyWidth, String nameOfBdyInJson, boolean isStatic){
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(position);
-        if (isStatic) {
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-        }
-        else{
-            bodyDef.type = BodyDef.BodyType.DynamicBody;
-        }
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.friction = friction;
-
-        body = world.createBody(bodyDef);
-
-        bodyEditorLoader.attachFixture(body, nameOfBdyInJson, fixtureDef, bodyWidth);
+    public Shape(long iD, Body body) {
+        this.iD = iD;
+        rubeSprites = null;
+        body.setUserData(this);
+        this.body = body;
     }
 
     /**
      * The function that draws the object every frame
      * @param batch The SpriteBatch with wich to draw
      */
-    public void draw(SpriteBatch batch){
-        sprite.setPosition(body.getPosition().x, body.getPosition().y);
-        sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
-        sprite.draw(batch);
+    public void draw(SpriteBatch batch, int layer){
+        if (rubeSprites != null) {
+            for (RubeSprite rubeSprite : rubeSprites) {
+                Sprite sprite = rubeSprite.getSprite();
+                RubeImage rubeImage = rubeSprite.getRubeImage();
+                //If the current RubeSprite is on the layer that is being drawn then draw it
+                if (rubeImage.filter == layer) {
+                    //rubeImage.center is <></>he variable given by the RUBE enviroment. This does not completely work with
+                    //openGL since images in openGL is drawn with their bottom left corner as center.
+                    sprite.setPosition(body.getPosition().x + rubeImage.center.x - (rubeImage.width / 2),
+                                       body.getPosition().y + rubeImage.center.y - (rubeImage.height / 2));
+                    if (rubeImage.flip) {
+                        sprite.flip(true, false);
+                    }
+                    sprite.draw(batch);
+                }
+            }
+        }
     }
+
     public long getId(){return iD;}
 
     /**

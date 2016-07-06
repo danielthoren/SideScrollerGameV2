@@ -83,7 +83,7 @@ public class Circle implements Draw
 		body.setUserData(this);
     }
 
-    public void draw(SpriteBatch batch){
+    public void draw(SpriteBatch batch, int layer){
 	sprite.setPosition(body.getPosition().x - radious, body.getPosition().y - radious);
 	sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
 	sprite.draw(batch);
