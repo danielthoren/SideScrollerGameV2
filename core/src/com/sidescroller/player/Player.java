@@ -8,6 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.sidescroller.game.*;
 
+import java.util.Arrays;
+import java.util.Properties;
+
 public class Player implements Draw, Update, InputListener, CollisionListener {
 
     private Body body;
@@ -27,8 +30,18 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private static final float GROUNDED_THRESHOLD = 0.01f;
     private static final int GROUNDED_RESET_THRESHOLD = 50;
 
+
+    //Jumping
     private static final int DEFAULT_NUMBER_OF_JUMPS = 2;
     private int numberOfJumpsLeft;
+
+
+    //Inventory
+    private InventoryItem currentItem;
+    private Inventory inventory;
+
+    //Loading properties
+    Properties prop = new Properties();
 
     public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
         this.iD = iD;
@@ -51,6 +64,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, 0.1f);
         body.setUserData(this);
         numberOfJumpsLeft = DEFAULT_NUMBER_OF_JUMPS;
+        inventory = new Inventory(10, 100);
+        currentItem = inventory.getDefaultItem();
     }
 
     /**
@@ -168,13 +183,13 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          body.setUserData(this);
          body.setActive(true);
          body.setSleepingAllowed(false);
+
      }
 
     /**
      * The function that updates the object every frame
      */
     public void update() {
-
         runHandler();
         //Ensures that the sensor value is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
         if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !isGrounded){
@@ -283,6 +298,16 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         else if (keycode == Input.Keys.UP){
             jump();
         }
+        else if (keycode == Input.Keys.P){
+            System.out.println(currentItem);
+        }
+        else if(keycode == Input.Keys.I){
+            System.out.println(Arrays.toString(inventory.getItems()));
+        }
+        else if(keycode == Input.Keys.O){
+            createDummyItem();
+        }
+
     }
 
     /** Called when a key was released
@@ -368,7 +393,34 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             body.applyLinearImpulse(impulse, body.getLocalCenter(), true);
             numberOfJumpsLeft -= 1;
         }
+    }
 
+
+    private void equipItem(int itemId){
+        currentItem = inventory.getItem(itemId);
+    }
+
+
+    private void createDummyItem(){
+        InventoryItem dummyItem = new TestItem(2,2,"test item");
+        inventory.addToInventory(dummyItem);
+
+    }
+
+    /**
+     * Toggles the current item equipped to the next item in the inventory.
+     * This should not be used in final version!
+     */
+    private  void toggleItems(){
+        int currentItemID = inventory.getItemID(currentItem);
+
+
+        //Switches to the first item in the inventory whe the last one is equipped.
+        if (currentItemID == inventory.getItems().length - 1){
+            currentItem = inventory.getItem(0);
+        } else{
+            currentItem = inventory.getItem(currentItemID + 1);
+        }
     }
 
 
