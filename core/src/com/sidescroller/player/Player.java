@@ -35,7 +35,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private static final int DEFAULT_NUMBER_OF_JUMPS = 2;
     private int numberOfJumpsLeft;
 
-
     //Inventory
     private InventoryItem currentItem;
     private Inventory inventory;
