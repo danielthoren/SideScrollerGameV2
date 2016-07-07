@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
@@ -26,10 +28,15 @@ public class MapLoader {
     private static MapLoader instance = new MapLoader();
     private RubeSceneLoader loader;
     private HashMap<String, Map> loadedMaps;
+	private JsonReader jsonReader;
+	private JsonWriter jsonWriter;
 
+	//TODO fix converter that fixes image paths
     private MapLoader() {
         loadedMaps = new HashMap<String, Map>(1);
         loader = new RubeSceneLoader();
+		jsonReader = new JsonReader();
+		//jsonWriter = new JsonWriter()
     }
 
     public static MapLoader getInstance(){return instance;}
@@ -44,6 +51,7 @@ public class MapLoader {
             int p = 0;
             for (int x = 0; x < scene.getBodies().size; x++){
                 Body body = scene.getBodies().get(x);
+				System.out.println(scene.getCustom(body, "type", "no type"));
                 Array<RubeImage> rubeImages = scene.getMappedImage(body);
                 //Creating the arrays for the hashmap and adding images to the map if there are images
                 Shape shape;
@@ -74,6 +82,10 @@ public class MapLoader {
         }
         return loadedMaps.get(mapPath);
     }
+
+	private void jsonConverter(String mapPath){
+
+	}
 
 
 }
