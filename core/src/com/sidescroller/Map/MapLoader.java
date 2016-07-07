@@ -6,12 +6,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.Json;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
-import com.sidescroller.game.SideScrollerGameV2;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
 import com.sidescroller.player.Player;
@@ -28,15 +26,13 @@ public class MapLoader {
     private static MapLoader instance = new MapLoader();
     private RubeSceneLoader loader;
     private HashMap<String, Map> loadedMaps;
-	private JsonReader jsonReader;
-	private JsonWriter jsonWriter;
+	private Json json;
 
 	//TODO fix converter that fixes image paths
     private MapLoader() {
         loadedMaps = new HashMap<String, Map>(1);
         loader = new RubeSceneLoader();
-		jsonReader = new JsonReader();
-		//jsonWriter = new JsonWriter()
+		json = new Json();
     }
 
     public static MapLoader getInstance(){return instance;}
@@ -44,6 +40,11 @@ public class MapLoader {
     public Map loadMap(String mapPath){
         if (!loadedMaps.containsKey(mapPath)){
             RubeScene scene = loader.loadScene(Gdx.files.internal(mapPath));
+
+			//removes the '../' in each image filepath that the editor generates
+			for (RubeImage rubeImage : scene.getImages()){
+				rubeImage.file = rubeImage.file.substring(3);
+			}
 
             Map map = new Map(scene.getWorld(), true, scene.velocityIterations, scene.positionIterations);
 
@@ -81,10 +82,4 @@ public class MapLoader {
         }
         return loadedMaps.get(mapPath);
     }
-
-	private void jsonConverter(String mapPath){
-
-	}
-
-
 }
