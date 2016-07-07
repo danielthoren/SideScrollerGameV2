@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
@@ -27,10 +29,15 @@ public class MapLoader {
     private static MapLoader instance = new MapLoader();
     private RubeSceneLoader loader;
     private HashMap<String, Map> loadedMaps;
+	private JsonReader jsonReader;
+	private JsonWriter jsonWriter;
 
+	//TODO fix converter that fixes image paths
     private MapLoader() {
         loadedMaps = new HashMap<String, Map>(1);
         loader = new RubeSceneLoader();
+		jsonReader = new JsonReader();
+		//jsonWriter = new JsonWriter()
     }
 
     public static MapLoader getInstance(){return instance;}
@@ -63,6 +70,8 @@ public class MapLoader {
                 }
             }
 
+			//adding a player at specific position
+			//@TODO Load playerinformation from file
             Player player = new Player(map.getObjectID(), scene.getWorld(), new Vector2(2f, 2f), new Texture(Gdx.files.internal("body.png")), 1f, 1f, 0.1f, 0.2f);
             map.addInputListener(player);
             map.addUpdateObject(player);
@@ -73,6 +82,10 @@ public class MapLoader {
         }
         return loadedMaps.get(mapPath);
     }
+
+	private void jsonConverter(String mapPath){
+
+	}
 
 
 }
