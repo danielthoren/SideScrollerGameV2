@@ -43,6 +43,11 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     //Loading properties
     Properties prop = new Properties();
 
+    //Player health
+    private int maxHealth;
+    private int currentHealth;
+    private boolean isPlayerAlive;
+
     public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
         this.iD = iD;
         direction = Direction.RIGHT;
@@ -66,6 +71,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         numberOfJumpsLeft = DEFAULT_NUMBER_OF_JUMPS;
         inventory = new Inventory(10, 100);
         currentItem = inventory.getDefaultItem();
+        maxHealth = 100;
+        currentHealth = maxHealth;
     }
 
     /**
@@ -190,6 +197,9 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * The function that updates the object every frame
      */
     public void update() {
+        //Sets isPlayerAlive to true as long as the player has any health left.
+        isPlayerAlive = currentHealth != 0;
+
         runHandler();
         //Ensures that the sensor value is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
         if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !isGrounded){
@@ -308,6 +318,14 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         else if(keycode == Input.Keys.O){
             createDummyItem();
         }
+        else if(keycode == Input.Keys.Q){
+            dropItem(inventory.getItemID(currentItem));
+        }
+        else if(keycode == Input.Keys.T){
+            toggleItem();
+        }
+
+
 
     }
 
@@ -396,12 +414,36 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         }
     }
 
-
-    private void equipItem(int itemId){
-        currentItem = inventory.getItem(itemId);
+    /**
+     * Equips the item from the inventory with the given ID.
+     * @param itemID The ID of the item in the inventory.
+     */
+    private void equipItem(int itemID){
+            currentItem = inventory.getItem(itemID);
     }
 
+    private void toggleItem(){
+        //Gives the ID of the item currently equipped
+        int currentItemID = inventory.getItemID(currentItem);
 
+        currentItem = inventory.getNextItem(currentItemID);
+        System.out.println(currentItem);
+    }
+
+    private void dropItem(int itemIndex){
+        try{
+            System.out.println("dropping item: " + inventory.getItem(itemIndex));
+            inventory.removeItemFromInventory(itemIndex);
+            currentItem = inventory.getDefaultItem();
+        }
+        catch (ItemNotDroppableException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Creates an item to be used for testing
+     */
     private void createDummyItem(){
 
         InventoryItem dummyItem = new TestItem(2,2,"test item");
@@ -411,7 +453,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         } catch (InventoryFullException e){
             e.printStackTrace();
         }
-
     }
 
 
