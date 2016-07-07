@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.SideScrollerGameV2;
 
@@ -13,17 +14,15 @@ import java.util.Hashtable;
 /**
  * Inventory class
  */
-public class Inventory implements Draw {
+public class Inventory {
 
     private int size;
     private int maxWeight;
     private InventoryItem[] items;
     private InventoryItem defaultItem;
 	private Sprite inventorySprite;
-	private final long iD;
 
-    public Inventory(long iD, int size, int maxWeight) {
-		this.iD = iD;
+    public Inventory(int size, int maxWeight) {
         this.size = size;
         this.maxWeight = maxWeight;
 		//Creates a sprite to draw and adds this object to the drawobjects of the map
@@ -122,13 +121,12 @@ public class Inventory implements Draw {
     }
 
 	/**
-	 * The function that draws the object every frame
-	 * @param batch The SpriteBatch with wich to draw
-	 * @param layer The draw layer that is supposed to be drawn
+	 * If inventory is supposed to be shown then the player must call on this function to draw the inventory.
+	 * @param batch The batch in wich to draw
 	 */
-	public void draw(SpriteBatch batch, int layer){
-		inventorySprite.setPosition(0,0);
-		inventorySprite.setSize(2,2);
+	public void draw(SpriteBatch batch, Vector2 position){
+		inventorySprite.setPosition(position.x, position.y);
+		inventorySprite.setSize(0.5f, 0.5f);
 		inventorySprite.draw(batch);
 	}
 
@@ -162,12 +160,4 @@ public class Inventory implements Draw {
                 "items=" + Arrays.toString(items) +
                 '}';
     }
-
-	/**
-	 * returns the individual iD for the specific object.
-	 * @return int iD
-	 */
-	public long getId(){
-		return iD;
-	}
 }

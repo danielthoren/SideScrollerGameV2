@@ -63,9 +63,7 @@ public class MapLoader {
                 }
             }
 
-			Inventory inventory = new Inventory(map.getObjectID(), 10, 10);
-			map.addDrawObject(inventory);
-            Player player = new Player(map.getObjectID(), scene.getWorld(), new Vector2(2f, 2f), new Texture(Gdx.files.internal("body.png")), 1f, 1f, 0.1f, 0.2f, inventory);
+            Player player = new Player(map.getObjectID(), scene.getWorld(), new Vector2(2f, 2f), new Texture(Gdx.files.internal("body.png")), 1f, 1f, 0.1f, 0.2f);
             map.addInputListener(player);
             map.addUpdateObject(player);
             map.addDrawObject(player);

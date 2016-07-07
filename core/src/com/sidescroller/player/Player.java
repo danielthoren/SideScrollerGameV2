@@ -48,14 +48,14 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private int currentHealth;
     private boolean isPlayerAlive;
 
-    public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth, Inventory inventory) {
+    public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
         this.iD = iD;
-		this.inventory = inventory;
         direction = Direction.RIGHT;
         maxVelocity = DEFAULT_MAX_VELOCITY;
         acceleration = new Vector2(30f, 50f);
         deceleration = new Vector2(100f, 0f);
         groundResetTimer = -1;
+		inventory = new Inventory(10, 10);
         isBottomSensor = false;
         isLeftSensor = false;
         isRightSensor = false;
@@ -220,10 +220,12 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     @Override
     public void draw(SpriteBatch batch, int layer){
         //TODO Fix so that player layer is loaded from file
-        if (layer == 0) {
+        if (true) {
             sprite.setPosition(body.getPosition().x - (sprite.getWidth() / 2), body.getPosition().y - (sprite.getHeight() / 2));
             sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
             sprite.draw(batch);
+
+			inventory.draw(batch, body.getPosition());
         }
     }
 
