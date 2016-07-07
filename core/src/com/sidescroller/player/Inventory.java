@@ -101,8 +101,8 @@ public class Inventory {
         }
 
         for (int i = 0; i < itemID; i++) {
-            if (items[itemID] != null && !items[itemID].equals(items[i])){
-                return items[itemID];
+            if (items[i] != null && !items[itemID].equals(items[i])){
+                return items[i];
             }
         }
 
