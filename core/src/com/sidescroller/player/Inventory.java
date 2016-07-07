@@ -1,22 +1,33 @@
 package com.sidescroller.player;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sidescroller.game.Draw;
+import com.sidescroller.game.SideScrollerGameV2;
+
 import java.util.Arrays;
 import java.util.Hashtable;
 
 /**
  * Inventory class
  */
-public class Inventory {
+public class Inventory implements Draw {
 
     private int size;
     private int maxWeight;
     private InventoryItem[] items;
     private InventoryItem defaultItem;
+	private Sprite inventorySprite;
+	private final long iD;
 
-
-    public Inventory(int size, int maxWeight) {
+    public Inventory(long iD, int size, int maxWeight) {
+		this.iD = iD;
         this.size = size;
         this.maxWeight = maxWeight;
+		//Creates a sprite to draw and adds this object to the drawobjects of the map
+		inventorySprite = new Sprite(new Texture(Gdx.files.internal("inventory.jpg")));
         items = new InventoryItem[size];
         //Creates a default item for the player to use
         createDefaultItem();
@@ -110,6 +121,17 @@ public class Inventory {
         return items[0];
     }
 
+	/**
+	 * The function that draws the object every frame
+	 * @param batch The SpriteBatch with wich to draw
+	 * @param layer The draw layer that is supposed to be drawn
+	 */
+	public void draw(SpriteBatch batch, int layer){
+		inventorySprite.setPosition(0,0);
+		inventorySprite.setSize(2,2);
+		inventorySprite.draw(batch);
+	}
+
     /**
      * Returns how many slots are used in the inventory. This needs to be rewritten since
      * it doesn't take the size or weight of the items into consideration.
@@ -140,4 +162,12 @@ public class Inventory {
                 "items=" + Arrays.toString(items) +
                 '}';
     }
+
+	/**
+	 * returns the individual iD for the specific object.
+	 * @return int iD
+	 */
+	public long getId(){
+		return iD;
+	}
 }

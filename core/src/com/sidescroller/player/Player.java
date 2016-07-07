@@ -48,8 +48,9 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private int currentHealth;
     private boolean isPlayerAlive;
 
-    public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
+    public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth, Inventory inventory) {
         this.iD = iD;
+		this.inventory = inventory;
         direction = Direction.RIGHT;
         maxVelocity = DEFAULT_MAX_VELOCITY;
         acceleration = new Vector2(30f, 50f);
@@ -69,7 +70,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, 0.1f);
         body.setUserData(this);
         numberOfJumpsLeft = DEFAULT_NUMBER_OF_JUMPS;
-        inventory = new Inventory(10, 100);
         currentItem = inventory.getDefaultItem();
         maxHealth = 100;
         currentHealth = maxHealth;

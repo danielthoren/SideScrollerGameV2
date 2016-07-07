@@ -12,6 +12,7 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.R
 import com.sidescroller.game.SideScrollerGameV2;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
+import com.sidescroller.player.Inventory;
 import com.sidescroller.player.Player;
 
 import java.util.ArrayList;
@@ -62,7 +63,9 @@ public class MapLoader {
                 }
             }
 
-            Player player = new Player(map.getObjectID(), scene.getWorld(), new Vector2(2f, 2f), new Texture(Gdx.files.internal("body.png")), 1f, 1f, 0.1f, 0.2f);
+			Inventory inventory = new Inventory(map.getObjectID(), 10, 10);
+			map.addDrawObject(inventory);
+            Player player = new Player(map.getObjectID(), scene.getWorld(), new Vector2(2f, 2f), new Texture(Gdx.files.internal("body.png")), 1f, 1f, 0.1f, 0.2f, inventory);
             map.addInputListener(player);
             map.addUpdateObject(player);
             map.addDrawObject(player);
