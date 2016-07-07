@@ -51,7 +51,6 @@ public class MapLoader {
             int p = 0;
             for (int x = 0; x < scene.getBodies().size; x++){
                 Body body = scene.getBodies().get(x);
-				System.out.println(scene.getCustom(body, "type", "no type"));
                 Array<RubeImage> rubeImages = scene.getMappedImage(body);
                 //Creating the arrays for the hashmap and adding images to the map if there are images
                 Shape shape;

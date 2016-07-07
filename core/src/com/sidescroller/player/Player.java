@@ -176,7 +176,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public void update() {
         runHandler();
 
-        //Ensures that the sensorvalue is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
+        //Ensures that the sensor value is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
         if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !isGrounded){
             if (groundResetTimer == -1){groundResetTimer = System.currentTimeMillis();}
             else if (System.currentTimeMillis() - groundResetTimer >= GROUNDED_RESET_THRESHOLD){
@@ -203,10 +203,10 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
     /**
-     * Handles the collisionchecks of the player. If a sensor collides with something then set the specific sensor
-     * collision statis to either true or false. This is used to determine if the player can jump or not (the bottomsensor
+     * Handles the collision checks of the player. If a sensor collides with something then set the specific sensor
+     * collision statis to either true or false. This is used to determine if the player can jump or not (the bottom sensor
      * must collide with something) among other things.
-     * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
+     * @param contact A object containing the two bodies and fixtures that made contact. It also contains collision data
      */
     public void beginContact(Contact contact){
         boolean playerContact = false;

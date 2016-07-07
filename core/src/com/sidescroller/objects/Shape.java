@@ -49,14 +49,16 @@ public class Shape implements Draw {
     public void draw(SpriteBatch batch, int layer){
         if (rubeSprites != null) {
             for (RubeSprite rubeSprite : rubeSprites) {
-                Sprite sprite = rubeSprite.getSprite();
-                RubeImage rubeImage = rubeSprite.getRubeImage();
                 //If the current RubeSprite is on the layer that is being drawn then draw it
-                if (rubeImage.filter == layer) {
+                if (rubeSprite.getRubeImage().renderOrder == layer) {
+					Sprite sprite = rubeSprite.getSprite();
+					RubeImage rubeImage = rubeSprite.getRubeImage();
                     //rubeImage.center is <></>he variable given by the RUBE enviroment. This does not completely work with
                     //openGL since images in openGL is drawn with their bottom left corner as center.
                     sprite.setPosition(body.getPosition().x + rubeImage.center.x - (rubeImage.width / 2),
                                        body.getPosition().y + rubeImage.center.y - (rubeImage.height / 2));
+					sprite.setOrigin(rubeImage.width/2 - rubeImage.center.x, rubeImage.height/2 - rubeImage.center.y);
+					sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
                     if (rubeImage.flip) {
                         sprite.flip(true, false);
                     }

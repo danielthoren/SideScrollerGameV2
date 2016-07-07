@@ -230,8 +230,8 @@ public class Map
      */
     public void updateLayerDepth(Array<RubeSprite> rubeSprites){
         for (RubeSprite rubeSprite : rubeSprites){
-            if (rubeSprite.getRubeImage().filter > layerCount){
-                layerCount = rubeSprite.getRubeImage().filter;
+            if (rubeSprite.getRubeImage().renderOrder > layerCount){
+                layerCount = rubeSprite.getRubeImage().renderOrder;
             }
         }
     }
