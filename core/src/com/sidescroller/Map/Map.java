@@ -1,6 +1,7 @@
 package com.sidescroller.Map;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
@@ -20,6 +21,7 @@ import java.util.List;
 public class Map
 {
     private Box2DDebugRenderer debugRenderer;
+    private ActionManager actionManager;
 
     private List<Draw> drawObjects;
     private List<Update> updateObjects;
@@ -56,6 +58,7 @@ public class Map
         objectID = 0;
         layerCount = 1;
         debugRenderer = new Box2DDebugRenderer();
+        actionManager = new ActionManager();
         drawObjects = new ArrayList<Draw>(layerCount);
         updateObjects = new ArrayList<Update>(10);
         collisionListenerList = new ArrayList<CollisionListener>(10);
@@ -83,8 +86,8 @@ public class Map
         List<Long> bodyIDRemoved = new ArrayList<Long>();
         //Destroying all of the bodies that are staged for removal
         for (Body body : bodiesStagedForRemoval){
-            if (!bodyIDRemoved.contains(((GameObject)body.getUserData()).getId())) {
-                bodyIDRemoved.add(((GameObject)body.getUserData()).getId());
+            if (!bodyIDRemoved.contains(((GameObject)body.getUserData()).getiD())) {
+                bodyIDRemoved.add(((GameObject)body.getUserData()).getiD());
                 world.destroyBody(body);
             }
         }
@@ -93,7 +96,7 @@ public class Map
         for (Draw drawObjectRemove : drawObjectsStagedForRemoval){
             for (Iterator<Draw> iterator = drawObjects.iterator(); iterator.hasNext();){
                 Draw object = iterator.next();
-                if (drawObjectRemove.getId() == object.getId()){
+                if (drawObjectRemove.getiD() == object.getiD()){
                     iterator.remove();
                 }
             }
@@ -104,7 +107,7 @@ public class Map
         for (Update objectRemove : updateObjectsStagedForRemoval){
             for (Iterator<Update> iterator = updateObjects.iterator(); iterator.hasNext();){
                 Update object = iterator.next();
-                if (objectRemove.getId() == object.getId()){
+                if (objectRemove.getiD() == object.getiD()){
                     iterator.remove();
                 }
             }
@@ -113,7 +116,7 @@ public class Map
         for (InputListener listenerRemova : inputListenersStagedForRemoval){
             for (Iterator<InputListener> iterator = inputListenerList.iterator(); iterator.hasNext();) {
                 InputListener inputListener = iterator.next();
-                if (inputListener.getId() == listenerRemova.getId()){
+                if (inputListener.getiD() == listenerRemova.getiD()){
                     iterator.remove();
                 }
             }
@@ -122,7 +125,7 @@ public class Map
         for (CollisionListener collisionListenerRemove : collisionListenersStagedForRemoval){
             for (Iterator<CollisionListener> iterator = collisionListenerList.iterator(); iterator.hasNext();){
                 CollisionListener collisionListener = iterator.next();
-                if (collisionListener.getId() == collisionListenerRemove.getId()) {
+                if (collisionListener.getiD() == collisionListenerRemove.getiD()) {
                     iterator.remove();
                 }
             }
@@ -163,6 +166,24 @@ public class Map
         inputListenersStagedForAddition.clear();
         collisionListenersStagedForAddition.clear();
     }
+
+    public void update(){
+        //Updating all of the objects
+        for (Update updateObj : updateObjects){
+            updateObj.update();
+        }
+        actionManager.update();
+    }
+
+    public void draw(SpriteBatch batch){
+        //Drawing the drawobjects
+        for (int layer = layerCount; layer >= 0; layer--) {
+            for (Draw obj : drawObjects) {
+                obj.draw(batch, layer);
+            }
+        }
+    }
+
 
     /**
      * Draws the outlinings of all of the worlds fixtures.
@@ -223,6 +244,8 @@ public class Map
     public List<CollisionListener> getCollisionListenerList() {return collisionListenerList;}
 
     public int getLayerCount() {return layerCount;}
+
+    public ActionManager getActionManager(){return actionManager;}
 
     /**
      * Sets the drawLayerCount variable to the highest value found in the list, if any exceeds the one already in the map.

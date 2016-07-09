@@ -41,10 +41,10 @@ public class MapLoader {
         if (!loadedMaps.containsKey(mapPath)){
             RubeScene scene = loader.loadScene(Gdx.files.internal(mapPath));
 
-			//removes the '../' in each image filepath that the editor generates
-			for (RubeImage rubeImage : scene.getImages()){
-				rubeImage.file = rubeImage.file.substring(3);
-			}
+            //removes the '../' in each image filepath that the editor generates
+            for (RubeImage rubeImage : scene.getImages()){
+                rubeImage.file = rubeImage.file.substring(3);
+            }
 
             Map map = new Map(scene.getWorld(), true, scene.velocityIterations, scene.positionIterations);
 
@@ -70,9 +70,9 @@ public class MapLoader {
                 }
             }
 
-			//adding a player at specific position
-			//@TODO Load playerinformation from file
-            Player player = new Player(map.getObjectID(), scene.getWorld(), new Vector2(2f, 2f), new Texture(Gdx.files.internal("body.png")), 1f, 1f, 0.1f, 0.2f);
+            //adding a player at specific position
+            //@TODO Load playerinformation from file
+            Player player = new Player(map.getObjectID(), scene.getWorld(), new Vector2(2f, 2f), new Texture(Gdx.files.internal("body.png")), 1f, 1f, 0.01f, 0.2f);
             map.addInputListener(player);
             map.addUpdateObject(player);
             map.addDrawObject(player);
