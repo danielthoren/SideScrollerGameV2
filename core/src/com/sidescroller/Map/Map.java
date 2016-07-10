@@ -58,7 +58,6 @@ public class Map
         objectID = 0;
         layerCount = 1;
         debugRenderer = new Box2DDebugRenderer();
-        actionManager = new ActionManager();
         drawObjects = new ArrayList<Draw>(layerCount);
         updateObjects = new ArrayList<Update>(10);
         collisionListenerList = new ArrayList<CollisionListener>(10);
@@ -72,6 +71,7 @@ public class Map
         updateObjectsStagedForAddition = new ArrayList<Update>(2);
         inputListenersStagedForAddition = new ArrayList<InputListener>(2);
         collisionListenersStagedForAddition = new ArrayList<CollisionListener>(2);
+		actionManager = new ActionManager();
     }
 
     /**
@@ -86,8 +86,8 @@ public class Map
         List<Long> bodyIDRemoved = new ArrayList<Long>();
         //Destroying all of the bodies that are staged for removal
         for (Body body : bodiesStagedForRemoval){
-            if (!bodyIDRemoved.contains(((GameObject)body.getUserData()).getiD())) {
-                bodyIDRemoved.add(((GameObject)body.getUserData()).getiD());
+            if (!bodyIDRemoved.contains(((GameObject)body.getUserData()).getID())) {
+                bodyIDRemoved.add(((GameObject)body.getUserData()).getID());
                 world.destroyBody(body);
             }
         }
@@ -96,7 +96,7 @@ public class Map
         for (Draw drawObjectRemove : drawObjectsStagedForRemoval){
             for (Iterator<Draw> iterator = drawObjects.iterator(); iterator.hasNext();){
                 Draw object = iterator.next();
-                if (drawObjectRemove.getiD() == object.getiD()){
+                if (drawObjectRemove.getID() == object.getID()){
                     iterator.remove();
                 }
             }
@@ -107,7 +107,7 @@ public class Map
         for (Update objectRemove : updateObjectsStagedForRemoval){
             for (Iterator<Update> iterator = updateObjects.iterator(); iterator.hasNext();){
                 Update object = iterator.next();
-                if (objectRemove.getiD() == object.getiD()){
+                if (objectRemove.getID() == object.getID()){
                     iterator.remove();
                 }
             }
@@ -116,7 +116,7 @@ public class Map
         for (InputListener listenerRemova : inputListenersStagedForRemoval){
             for (Iterator<InputListener> iterator = inputListenerList.iterator(); iterator.hasNext();) {
                 InputListener inputListener = iterator.next();
-                if (inputListener.getiD() == listenerRemova.getiD()){
+                if (inputListener.getID() == listenerRemova.getID()){
                     iterator.remove();
                 }
             }
@@ -125,7 +125,7 @@ public class Map
         for (CollisionListener collisionListenerRemove : collisionListenersStagedForRemoval){
             for (Iterator<CollisionListener> iterator = collisionListenerList.iterator(); iterator.hasNext();){
                 CollisionListener collisionListener = iterator.next();
-                if (collisionListener.getiD() == collisionListenerRemove.getiD()) {
+                if (collisionListener.getID() == collisionListenerRemove.getID()) {
                     iterator.remove();
                 }
             }

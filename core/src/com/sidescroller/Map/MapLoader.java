@@ -71,25 +71,33 @@ public class MapLoader {
                 }
 
                 //Checking for the type variable in custom and creating object accordingly
-                String type;
-                try {
-                    type = (String) scene.getCustom(body, "type");
-                }
-                catch (ClassCastException e){
-                    type = "";
-                }
+                String type = (String) scene.getCustom(body, "type");
 
-                if (type.toLowerCase().equals("spawnaction")){
-                    SpawnAction spawnAction = new SpawnAction(shape);
-                    map.getActionManager().addAction(spawnAction);
+				if (type == null){
+					map.addDrawObject(shape);
+				}
+                else if (type.toLowerCase().equals("spawnaction")){
+					try {
+						int actionID = (Integer) scene.getCustom(body, "id");
+						SpawnAction spawnAction = new SpawnAction(actionID, shape);
+						map.getActionManager().addAction(spawnAction);
+					}
+					catch (ClassCastException e){
+						System.out.println("Error corrected. ClassCastException when getting custom property 'id'");
+						map.addDrawObject(shape);
+					}
                 }
                 else if (type.toLowerCase().equals("buttontrigger")){
-                    ButtonTrigger buttonTrigger = new ButtonTrigger(shape);
-                    map.getActionManager().addTrigger(buttonTrigger);
-                    map.addDrawObject(shape);
-                }
-                else{
-                    map.addDrawObject(shape);
+					try {
+						int targetActionID = (Integer) scene.getCustom(body, "id");
+						ButtonTrigger buttonTrigger = new ButtonTrigger(targetActionID, shape);
+						map.getActionManager().addTrigger(buttonTrigger);
+						map.addDrawObject(shape);
+					}
+					catch (ClassCastException e){
+						System.out.println("Error corrected. ClassCastException when getting custom property 'id'");
+						map.addDrawObject(shape);
+					}
                 }
             }
 

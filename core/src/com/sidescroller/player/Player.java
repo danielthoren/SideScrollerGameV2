@@ -30,7 +30,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private boolean isRunning, isGrounded, isCollisionLeft, isCollisionRight;
 
     //Default values
-    private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(5f, 20f);
+    private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(1f, 5f);
     private static final float GROUNDED_THRESHOLD = 0.01f;
     private static final int GROUNDED_RESET_THRESHOLD = 50;
 
@@ -39,7 +39,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         collidingBodies = new ArrayList<Body>(1);
         direction = Direction.RIGHT;
         maxVelocity = DEFAULT_MAX_VELOCITY;
-        acceleration = new Vector2(30f, 50f);
+        acceleration = new Vector2(10f, 20f);
         deceleration = new Vector2(100f, 0f);
         groundResetTimer = -1;
         isBottomSensor = false;
@@ -214,7 +214,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collision data
      */
     public void beginContact(Contact contact){
-        boolean playerContact = false;
+		boolean playerContact = false;
         Body otherBody = body;
         if (contact.getFixtureA().getBody().getUserData().equals(this)){
             otherBody = contact.getFixtureB().getBody();
@@ -399,7 +399,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
 
-    public long getiD(){return iD;}
+    public long getID(){return iD;}
 
     public TypeOfGameObject getTypeOfGameObject(){return typeOfGameObject;}
 
@@ -413,7 +413,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public boolean equals(Object obj) {
         try{
             GameObject gameObject = (GameObject) obj;
-            return gameObject.getiD() == this.getiD();
+            return gameObject.getID() == this.getID();
         }
         catch (Exception e){
             return false;

@@ -8,16 +8,16 @@ import java.util.ArrayList;
 
 public abstract class Trigger implements GameObject
 {
-    private long iD;
-    private ArrayList<Integer> targetActionIDs;
+    protected long iD;
+    protected int targetActionID;
 
     public abstract boolean hasTriggered();
 
-    public ArrayList<Integer> getTargetActionIDs(){
-	return targetActionIDs;
+    public int getTargetActionID(){
+	return targetActionID;
     }
 
-    public long getiD(){
+    public long getID(){
 	return iD;
     }
 }

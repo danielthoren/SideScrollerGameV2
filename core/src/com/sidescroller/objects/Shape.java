@@ -62,7 +62,7 @@ public class Shape implements Draw {
 
     public Body getBody(){return body;}
 
-    public long getiD(){return iD;}
+    public long getID(){return iD;}
 
     public TypeOfGameObject getTypeOfGameObject(){return typeOfGameObject;}
 
@@ -76,7 +76,7 @@ public class Shape implements Draw {
     public boolean equals(Object obj) {
         try{
             GameObject gameObject = (GameObject) obj;
-            return gameObject.getiD() == this.getiD();
+            return gameObject.getID() == this.getID();
         }
         catch (Exception e){
             return false;
