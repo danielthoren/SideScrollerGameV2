@@ -230,8 +230,9 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 playerContact = true;
             }
         }
-        collidingBodies.add(otherBody);
-        System.out.println("in begincontact");
+        if (collidingBodies.contains(otherBody) == false) {
+            collidingBodies.add(otherBody);
+        }
 
         if(!isRunning && playerContact) {
             contact.setFriction(100);

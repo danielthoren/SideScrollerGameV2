@@ -5,11 +5,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
+import com.sidescroller.objects.Actions.ButtonTrigger;
+import com.sidescroller.objects.Actions.SpawnAction;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
 import com.sidescroller.player.Player;
@@ -53,7 +56,7 @@ public class MapLoader {
             for (int x = 0; x < scene.getBodies().size; x++){
                 Body body = scene.getBodies().get(x);
                 Array<RubeImage> rubeImages = scene.getMappedImage(body);
-                //Creating the arrays for the hashmap and adding images to the map if there are images
+                //Creating the arrays for the hashmap and adding images to the map if there are images then creating a Shape.
                 Shape shape;
                 if (rubeImages != null) {
                     Array<RubeSprite> rubeSprites = new Array<RubeSprite>(1);
@@ -62,10 +65,30 @@ public class MapLoader {
                     }
                     map.updateLayerDepth(rubeSprites);
                     shape = new Shape(map.getObjectID(), body, rubeSprites);
-                    map.addDrawObject(shape);
                 }
                 else{
                     shape = new Shape(map.getObjectID(), body);
+                }
+
+                //Checking for the type variable in custom and creating object accordingly
+                String type;
+                try {
+                    type = (String) scene.getCustom(body, "type");
+                }
+                catch (ClassCastException e){
+                    type = "";
+                }
+
+                if (type.toLowerCase().equals("spawnaction")){
+                    SpawnAction spawnAction = new SpawnAction(shape);
+                    map.getActionManager().addAction(spawnAction);
+                }
+                else if (type.toLowerCase().equals("buttontrigger")){
+                    ButtonTrigger buttonTrigger = new ButtonTrigger(shape);
+                    map.getActionManager().addTrigger(buttonTrigger);
+                    map.addDrawObject(shape);
+                }
+                else{
                     map.addDrawObject(shape);
                 }
             }
