@@ -10,14 +10,12 @@ import com.sidescroller.game.SideScrollerGameV2;
  * A parent class for different inventory items.
  */
 public class InventoryItem implements Draw, GameObject{
-    protected int itemSize;
     protected int itemWeight;
     protected String description;
     protected boolean isDroppable;
     //protected Sprite itemIcon;
 
-    protected InventoryItem(int itemSize, int itemWeight, String description, boolean isDroppable){
-        this.itemSize = itemSize;
+    protected InventoryItem(int itemWeight, String description, boolean isDroppable){
         this.itemWeight = itemWeight;
         this.description = description;
         this.isDroppable = isDroppable;
@@ -25,8 +23,7 @@ public class InventoryItem implements Draw, GameObject{
         //SideScrollerGameV2.getCurrentMap().addDrawObject(this);
     }
 
-    protected InventoryItem(int itemSize, int itemWeight, boolean isDroppable){
-        this.itemSize = itemSize;
+    protected InventoryItem(int itemWeight, boolean isDroppable){
         this.itemWeight = itemWeight;
         this.isDroppable = isDroppable;
 
@@ -39,6 +36,10 @@ public class InventoryItem implements Draw, GameObject{
 
     public boolean isDroppable() {
         return isDroppable;
+    }
+
+    public int getItemWeight() {
+        return itemWeight;
     }
 
     @Override

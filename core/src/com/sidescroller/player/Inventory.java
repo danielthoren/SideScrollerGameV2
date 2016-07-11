@@ -48,8 +48,9 @@ public class Inventory {
      */
 
     public int getItemID(InventoryItem item){
+        //TODO throws NullPointerException when an item is dropped and you then toggle items.
         for (int i = 0; i < items.length; i++) {
-            if (items[i].equals(item)){
+            if (items[i] != null && items[i].equals(item)){
                 return i;
             }
         }
@@ -62,7 +63,7 @@ public class Inventory {
      */
 
     public void createDefaultItem(){
-        defaultItem = new DefaultItem(1, 1);
+        defaultItem = new DefaultItem(1);
         try {
             addToInventory(defaultItem);
         }catch (InventoryFullException e){
@@ -82,13 +83,12 @@ public class Inventory {
      * so it can be handled properly.
      */
     public void addToInventory(InventoryItem item) throws InventoryFullException {
-
         for (int i = 0; i < items.length; i++) {
-            if (items[i] == null){
+            if (items[i] == null && doesItemFit(item)){
                 items[i] = item;
                 break;
             }
-            else if(i == items.length - 1) {
+            else if(i == items.length - 1 || !doesItemFit(item)) {
                 throw new InventoryFullException("Inventory is full");
             }
         }
@@ -101,6 +101,10 @@ public class Inventory {
         else{
             throw new ItemNotDroppableException("This item is not droppable");
         }
+    }
+
+    public boolean doesItemFit(InventoryItem item){
+        return (getWeightUsed() + item.getItemWeight()) < maxWeight;
     }
 
     public InventoryItem getNextItem(int itemID){
@@ -144,6 +148,18 @@ public class Inventory {
             }
         }
         return total;
+    }
+
+    public int getWeightUsed(){
+        int totalItemWeight = 0;
+
+        for (InventoryItem invItem :
+                items) {
+            if (invItem != null){
+                totalItemWeight += invItem.getItemWeight();
+            }
+        }
+        return totalItemWeight;
     }
 
     public int getMaxWeight() {

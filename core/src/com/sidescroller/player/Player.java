@@ -54,7 +54,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         acceleration = new Vector2(30f, 50f);
         deceleration = new Vector2(100f, 0f);
         groundResetTimer = -1;
-		inventory = new Inventory(10, 10);
         isBottomSensor = false;
         isLeftSensor = false;
         isRightSensor = false;
@@ -68,6 +67,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         sprite.setOrigin(0,0);
         createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, 0.1f);
         body.setUserData(this);
+
+        inventory = new Inventory(10, 100);
         numberOfJumpsLeft = DEFAULT_NUMBER_OF_JUMPS;
         currentItem = inventory.getDefaultItem();
         maxHealth = 100;
@@ -324,7 +325,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         }
         else if(keycode == Input.Keys.T){
             toggleItem();
-            System.out.println("blah");
         }
 
 
@@ -396,7 +396,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         else if(hasJumpLefts){
             //This is used to make the second jump not care what direction the body is going
             //i.e. if the body was going down the forces would have cancelled each other out.
-            body.setLinearVelocity(body.getLinearVelocity().x,0);
+            body.setLinearVelocity(body.getLinearVelocity().x,0);tttt
 
             float accY =  (float) (9.82 * body.getMass());
             Vector2 impulse = new Vector2(0, accY);
@@ -425,6 +425,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
     private void toggleItem(){
+        System.out.println("current item");
         //Gives the ID of the item currently equipped
         int currentItemID = inventory.getItemID(currentItem);
 
@@ -448,7 +449,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      */
     private void createDummyItem(){
 
-        InventoryItem dummyItem = new TestItem(2,2,"test item");
+        InventoryItem dummyItem = new TestItem(2,"test item");
 
         try{
             inventory.addToInventory(dummyItem);
