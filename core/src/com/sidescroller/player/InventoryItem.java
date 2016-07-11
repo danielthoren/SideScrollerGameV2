@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.GameObject;
 import com.sidescroller.game.SideScrollerGameV2;
+import com.sidescroller.game.TypeOfGameObject;
 
 /**
  * A parent class for different inventory items.
@@ -54,8 +55,14 @@ public class InventoryItem implements Draw, GameObject{
     //    itemIcon.draw(batch);
     }
 
+
     @Override
-    public long getId() {
+    public long getID() {
         return 0;
+    }
+
+    @Override
+    public TypeOfGameObject getTypeOfGameObject() {
+        return null;
     }
 }

@@ -13,9 +13,6 @@ import java.util.Properties;
 
 import java.util.ArrayList;
 
-/**
- * Created by daniel on 2016-06-06.
- */
 public class Player implements Draw, Update, InputListener, CollisionListener {
 
     private Body body;
@@ -56,7 +53,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 
     public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
         this.iD = iD;
-        collidingBodies = new ArrayList<Body>(1);
+        collidingBodies = new ArrayList<>(1);
         direction = Direction.RIGHT;
         maxVelocity = DEFAULT_MAX_VELOCITY;
         acceleration = new Vector2(10f, 20f);
@@ -247,12 +244,13 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public void beginContact(Contact contact){
 		boolean playerContact = false;
         Body otherBody = body;
-        if (contact.getFixtureA().getBody().getUserData().equals(this)){
+        if (contact.getFixtureA().getBody().getUserData().equals(this)) {
             otherBody = contact.getFixtureB().getBody();
             if (contact.getFixtureA().isSensor()) {
                 sensorSwitch(contact.getFixtureA(), true);
                 playerContact = true;
             }
+        }
         else if (contact.getFixtureB().getBody().getUserData().equals(this)) {
             otherBody = contact.getFixtureA().getBody();
             if (contact.getFixtureB().isSensor()) {
@@ -260,7 +258,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 playerContact = true;
             }
         }
-        if (collidingBodies.contains(otherBody) == false) {
+        if (!collidingBodies.contains(otherBody)) {
             collidingBodies.add(otherBody);
         }
 
