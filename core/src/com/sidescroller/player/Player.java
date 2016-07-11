@@ -11,14 +11,21 @@ import com.sidescroller.game.*;
 import java.util.Arrays;
 import java.util.Properties;
 
+import java.util.ArrayList;
+
+/**
+ * Created by daniel on 2016-06-06.
+ */
 public class Player implements Draw, Update, InputListener, CollisionListener {
 
     private Body body;
     private Sprite sprite;
     private Direction direction;
+    private ArrayList<Body> collidingBodies;
 
     private Vector2 acceleration, maxVelocity, deceleration;
     private final long iD;
+    private static final TypeOfGameObject typeOfGameObject = TypeOfGameObject.PLAYER;
 
     private long groundResetTimer;
 
@@ -26,7 +33,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private boolean isRunning, isGrounded, isCollisionLeft, isCollisionRight;
 
     //Default values
-    private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(5f, 20f);
+    private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(1f, 5f);
     private static final float GROUNDED_THRESHOLD = 0.01f;
     private static final int GROUNDED_RESET_THRESHOLD = 50;
 
@@ -49,9 +56,10 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 
     public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
         this.iD = iD;
+        collidingBodies = new ArrayList<Body>(1);
         direction = Direction.RIGHT;
         maxVelocity = DEFAULT_MAX_VELOCITY;
-        acceleration = new Vector2(30f, 50f);
+        acceleration = new Vector2(10f, 20f);
         deceleration = new Vector2(100f, 0f);
         groundResetTimer = -1;
         isBottomSensor = false;
@@ -66,6 +74,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         sprite.setSize(bodyWidth, bodyHeight);
         sprite.setOrigin(0,0);
         createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, 0.1f);
+
         body.setUserData(this);
 
         inventory = new Inventory(10, 100);
@@ -190,7 +199,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          body.setUserData(this);
          body.setActive(true);
          body.setSleepingAllowed(false);
-
      }
 
     /**
@@ -201,6 +209,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         isPlayerAlive = currentHealth != 0;
 
         runHandler();
+
         //Ensures that the sensor value is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
         if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !isGrounded){
             if (groundResetTimer == -1){groundResetTimer = System.currentTimeMillis();}
@@ -236,15 +245,23 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
     public void beginContact(Contact contact){
-
-        boolean playerContact = false;
-        if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
-            sensorSwitch(contact.getFixtureA(), true);
-            playerContact = true;
+		boolean playerContact = false;
+        Body otherBody = body;
+        if (contact.getFixtureA().getBody().getUserData().equals(this)){
+            otherBody = contact.getFixtureB().getBody();
+            if (contact.getFixtureA().isSensor()) {
+                sensorSwitch(contact.getFixtureA(), true);
+                playerContact = true;
+            }
+        else if (contact.getFixtureB().getBody().getUserData().equals(this)) {
+            otherBody = contact.getFixtureA().getBody();
+            if (contact.getFixtureB().isSensor()) {
+                sensorSwitch(contact.getFixtureB(), true);
+                playerContact = true;
+            }
         }
-        if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()) {
-            sensorSwitch(contact.getFixtureB(), true);
-            playerContact = true;
+        if (collidingBodies.contains(otherBody) == false) {
+            collidingBodies.add(otherBody);
         }
 
         if(!isRunning && playerContact) {
@@ -259,12 +276,22 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
     public void endContact(Contact contact){
-        if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
-            sensorSwitch(contact.getFixtureA(), false);
+        Body otherBody = body;
+        if (contact.getFixtureA().getBody().getUserData().equals(this)){
+            otherBody = contact.getFixtureB().getBody();
+            if (contact.getFixtureA().isSensor()) {
+                sensorSwitch(contact.getFixtureA(), false);
+            }
         }
-        if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
-            sensorSwitch(contact.getFixtureB(), false);
+        if (contact.getFixtureB().getBody().getUserData().equals(this)){
+            otherBody = contact.getFixtureA().getBody();
+            if (contact.getFixtureB().isSensor()){
+                sensorSwitch(contact.getFixtureB(), false);
+            }
         }
+
+        //Removing the object from the list
+        collidingBodies.remove(otherBody);
     }
 
     /**
@@ -298,7 +325,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      *
      * @param keycode one of the constants in */
     public void keyDown(int keycode){
-        System.out.println("key pressed");
         if (keycode == Input.Keys.LEFT){
             isRunning = true;
             direction = Direction.LEFT;
@@ -327,7 +353,11 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             toggleItem();
         }
 
-
+        //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
+        //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
+        else if (keycode == Input.Keys.E){
+            notifyInteractObjects(collidingBodies, true);
+        }
 
     }
 
@@ -335,9 +365,42 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      *
      * @param keycode one of the constants in  */
     public void keyUp (int keycode){
-        System.out.println("key released");
         if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT){
             isRunning = false;
+        }
+        //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
+        //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
+        else if (keycode == Input.Keys.E){
+            notifyInteractObjects(collidingBodies, false);
+        }
+    }
+
+    /**
+     * Checks all of the bodies in the 'collidingBodies list containing the objects that the player is currently colliding with.
+     * If any of the bodies userdata contains a 'InteractGameObject' then it notifies that object that it is being
+     * interacted with. All of the objects in the game world should implement the interface 'GameObject'. Thus we tre to
+     * cast the bodies userdata value to a 'GameObject' then checks if it is of the type 'InteractGameObject'. If one or both
+     * of these casts fails, the body is removed from the world.
+     * @param bodies The bodies the player is currently colliding with.
+     * @param startInteract True if the interaction is now starting, otherwise false.
+     */
+    private void notifyInteractObjects(ArrayList<Body> bodies, boolean startInteract){
+        //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
+        //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
+        System.out.println(collidingBodies.size());
+        for (Body body : bodies){
+            GameObject object;
+            try{
+                object = (GameObject) body.getUserData();
+                if (object.getTypeOfGameObject() == TypeOfGameObject.INTERACTOBJECT){
+                    InteractGameObject interactGameObject = (InteractGameObject) object;
+                    if (startInteract) {interactGameObject.startInteract(this);}
+                    else {interactGameObject.endInteract(this);}
+                }
+            }
+            catch (ClassCastException e){
+                SideScrollerGameV2.getCurrentMap().removeBody(body);
+            }
         }
     }
 
@@ -345,7 +408,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * Handles the acceleration and deceleration of the character
      */
     private void runHandler(){
-
         //Decelerating the player from running to a stop
         if (!isRunning && isGrounded){
             if (body.getLinearVelocity().x > deceleration.x / 4){
@@ -370,10 +432,10 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         else if (isRunning && !isGrounded){
             //Code for smooth acceleration when in the air
             if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
-                body.applyForceToCenter(acceleration.x, 0f, true);
+                body.applyForceToCenter(acceleration.x / 10, 0f, true);
             }
             else if (direction == Direction.LEFT && body.getLinearVelocity().x > -maxVelocity.x){
-                body.applyForceToCenter(-acceleration.x, 0f, true);
+                body.applyForceToCenter(-acceleration.x / 10, 0f, true);
             }
         }
     }
@@ -459,7 +521,9 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
 
-    public long getId(){return iD;}
+    public long getID(){return iD;}
+
+    public TypeOfGameObject getTypeOfGameObject(){return typeOfGameObject;}
 
     /**
      * Overridden version of Equals that ensures that both object pointers are the exact same instantiation of
@@ -471,7 +535,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public boolean equals(Object obj) {
         try{
             GameObject gameObject = (GameObject) obj;
-            return gameObject.getId() == this.getId();
+            return gameObject.getID() == this.getID();
         }
         catch (Exception e){
             return false;

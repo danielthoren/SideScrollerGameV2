@@ -76,6 +76,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		for (Update obj : currentMap.getUpdateObjects()){
 			obj.update();
 		}
+		currentMap.getActionManager().update();
 
 		//Drawing the drawobjects
 		for (int layer = currentMap.getLayerCount(); layer >= 0; layer--) {

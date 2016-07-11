@@ -1,23 +1,14 @@
 package com.sidescroller.objects;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
-import com.sidescroller.game.BodyEditorLoader;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.GameObject;
 import com.sidescroller.game.SideScrollerGameV2;
-
-import java.util.HashMap;
-import java.util.Iterator;
+import com.sidescroller.game.TypeOfGameObject;
 
 /**
  * Created by daniel on 2016-06-06.
@@ -27,6 +18,7 @@ public class Shape implements Draw {
     private Array<RubeSprite> rubeSprites;
     private Body body;
     private final long iD;
+    private final static TypeOfGameObject typeOfGameObject = TypeOfGameObject.GAME;
 
     public Shape(long iD, Body body, Array<RubeSprite> rubeSprites) {
         this.iD = iD;
@@ -68,7 +60,11 @@ public class Shape implements Draw {
         }
     }
 
-    public long getId(){return iD;}
+    public Body getBody(){return body;}
+
+    public long getID(){return iD;}
+
+    public TypeOfGameObject getTypeOfGameObject(){return typeOfGameObject;}
 
     /**
      * Overridden version of Equals that ensures that both object pointers are the exact same instantiation of
@@ -80,7 +76,7 @@ public class Shape implements Draw {
     public boolean equals(Object obj) {
         try{
             GameObject gameObject = (GameObject) obj;
-            return gameObject.getId() == this.getId();
+            return gameObject.getID() == this.getID();
         }
         catch (Exception e){
             return false;
