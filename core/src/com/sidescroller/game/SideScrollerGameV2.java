@@ -33,6 +33,8 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 
 	private static final boolean DEBUGRENDERER = true;
 
+	SpriteAnimation spriteAnimation;
+
 	@Override
 	public void create () {
 		nanoTimeLastUpdate = System.nanoTime();
@@ -51,8 +53,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		ContactListenerGame contactListenerGame = new ContactListenerGame();
 		currentMap.setContactListener(contactListenerGame);
 
-		velocityIterations = 6;  //Accuracy of jbox2d velocity simulation
-		positionIterations = 3;  //Accuracy of jbox2d position simulation
+		spriteAnimation = new SpriteAnimation(10, 6, 4, new Texture(Gdx.files.internal("walkAnimation.png")));
 	}
 
 	@Override
@@ -60,7 +61,6 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		float deltaTime = System.nanoTime() - nanoTimeLastUpdate;
 		nanoTimeLastUpdate = System.nanoTime();
 		currentMap.stepWorld(1f/60f);
-		//currentMap.getWorld().step(deltaTime / NANOS_PER_SECOND, velocityIterations, positionIterations);
 
 		currentMap.removeStagedOBjects();
 		currentMap.addStagedObjects();
@@ -70,13 +70,14 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
 
 		//Updating the updateobjects
 		for (Update obj : currentMap.getUpdateObjects()){
 			obj.update();
 		}
 		currentMap.getActionManager().update();
+
+		batch.begin();
 
 		//Drawing the drawobjects
 		for (int layer = currentMap.getLayerCount(); layer >= 0; layer--) {
@@ -85,11 +86,13 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 			}
 		}
 
+		spriteAnimation.draw(batch, 0);
+
+		batch.end();
+
 		if (DEBUGRENDERER){
 			currentMap.debugDraw(camera);
 		}
-
-		batch.end();
 	}
 
 	@Override

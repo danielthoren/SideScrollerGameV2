@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import com.sidescroller.game.SideScrollerGameV2;
 import com.sidescroller.objects.Shape;
-import javafx.geometry.Side;
 
 import java.util.ArrayList;
 

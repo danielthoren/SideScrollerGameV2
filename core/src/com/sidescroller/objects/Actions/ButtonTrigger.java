@@ -13,6 +13,9 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 	private Shape shape;
 	private boolean hasTriggered;
 
+	public ButtonTrigger() {
+	}
+
 	public ButtonTrigger(int targetActionID, Shape shape) {
 		this.targetActionID = targetActionID;
 		this.shape = shape;
