@@ -33,8 +33,6 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 
 	private static final boolean DEBUGRENDERER = true;
 
-	SpriteAnimation spriteAnimation;
-
 	@Override
 	public void create () {
 		nanoTimeLastUpdate = System.nanoTime();
@@ -52,8 +50,6 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		//Setting the worlds contactlistener
 		ContactListenerGame contactListenerGame = new ContactListenerGame();
 		currentMap.setContactListener(contactListenerGame);
-
-		spriteAnimation = new SpriteAnimation(10, 6, 4, new Texture(Gdx.files.internal("walkAnimation.png")));
 	}
 
 	@Override
@@ -85,9 +81,6 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 				obj.draw(batch, layer);
 			}
 		}
-
-		spriteAnimation.draw(batch, 0);
-
 		batch.end();
 
 		if (DEBUGRENDERER){

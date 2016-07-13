@@ -8,13 +8,13 @@ import com.sidescroller.objects.Shape;
 
 import java.util.ArrayList;
 
-public class SpawnAction extends Action
+public class BodyAction extends Action
 {
     private Shape shape;
     private BodyDef.BodyType bodyType;
     private ArrayList<Boolean> tempFixtureSensorData;
 
-    public SpawnAction(final int id, final Shape shape) {
+    public BodyAction(final int id, final Shape shape) {
 		this.shape = shape;
 		this.actionID = id;
 		tempFixtureSensorData = new ArrayList<Boolean>(1);

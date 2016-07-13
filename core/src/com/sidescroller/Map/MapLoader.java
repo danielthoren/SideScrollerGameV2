@@ -2,22 +2,19 @@ package com.sidescroller.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.objects.Actions.ButtonTrigger;
-import com.sidescroller.objects.Actions.SpawnAction;
+import com.sidescroller.objects.Actions.BodyAction;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
 import com.sidescroller.player.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -79,8 +76,8 @@ public class MapLoader {
                 else if (type.toLowerCase().equals("spawnaction")){
 					try {
 						int actionID = (Integer) scene.getCustom(body, "id");
-						SpawnAction spawnAction = new SpawnAction(actionID, shape);
-						map.getActionManager().addAction(spawnAction);
+						BodyAction bodyAction = new BodyAction(actionID, shape);
+						map.getActionManager().addAction(bodyAction);
 					}
 					catch (ClassCastException e){
 						System.out.println("Error corrected. ClassCastException when getting custom property 'id'");

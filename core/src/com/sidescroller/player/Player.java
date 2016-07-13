@@ -336,7 +336,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private void notifyInteractObjects(ArrayList<Body> bodies, boolean startInteract){
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
-        System.out.println(collidingBodies.size());
         for (Body body : bodies){
             GameObject object;
             try{
