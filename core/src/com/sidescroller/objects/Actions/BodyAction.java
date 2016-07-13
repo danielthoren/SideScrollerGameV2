@@ -10,33 +10,49 @@ import java.util.ArrayList;
 
 public class BodyAction extends Action
 {
+	public enum TypeOfBodyAction{
+		SPAWN, REMOVE, MAKE_DYNAMIC
+	}
+
     private Shape shape;
     private BodyDef.BodyType bodyType;
     private ArrayList<Boolean> tempFixtureSensorData;
+	TypeOfBodyAction typeOfBodyAction;
 
-    public BodyAction(final int id, final Shape shape) {
+    public BodyAction(final int id, final Shape shape, TypeOfBodyAction typeOfBodyAction) {
 		this.shape = shape;
+		this.typeOfBodyAction = typeOfBodyAction;
 		this.actionID = id;
 		tempFixtureSensorData = new ArrayList<Boolean>(1);
 		bodyType = shape.getBody().getType();
-		shape.getBody().setType(BodyDef.BodyType.StaticBody);
-		Array<Fixture> fixtures = shape.getBody().getFixtureList();
-		for (Fixture fixture : fixtures){
-			tempFixtureSensorData.add(fixture.isSensor());
-			fixture.setSensor(true);
+		if (typeOfBodyAction ==TypeOfBodyAction.SPAWN) {
+			shape.getBody().setType(BodyDef.BodyType.StaticBody);
+			Array<Fixture> fixtures = shape.getBody().getFixtureList();
+			for (Fixture fixture : fixtures) {
+				tempFixtureSensorData.add(fixture.isSensor());
+				fixture.setSensor(true);
+			}
 		}
 	}
 
-    public void act(){
-		Array<Fixture> fixtures = shape.getBody().getFixtureList();
-		for (int x = 0; x < fixtures.size; x++){
-			if (tempFixtureSensorData.get(x) == false){
-				fixtures.get(x).setSensor(false);
+    public void act() {
+		if (typeOfBodyAction == TypeOfBodyAction.SPAWN) {
+			Array<Fixture> fixtures = shape.getBody().getFixtureList();
+			for (int x = 0; x < fixtures.size; x++) {
+				if (!tempFixtureSensorData.get(x)) {
+					fixtures.get(x).setSensor(false);
+				}
 			}
+			shape.getBody().setType(bodyType);
+			SideScrollerGameV2.getCurrentMap().addDrawObject(shape);
 		}
-
-		shape.getBody().setType(bodyType);
-		SideScrollerGameV2.getCurrentMap().addDrawObject(shape);
+		else if (typeOfBodyAction == TypeOfBodyAction.MAKE_DYNAMIC){
+			shape.getBody().setType(BodyDef.BodyType.DynamicBody);
+		}
+		else if(typeOfBodyAction == TypeOfBodyAction.REMOVE){
+			SideScrollerGameV2.getCurrentMap().removeBody(shape.getBody());
+			SideScrollerGameV2.getCurrentMap().removeDrawObject(shape);
+		}
 		SideScrollerGameV2.getCurrentMap().getActionManager().removeAction(this);
 	}
 }
