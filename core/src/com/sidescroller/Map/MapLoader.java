@@ -15,6 +15,7 @@ import com.sidescroller.objects.Actions.BodyAction;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
 import com.sidescroller.player.Player;
+import javafx.scene.Scene;
 
 import java.util.HashMap;
 
@@ -39,6 +40,7 @@ public class MapLoader {
     public static MapLoader getInstance(){return instance;}
 
     public Map loadMap(String mapPath){
+        //If the map is not yet loaded, then load it
         if (!loadedMaps.containsKey(mapPath)){
             RubeScene scene = loader.loadScene(Gdx.files.internal(mapPath));
 
@@ -70,74 +72,24 @@ public class MapLoader {
 
                 //Checking for the type variable in custom and creating object accordingly
                 Object typeObj = scene.getCustom(body, "type");
-                Object subTypeObj = scene.getCustom(shape.getBody(), "subtype");
-                Object actionIDObj = scene.getCustom(body, "id");
-                Object drawObj = scene.getCustom(shape.getBody(), "draw");
-
-                String type, subType;
-                int actionID;
-                boolean draw;
-                //Try to cast custom properties to the right
-                try {
+                String type;
+                try{
                     type = (String) typeObj;
-                    subType = (String) subTypeObj;
-                    actionID = (Integer) actionIDObj;
-                    draw = (Boolean) drawObj;
                 }
                 catch (ClassCastException e){
-                    try{
-                        type = (String) typeObj;
-                        actionID = (Integer) actionIDObj;
-
-                        subType = null;
-                        draw = true;
-                    }
-                    catch (ClassCastException e) {
-                        System.out.println("Error corrected. ClassCastException when getting custom property!");
-                        map.addDrawObject(shape);
-                    }
+                    System.out.println("Error corrected. ClassCastException when getting custom property!'");
+                    type = null;
                 }
 
-				if (type == null){
-					map.addDrawObject(shape);
-				}
-                else if (type.toLowerCase().equals("bodyaction")){
-					try {
-
-                        BodyAction.TypeOfBodyAction typeOfBodyAction;
-                        if (subType.equals("make_dynamic")){
-                            typeOfBodyAction = BodyAction.TypeOfBodyAction.MAKE_DYNAMIC;
-                        }
-                        else if (subType.equals("remove")){
-                            typeOfBodyAction = BodyAction.TypeOfBodyAction.REMOVE;
-                        }
-                        else {
-                            typeOfBodyAction = BodyAction.TypeOfBodyAction.SPAWN;
-                        }
-
-                        //Needs '==' since the value may be null.
-                        if (drawFromBeginning == true){
-                            map.addDrawObject(shape);
-                        }
-						BodyAction bodyAction = new BodyAction(actionID, shape, typeOfBodyAction);
-						map.getActionManager().addAction(bodyAction);
-					}
-					catch (ClassCastException e){
-						System.out.println("Error corrected. ClassCastException when getting custom property 'id'");
-						map.addDrawObject(shape);
-					}
+                //Creating the object that the 'type' variable specifies.
+                if (type.toLowerCase().equals("bodyaction")){
+                    createBodyAction(shape, scene, map);
                 }
-                else if (type.toLowerCase().equals("")){
-					try {
-						int targetActionID = (Integer) scene.getCustom(body, "id");
-						ButtonTrigger buttonTrigger = new ButtonTrigger(targetActionID, shape);
-						map.getActionManager().addTrigger(buttonTrigger);
-						map.addDrawObject(shape);
-					}
-					catch (ClassCastException e){
-						System.out.println("Error corrected. ClassCastException when getting custom property 'id'");
-						map.addDrawObject(shape);
-					}
+                else if (type.toLowerCase().equals("buttontrigger")){
+                    createButtonTrigger(shape, scene, map);
+                }
+                else{
+                    map.addDrawObject(shape);
                 }
             }
 
@@ -152,5 +104,71 @@ public class MapLoader {
             loadedMaps.put(mapPath, map);
         }
         return loadedMaps.get(mapPath);
+    }
+
+    /**
+     * Creates a 'ButtonTrigger' of specified type and adding it to the world.
+     * @param shape The shape that belongs to the object.
+     * @param scene The scene from wich to create the object.
+     * @param map The map to add the object to.
+     */
+    private void createButtonTrigger(Shape shape, RubeScene scene, Map map){
+
+        Object actionIDObj = scene.getCustom(shape.getBody(), "subtype");
+        int actionID;
+        try{
+            actionID = (Integer) actionIDObj;
+
+            ButtonTrigger buttonTrigger = new ButtonTrigger(actionID, shape);
+            map.getActionManager().addTrigger(buttonTrigger);
+            map.addDrawObject(shape);
+        }
+        catch (ClassCastException e){
+            System.out.println("Error corrected. ClassCastException when getting custom property!'");
+            map.addDrawObject(shape);
+        }
+    }
+
+    /**
+     * Creating a object of type 'BodyAction' and adding it to the world.
+     * @param shape The shape that belongs to the object.
+     * @param scene The scene from wich to construct the object.
+     * @param map The map to add the object to.
+     */
+    private void createBodyAction(Shape shape, RubeScene scene, Map map){
+
+        Object subTypeObj = scene.getCustom(shape.getBody(), "subtype");
+        Object actionIDObj = scene.getCustom(shape.getBody(), "id");
+        Object drawObj = scene.getCustom(shape.getBody(), "draw");
+        String subType;
+        int actionID;
+        boolean draw;
+        try {
+            subType = (String) subTypeObj;
+            actionID = (Integer) actionIDObj;
+            draw = (Boolean) drawObj;
+            BodyAction.TypeOfBodyAction typeOfBodyAction;
+
+            if (subType.equals("make_dynamic")){
+                typeOfBodyAction = BodyAction.TypeOfBodyAction.MAKE_DYNAMIC;
+            }
+            else if (subType.equals("remove")){
+                typeOfBodyAction = BodyAction.TypeOfBodyAction.REMOVE;
+            }
+            else {
+                typeOfBodyAction = BodyAction.TypeOfBodyAction.SPAWN;
+            }
+
+            //Needs '==' since the value may be null.
+            if (draw == true){
+                map.addDrawObject(shape);
+            }
+            BodyAction bodyAction = new BodyAction(actionID, shape, typeOfBodyAction);
+            map.getActionManager().addAction(bodyAction);
+        }
+        catch (ClassCastException e){
+            System.out.println("Error corrected. ClassCastException when getting custom property!'");
+            map.addDrawObject(shape);
+        }
     }
 }
