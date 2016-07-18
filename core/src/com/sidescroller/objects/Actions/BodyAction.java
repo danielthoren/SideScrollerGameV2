@@ -17,7 +17,7 @@ public class BodyAction extends Action
     private Shape shape;
     private BodyDef.BodyType bodyType;
     private ArrayList<Boolean> tempFixtureSensorData;
-	TypeOfBodyAction typeOfBodyAction;
+	private TypeOfBodyAction typeOfBodyAction;
 
     public BodyAction(final int id, final Shape shape, TypeOfBodyAction typeOfBodyAction) {
 		this.shape = shape;
@@ -43,7 +43,12 @@ public class BodyAction extends Action
 					fixtures.get(x).setSensor(false);
 				}
 			}
-			shape.getBody().setType(bodyType);
+			if (bodyType == BodyDef.BodyType.StaticBody) {
+				shape.getBody().setType(BodyDef.BodyType.DynamicBody);
+			}
+			else{
+				shape.getBody().setType(bodyType);
+			}
 			SideScrollerGameV2.getCurrentMap().addDrawObject(shape);
 		}
 		else if (typeOfBodyAction == TypeOfBodyAction.MAKE_DYNAMIC){

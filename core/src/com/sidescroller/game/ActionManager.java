@@ -46,7 +46,9 @@ public class ActionManager
 	public void update(){
 		for (Trigger trigger : triggers){
 			if (trigger.hasTriggered()){
-				actions.get(trigger.getTargetActionID()).act();
+				if (actions.containsKey(trigger.getTargetActionID())) {
+					actions.get(trigger.getTargetActionID()).act();
+				}
 			}
 		}
 
