@@ -122,7 +122,7 @@ public class MapLoader {
         Object actionIDObj = scene.getCustom(shape.getBody(), "id");
         try{
             int actionID = (Integer) actionIDObj;
-            ButtonTrigger buttonTrigger = new ButtonTrigger(actionID, shape);
+            ButtonTrigger buttonTrigger = new ButtonTrigger(map.getObjectID(), actionID, shape);
             map.getActionManager().addTrigger(buttonTrigger);
             map.addDrawObject(shape);
         }

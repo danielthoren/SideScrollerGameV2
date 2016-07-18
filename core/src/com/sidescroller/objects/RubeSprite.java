@@ -6,12 +6,16 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 
 /**
- * Created by daniel on 2016-06-26.
+ * A container for image information that is used when creating game objects.
  */
 public class RubeSprite {
     private RubeImage rubeImage;
     private Sprite sprite;
 
+    /**
+     * Creates a 'RubeSprite'
+     * @param rubeImage A 'RubeImage' from wich to create a 'Sprite'.
+     */
     public RubeSprite(RubeImage rubeImage) {
         this.rubeImage = rubeImage;
 
@@ -19,7 +23,15 @@ public class RubeSprite {
         sprite.setSize(rubeImage.width, rubeImage.height);
     }
 
+    /**
+     * Returns the RubeImage.
+     * @return RubeImage
+     */
     public RubeImage getRubeImage() {return rubeImage;}
 
+    /**
+     * Returns the Sprite
+     * @return Sprite
+     */
     public Sprite getSprite() {return sprite;}
 }

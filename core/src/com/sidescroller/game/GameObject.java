@@ -11,7 +11,7 @@ public interface GameObject
      * returns the individual iD for the specific object.
      * @return int iD
      */
-    public long getID();
+    public long getiD();
 
     /**
      * Returns wich type of gameobject this specific object is.

@@ -3,6 +3,7 @@ package com.sidescroller.objects;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.utils.Array;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.game.Draw;
@@ -18,7 +19,6 @@ public class Shape implements Draw {
     private Array<RubeSprite> rubeSprites;
     private Body body;
     private final long iD;
-    private final static TypeOfGameObject typeOfGameObject = TypeOfGameObject.GAME;
 
     public Shape(long iD, Body body, Array<RubeSprite> rubeSprites) {
         this.iD = iD;
@@ -62,9 +62,13 @@ public class Shape implements Draw {
 
     public Body getBody(){return body;}
 
-    public long getID(){return iD;}
+    public long getiD(){return iD;}
 
-    public TypeOfGameObject getTypeOfGameObject(){return typeOfGameObject;}
+    public TypeOfGameObject getTypeOfGameObject(){return TypeOfGameObject.SHAPE;}
+
+    public Array<RubeSprite> getRubeSprites(){
+        return rubeSprites;
+    }
 
     /**
      * Overridden version of Equals that ensures that both object pointers are the exact same instantiation of
@@ -76,7 +80,7 @@ public class Shape implements Draw {
     public boolean equals(Object obj) {
         try{
             GameObject gameObject = (GameObject) obj;
-            return gameObject.getID() == this.getID();
+            return gameObject.getiD() == this.getiD();
         }
         catch (Exception e){
             return false;

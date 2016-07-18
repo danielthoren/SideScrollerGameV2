@@ -37,7 +37,7 @@ public class ActionManager
 	public void removeTrigger(Trigger trigger){
 		for (Iterator<Trigger> iterator = triggers.iterator(); iterator.hasNext();){
 			Trigger trig = iterator.next();
-			if (trig.getID() == trigger.getID()){
+			if (trig.getiD() == trigger.getiD()){
 				iterator.remove();
 			}
 		}

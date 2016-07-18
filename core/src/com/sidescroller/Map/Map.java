@@ -86,8 +86,8 @@ public class Map
         List<Long> bodyIDRemoved = new ArrayList<Long>();
         //Destroying all of the bodies that are staged for removal
         for (Body body : bodiesStagedForRemoval){
-            if (!bodyIDRemoved.contains(((GameObject)body.getUserData()).getID())) {
-                bodyIDRemoved.add(((GameObject)body.getUserData()).getID());
+            if (!bodyIDRemoved.contains(((GameObject)body.getUserData()).getiD())) {
+                bodyIDRemoved.add(((GameObject)body.getUserData()).getiD());
                 world.destroyBody(body);
             }
         }
@@ -96,7 +96,7 @@ public class Map
         for (Draw drawObjectRemove : drawObjectsStagedForRemoval){
             for (Iterator<Draw> iterator = drawObjects.iterator(); iterator.hasNext();){
                 Draw object = iterator.next();
-                if (drawObjectRemove.getID() == object.getID()){
+                if (drawObjectRemove.getiD() == object.getiD()){
                     iterator.remove();
                 }
             }
@@ -107,7 +107,7 @@ public class Map
         for (Update objectRemove : updateObjectsStagedForRemoval){
             for (Iterator<Update> iterator = updateObjects.iterator(); iterator.hasNext();){
                 Update object = iterator.next();
-                if (objectRemove.getID() == object.getID()){
+                if (objectRemove.getiD() == object.getiD()){
                     iterator.remove();
                 }
             }
@@ -116,7 +116,7 @@ public class Map
         for (InputListener listenerRemova : inputListenersStagedForRemoval){
             for (Iterator<InputListener> iterator = inputListenerList.iterator(); iterator.hasNext();) {
                 InputListener inputListener = iterator.next();
-                if (inputListener.getID() == listenerRemova.getID()){
+                if (inputListener.getiD() == listenerRemova.getiD()){
                     iterator.remove();
                 }
             }
@@ -125,7 +125,7 @@ public class Map
         for (CollisionListener collisionListenerRemove : collisionListenersStagedForRemoval){
             for (Iterator<CollisionListener> iterator = collisionListenerList.iterator(); iterator.hasNext();){
                 CollisionListener collisionListener = iterator.next();
-                if (collisionListener.getID() == collisionListenerRemove.getID()) {
+                if (collisionListener.getiD() == collisionListenerRemove.getiD()) {
                     iterator.remove();
                 }
             }

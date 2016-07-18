@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 public class BodyAction extends Action
 {
+	/**
+	 * An enum that describes wich type of 'BodyAction' is to be performed.
+	 */
 	public enum TypeOfBodyAction{
 		SPAWN, REMOVE, MAKE_DYNAMIC
 	}
@@ -19,6 +22,12 @@ public class BodyAction extends Action
     private ArrayList<Boolean> tempFixtureSensorData;
 	private TypeOfBodyAction typeOfBodyAction;
 
+	/**
+	 * Makes a BodyAction object that can either spawn a shape object, remove a shape object or make it dynamic.
+	 * @param id The id of the action object.
+	 * @param shape The shape that will be worked on.
+	 * @param typeOfBodyAction The type of body action.
+     */
     public BodyAction(final int id, final Shape shape, TypeOfBodyAction typeOfBodyAction) {
 		this.shape = shape;
 		this.typeOfBodyAction = typeOfBodyAction;
@@ -35,6 +44,10 @@ public class BodyAction extends Action
 		}
 	}
 
+
+	/**
+	 * Act method of action. Makes an object spawn, dynamic or removes it.
+	 */
     public void act() {
 		if (typeOfBodyAction == TypeOfBodyAction.SPAWN) {
 			Array<Fixture> fixtures = shape.getBody().getFixtureList();

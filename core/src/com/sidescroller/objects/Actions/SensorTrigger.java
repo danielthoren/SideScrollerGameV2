@@ -8,10 +8,12 @@ import com.sidescroller.objects.Shape;
 
 public class SensorTrigger extends Trigger implements CollisionListener
 {
+    private Shape shape;
     private boolean isTriggered;
 
-
-    public SensorTrigger(Shape shape) {
+    public SensorTrigger(long iD, int targetActionID, Shape shape) {
+        super(iD, targetActionID);
+        this.shape = shape;
     }
 
     /**
@@ -36,6 +38,10 @@ public class SensorTrigger extends Trigger implements CollisionListener
         checkForPlayerCollision(contact);
     }
 
+    /**
+     * Checks if this objects collides with a player, if so then sets triggered to true, otherwise false.
+     * @param contact
+     */
     private void checkForPlayerCollision(Contact contact){
         TypeOfGameObject fixA;
         TypeOfGameObject fixB;
@@ -56,6 +62,6 @@ public class SensorTrigger extends Trigger implements CollisionListener
     }
 
     public TypeOfGameObject getTypeOfGameObject(){
-        return TypeOfGameObject.COLLISION;
+        return TypeOfGameObject.SHAPE;
     }
 }
