@@ -6,24 +6,28 @@ import com.sidescroller.objects.Actions.Trigger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 public class ActionManager
 {
-	private HashMap<Integer, Action> actions;
-	private ArrayList<Trigger> triggers;
+	private HashMap<Integer, ArrayList<Action>> actions;
+	private List<Trigger> triggers;
 
-	private ArrayList<Integer> actionsStagedForRemoval;
-	private ArrayList<Trigger> triggersStagedForRemoval;
+	private List<Action> actionsStagedForRemoval;
+	private List<Trigger> triggersStagedForRemoval;
 
 	public ActionManager() {
-		actions = new HashMap<Integer, Action>(5);
+		actions = new HashMap<Integer, ArrayList<Action>>(5);
 		triggers = new ArrayList<Trigger>(5);
-		actionsStagedForRemoval = new ArrayList<Integer>(1);
+		actionsStagedForRemoval = new ArrayList<Action>(1);
 		triggersStagedForRemoval = new ArrayList<Trigger>(1);
 	}
 
 	public void addAction(Action action){
-		actions.put(action.getActionID(), action);
+		if (!actions.containsKey(action.getActionID())){
+			actions.put(action.getActionID(), new ArrayList<Action>(1));
+		}
+		actions.get(action.getActionID()).add(action);
 	}
 
 	public void addTrigger(Trigger trigger){
@@ -31,7 +35,7 @@ public class ActionManager
 	}
 
 	public void removeAction(Action action){
-		actionsStagedForRemoval.add(action.getActionID());
+		actionsStagedForRemoval.add(action);
 	}
 
 	public void removeTrigger(Trigger trigger){
@@ -44,22 +48,20 @@ public class ActionManager
 	}
 
 	public void update(){
+		//Checks if any of the triggers is triggered. If so then calles act on all 'Actions' with the specified id
 		for (Trigger trigger : triggers){
 			if (trigger.hasTriggered()){
 				if (actions.containsKey(trigger.getTargetActionID())) {
-					actions.get(trigger.getTargetActionID()).act();
+					for (Action action : actions.get(trigger.getTargetActionID())){
+						action.act();
+					}
 				}
 			}
 		}
 
-		for (Integer integer : actionsStagedForRemoval) {
-			for (Iterator<Trigger> iterator = triggers.iterator(); iterator.hasNext(); ) {
-				Trigger trigger = iterator.next();
-				if (trigger.getTargetActionID() == integer) {
-					iterator.remove();
-				}
-			}
-			actions.remove(integer);
+		//Removing all of the actions staged for removal
+		for (Action action : actionsStagedForRemoval) {
+			actions.get(action.getActionID()).remove(action);
 		}
 	}
 }
