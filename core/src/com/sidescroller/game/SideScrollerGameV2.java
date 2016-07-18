@@ -4,14 +4,21 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sidescroller.Map.Map;
 import com.sidescroller.Map.MapLoader;
+import com.sidescroller.objects.Shape;
 
 public class SideScrollerGameV2 extends ApplicationAdapter {
 	private static Map currentMap;
@@ -27,16 +34,22 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	private int velocityIterations, positionIterations;             //Values deciding the accuracy of velocity and position
 	private static float pixPerMeter = 10;
 	private static float aspectRatio;
-	public static final Vector2 windowView = new Vector2(16f, 9f);  //The constant camera size (the window in to the world)
+	private static final float UPDATE_INTERVAL = 1f / 60.0f;
+	public static final Vector2 WINDOW_VIEW = new Vector2(16f, 9f);  //The constant camera size (the window in to the world)
 	public static final int NANOS_PER_SECOND = 1000000000;
 
 	private static final boolean DEBUGRENDERER = true;
+
+	private Body body;
+
+	private Shape shapeObj;
+
 
 	@Override
 	public void create () {
 		nanoTimeLastUpdate = System.nanoTime();
 		cameraPosition = new Vector2(0,0);
-		camera = new OrthographicCamera(windowView.x, windowView.y);
+		camera = new OrthographicCamera(WINDOW_VIEW.x, WINDOW_VIEW.y);
 		viewport = new FillViewport(16, 9, camera);
 		viewport.apply();
 
@@ -49,13 +62,33 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		//Setting the worlds contactlistener
 		ContactListenerGame contactListenerGame = new ContactListenerGame();
 		currentMap.setContactListener(contactListenerGame);
+
+		CircleShape shape = new CircleShape();
+		shape.setPosition(new Vector2(0,0));
+		shape.setRadius(0.2f);
+
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.density = 1;
+		fixtureDef.friction = 0.1f;
+		fixtureDef.restitution = 0.01f;
+		fixtureDef.shape = shape;
+
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyDef.BodyType.DynamicBody;
+		bodyDef.position.set(3,3);
+
+		body = currentMap.createBody(bodyDef);
+		body.createFixture(fixtureDef);
+
+		shapeObj = new Shape(currentMap.getObjectID(), body);
+
 	}
 
 	@Override
 	public void render () {
 		float deltaTime = System.nanoTime() - nanoTimeLastUpdate;
 		nanoTimeLastUpdate = System.nanoTime();
-		currentMap.stepWorld(1f/60f);
+		currentMap.stepWorld(UPDATE_INTERVAL);
 
 		currentMap.removeStagedOBjects();
 		currentMap.addStagedObjects();
@@ -80,6 +113,9 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 				obj.draw(batch, layer);
 			}
 		}
+
+		drawTrojectory(batch, shapeObj.getBody(), new Vector2(-2, 10));
+
 		batch.end();
 
 		if (DEBUGRENDERER){
@@ -91,6 +127,35 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	public void resize (int width, int height) {
 		viewport.update(width,height);
 		camera.position.set(cameraPosition, 0);
+	}
+
+	/**
+	 * Calculates the approximate position of a moving body n steps in the future. Does not take other objects into account.
+	 * @param startPosition The starting position of the body.
+	 * @param startVelocity The starting velocity of the body.
+	 * @param n The step at wich to calculate the approximate posotion.
+     * @return A vector with the calculated position.
+     */
+	public static Vector2 getTrojectoryPoint(Vector2 startPosition, Vector2 startVelocity, float n){
+		//The velocity each step of the world.
+		Vector2 stepVelocity = new Vector2(UPDATE_INTERVAL * startVelocity.x, UPDATE_INTERVAL * startVelocity.y);
+		//The gravity each step of the world.
+		Vector2 stepGravity = new Vector2(currentMap.getGravity().x * UPDATE_INTERVAL * UPDATE_INTERVAL, currentMap.getGravity().y * UPDATE_INTERVAL * UPDATE_INTERVAL);
+
+		return new Vector2(startPosition.x + n * stepVelocity.x + 0.5f * (n*n + n) * stepGravity.x, startPosition.y + n * stepVelocity.y + 0.5f * (n*n + n) * stepGravity.y);
+	}
+
+	public void drawTrojectory(SpriteBatch batch, Body body, Vector2 startVelocity){
+		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
+		Texture texture = new Texture(pixmap);
+		Sprite sprite = new Sprite(texture);
+		sprite.setSize(0.05f, 0.05f);
+
+		for (int x = 1; x < 180; x++){
+			Vector2 position = getTrojectoryPoint(body.getPosition(), startVelocity, x);
+			sprite.setPosition(position.x, position.y);
+			sprite.draw(batch);
+		}
 	}
 
 	/**

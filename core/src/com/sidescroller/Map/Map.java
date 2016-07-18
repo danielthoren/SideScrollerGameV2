@@ -2,6 +2,8 @@ package com.sidescroller.Map;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
@@ -202,6 +204,15 @@ public class Map
     }
 
     /**
+     * Creates a body using the world
+     * @param bodyDef The bodydef from wich to create the body.
+     * @return Returns the created body.
+     */
+    public Body createBody(BodyDef bodyDef){
+        return world.createBody(bodyDef);
+    }
+
+    /**
      * @return Returns a unique id.
      */
     public long getObjectID() {
@@ -246,6 +257,8 @@ public class Map
     public int getLayerCount() {return layerCount;}
 
     public ActionManager getActionManager(){return actionManager;}
+
+    public Vector2 getGravity(){return world.getGravity();}
 
     /**
      * Sets the drawLayerCount variable to the highest value found in the list, if any exceeds the one already in the map.
