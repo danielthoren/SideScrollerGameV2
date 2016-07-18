@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * Created by daniel on 2016-07-12.
+ * Animates a evenly spaced sprite.
  */
 public class SpriteAnimation  {
 

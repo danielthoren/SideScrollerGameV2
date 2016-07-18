@@ -2,15 +2,12 @@ package com.sidescroller.game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Vector2;
 
 /**
- * Created by daniel on 2016-06-06.
+ * This class is instanciated in the main class and added to the 'libGDX' library. Theese functions are then called
+ * when inputs are registered.
  */
 public class InputHandler extends InputAdapter {
-
-    public InputHandler() {}
 
     /** Called when a key was pressed
      *

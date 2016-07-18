@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sidescroller.Map.Map;
 import com.sidescroller.Map.MapLoader;
-import com.sidescroller.player.Player;
 
 public class SideScrollerGameV2 extends ApplicationAdapter {
 	private static Map currentMap;

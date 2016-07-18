@@ -3,7 +3,6 @@ package com.sidescroller.objects;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.utils.Array;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.game.Draw;
@@ -12,7 +11,8 @@ import com.sidescroller.game.SideScrollerGameV2;
 import com.sidescroller.game.TypeOfGameObject;
 
 /**
- * Created by daniel on 2016-06-06.
+ * Creates a 'Shape' object that contains a physical body with fixtures etc. Also may contain many textures in the form of
+ * 'RubeSprite' that is drawn on the map.
  */
 public class Shape implements Draw {
 
@@ -20,6 +20,12 @@ public class Shape implements Draw {
     private Body body;
     private final long iD;
 
+    /**
+     * Creates a Shape object.
+     * @param iD The unique id of the object.
+     * @param body The body of the object.
+     * @param rubeSprites The 'RubeSprite' of the object (contains a 'RubeImage' and a 'Sprite').
+     */
     public Shape(long iD, Body body, Array<RubeSprite> rubeSprites) {
         this.iD = iD;
         this.rubeSprites = rubeSprites;
@@ -27,6 +33,11 @@ public class Shape implements Draw {
         this.body = body;
     }
 
+    /**
+     * Cteates a Shape object.
+     * @param iD The unique id of the object.
+     * @param body The body of the object.
+     */
     public Shape(long iD, Body body) {
         this.iD = iD;
         rubeSprites = null;

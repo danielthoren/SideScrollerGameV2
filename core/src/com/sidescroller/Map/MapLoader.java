@@ -9,14 +9,12 @@ import com.badlogic.gdx.utils.Json;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
-import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.objects.Actions.ButtonTrigger;
 import com.sidescroller.objects.Actions.BodyAction;
 import com.sidescroller.objects.Actions.SensorTrigger;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
 import com.sidescroller.player.Player;
-import javafx.scene.Scene;
 
 import java.util.HashMap;
 

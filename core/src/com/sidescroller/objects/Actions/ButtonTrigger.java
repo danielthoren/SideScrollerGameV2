@@ -2,17 +2,16 @@ package com.sidescroller.objects.Actions;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import com.sidescroller.game.Draw;
 import com.sidescroller.game.InteractGameObject;
-import com.sidescroller.game.SideScrollerGameV2;
 import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
 import com.sidescroller.player.Player;
 
+/**
+ * Creates a trigger that triggers when a player collides with it and presses the 'Interact' key (default 'E')
+ */
 public class ButtonTrigger extends Trigger implements InteractGameObject
 {
 	private TypeOfGameObject typeOfGameObject = TypeOfGameObject.INTERACTOBJECT;
@@ -24,6 +23,12 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 		super(iD, targetActionID);
 	}
 
+	/**
+	 * Creates a 'ButtonTrigger'.
+	 * @param iD The unique id of the object.
+	 * @param targetActionID The id of the target action/actions.
+	 * @param shape The shape of the button.
+     */
 	public ButtonTrigger(long iD, int targetActionID, Shape shape) {
 		super(iD, targetActionID);
 		this.shape = shape;
@@ -31,14 +36,10 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 		hasTriggered = false;
 	}
 
-	public ButtonTrigger(long iD, int targetActionID, Shape shape, Texture texture) {
-		super(iD, targetActionID);
-		this.shape = shape;
-		sprite = new Sprite(texture);
-		shape.getBody().setUserData(this);
-		hasTriggered = false;
-	}
-
+	/**
+	 * Used to check if the trigger has triggered.
+	 * @return True if triggered, else false.
+     */
 	public boolean hasTriggered(){
 		return hasTriggered;
 	}
@@ -63,8 +64,7 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 	 * other objects.
 	 * @param player
 	 */
-	public void endInteract(Player player){
-	}
+	public void endInteract(Player player){}
 
 	public TypeOfGameObject getTypeOfGameObject(){
 		return typeOfGameObject;
