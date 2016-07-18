@@ -12,6 +12,7 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.R
 import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.objects.Actions.ButtonTrigger;
 import com.sidescroller.objects.Actions.BodyAction;
+import com.sidescroller.objects.Actions.SensorTrigger;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
 import com.sidescroller.player.Player;
@@ -93,6 +94,9 @@ public class MapLoader {
                 else if (type.toLowerCase().equals("buttontrigger")){
                     createButtonTrigger(shape, scene, map);
                 }
+                else if (type.toLowerCase().equals("sensortrigger")){
+                    createSensorTrigger(shape, scene, map);
+                }
                 else{
                     map.addDrawObject(shape);
                 }
@@ -134,6 +138,27 @@ public class MapLoader {
             System.out.println("Error corrected. NullPointerException when getting custom property! (ButtonTrigger)");
             map.addDrawObject(shape);
         }
+    }
+
+    public void createSensorTrigger(Shape shape, RubeScene scene, Map map){
+
+        Object actionIDObj = scene.getCustom(shape.getBody(), "id");
+        try{
+            int actionID = (Integer) actionIDObj;
+            SensorTrigger sensorTrigger = new SensorTrigger(map.getObjectID(), actionID, shape);
+            map.getActionManager().addTrigger(sensorTrigger);
+            map.addDrawObject(shape);
+            map.addCollisionListener(sensorTrigger);
+        }
+        catch (ClassCastException e){
+            System.out.println("Error corrected. ClassCastException when getting custom property! (SensorTrigger)");
+            map.addDrawObject(shape);
+        }
+        catch (NullPointerException e){
+            System.out.println("Error corrected. NullPointerException when getting custom property! (SensorTrigger)");
+            map.addDrawObject(shape);
+        }
+
     }
 
     /**

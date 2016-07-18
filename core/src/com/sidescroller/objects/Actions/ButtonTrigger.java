@@ -50,9 +50,11 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 	 */
 	public void startInteract(Player player){
 		hasTriggered = !hasTriggered;
-		Array<RubeSprite> rubeSprites = shape.getRubeSprites();
-		for (RubeSprite rubeSprite : rubeSprites){
-			rubeSprite.getSprite().flip(true, false);
+		if(shape.getRubeSprites() != null) {
+			Array<RubeSprite> rubeSprites = shape.getRubeSprites();
+			for (RubeSprite rubeSprite : rubeSprites) {
+				rubeSprite.getSprite().flip(true, false);
+			}
 		}
 	}
 

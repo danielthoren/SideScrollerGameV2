@@ -14,6 +14,7 @@ public class SensorTrigger extends Trigger implements CollisionListener
     public SensorTrigger(long iD, int targetActionID, Shape shape) {
         super(iD, targetActionID);
         this.shape = shape;
+        shape.getBody().setUserData(this);
     }
 
     /**
