@@ -31,7 +31,6 @@ public class MapLoader {
     private HashMap<String, Map> loadedMaps;
 	private Json json;
 
-	//TODO fix converter that fixes image paths
     private MapLoader() {
         loadedMaps = new HashMap<String, Map>(1);
         loader = new RubeSceneLoader();
@@ -45,10 +44,7 @@ public class MapLoader {
         if (!loadedMaps.containsKey(mapPath)){
             RubeScene scene = loader.loadScene(Gdx.files.internal(mapPath));
 
-            //removes the '../' in each image filepath that the editor generates
-            for (RubeImage rubeImage : scene.getImages()){
-                rubeImage.file = rubeImage.file.substring(3);
-            }
+			convertFilePath(scene);
 
             Map map = new Map(scene.getWorld(), true, scene.velocityIterations, scene.positionIterations);
 
@@ -93,7 +89,7 @@ public class MapLoader {
                     createSensorTrigger(shape, scene, map);
                 }
 				else if (type.toLowerCase().equals("turret")){
-
+					createTurret(map, shape, scene);
 				}
                 else{
                     map.addDrawObject(shape);
@@ -112,6 +108,14 @@ public class MapLoader {
         }
         return loadedMaps.get(mapPath);
     }
+
+	private void convertFilePath(RubeScene scene){
+		//removes the '../' in each image filepath that the editor generates
+		//TODO fix converter that fixes image paths
+		for (RubeImage rubeImage : scene.getImages()){
+			rubeImage.file = rubeImage.file.substring(3);
+		}
+	}
 
 	private Array<RubeSprite> createRubeSprites(Array<RubeImage> rubeImages, Map map){
 		Array<RubeSprite> rubeSprites = new Array<RubeSprite>(1);
@@ -152,10 +156,19 @@ public class MapLoader {
 		}
 
 		if(turretBaseBody != null && barrelBody != null) {
-			Shape turretBase = new Shape(map.getObjectID(), turretBaseBody, createRubeSprites(scene.getMappedImage(turretBaseBody), map));
-			Shape barrel = new Shape(map.getObjectID(), barrelBody, createRubeSprites(scene.getMappedImage(barrelBody), map));
+			convertFilePath(turretScene);
+			Shape turretBase = new Shape(map.getObjectID(), turretBaseBody, createRubeSprites(turretScene.getMappedImage(turretBaseBody), map));
+			Shape barrel = new Shape(map.getObjectID(), barrelBody, createRubeSprites(turretScene.getMappedImage(barrelBody), map));
+			turretBase.getBody().setTransform(shape.getBody().getPosition(), shape.getBody().getAngle());
+			barrel.getBody().setTransform(shape.getBody().getPosition(), shape.getBody().getAngle());
+
+			System.out.println(shape.getBody().getPosition());
 
 			Turret turret = new Turret(map.getObjectID(), barrel, turretBase);
+
+			map.addDrawObject(barrel);
+			map.addDrawObject(turretBase);
+			map.addUpdateObject(turret);
 		}
 	}
 
