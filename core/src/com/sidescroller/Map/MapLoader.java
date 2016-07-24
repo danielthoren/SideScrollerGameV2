@@ -3,12 +3,10 @@ package com.sidescroller.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
@@ -17,6 +15,7 @@ import com.sidescroller.objects.Actions.BodyAction;
 import com.sidescroller.objects.Actions.SensorTrigger;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
+import com.sidescroller.objects.Turret;
 import com.sidescroller.player.Player;
 
 import java.util.HashMap;
@@ -61,12 +60,7 @@ public class MapLoader {
                 //Creating the arrays for the hashmap and adding images to the map if there are images then creating a Shape.
                 Shape shape;
                 if (rubeImages != null) {
-                    Array<RubeSprite> rubeSprites = new Array<RubeSprite>(1);
-                    for (RubeImage rubeImage : rubeImages){
-                        rubeSprites.add(new RubeSprite(rubeImage));
-                    }
-                    map.updateLayerDepth(rubeSprites);
-                    shape = new Shape(map.getObjectID(), body, rubeSprites);
+					shape = new Shape(map.getObjectID(), body, createRubeSprites(rubeImages, map));
                 }
                 else{
                     shape = new Shape(map.getObjectID(), body);
@@ -98,6 +92,9 @@ public class MapLoader {
                 else if (type.toLowerCase().equals("sensortrigger")){
                     createSensorTrigger(shape, scene, map);
                 }
+				else if (type.toLowerCase().equals("turret")){
+
+				}
                 else{
                     map.addDrawObject(shape);
                 }
@@ -115,6 +112,52 @@ public class MapLoader {
         }
         return loadedMaps.get(mapPath);
     }
+
+	private Array<RubeSprite> createRubeSprites(Array<RubeImage> rubeImages, Map map){
+		Array<RubeSprite> rubeSprites = new Array<RubeSprite>(1);
+		for (RubeImage rubeImage : rubeImages){
+			rubeSprites.add(new RubeSprite(rubeImage));
+		}
+		map.updateLayerDepth(rubeSprites);
+		return  rubeSprites;
+	}
+
+	private void createTurret(Map map, Shape shape, RubeScene scene){
+		RubeSceneLoader turretLoader = new RubeSceneLoader(scene.getWorld());
+		RubeScene turretScene;
+		turretScene = turretLoader.loadScene(Gdx.files.internal("turret.json"));
+
+		Body turretBaseBody = null;
+		Body barrelBody = null;
+
+		for (Body body : turretScene.getBodies()){
+			Object partObj = turretScene.getCustom(body, "part");
+			try{
+				String part = (String) partObj;
+				if (part.toLowerCase().equals("barrel")){
+					barrelBody = body;
+				}
+				else if (part.toLowerCase().equals("turretbase")){
+					turretBaseBody = body;
+				}
+			}
+			catch (ClassCastException e){
+				System.out.println("Error corrected. ClassCastException when getting custom property! (Turret)");
+				map.addDrawObject(shape);
+			}
+			catch (NullPointerException e){
+				System.out.println("Error corrected. NullPointerException when getting custom property! (Turret)");
+				map.addDrawObject(shape);
+			}
+		}
+
+		if(turretBaseBody != null && barrelBody != null) {
+			Shape turretBase = new Shape(map.getObjectID(), turretBaseBody, createRubeSprites(scene.getMappedImage(turretBaseBody), map));
+			Shape barrel = new Shape(map.getObjectID(), barrelBody, createRubeSprites(scene.getMappedImage(barrelBody), map));
+
+			Turret turret = new Turret(map.getObjectID(), barrel, turretBase);
+		}
+	}
 
     /**
      * Creates a 'ButtonTrigger' of specified type and adding it to the world.
