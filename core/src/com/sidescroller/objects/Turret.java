@@ -1,8 +1,7 @@
 package com.sidescroller.objects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.*;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.game.Update;
@@ -20,14 +19,14 @@ public class Turret implements Update {
 		this.barrel = barrel;
 		this.turretBase = turretBase;
 		this.id = id;
+
+		turretBase.getBody().setType(BodyDef.BodyType.DynamicBody);
+		barrel.getBody().setType(BodyDef.BodyType.DynamicBody);
+		barrel.getBody().setFixedRotation(false);
 	}
 
 	public void update(){
-		/*
-		float angle = barrel.getBody().getAngle();
-		angle = angle + 0.02f;
-		barrel.getBody().setTransform(barrel.getBody().getPosition(), angle);
-		*/
+
 	}
 
 	public TypeOfGameObject getTypeOfGameObject(){
