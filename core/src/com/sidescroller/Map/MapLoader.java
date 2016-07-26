@@ -13,6 +13,7 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.R
 import com.sidescroller.objects.Actions.ButtonTrigger;
 import com.sidescroller.objects.Actions.BodyAction;
 import com.sidescroller.objects.Actions.SensorTrigger;
+import com.sidescroller.objects.JointData;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
 import com.sidescroller.objects.Turret;
@@ -47,6 +48,8 @@ public class MapLoader {
 			convertFilePath(scene);
 
             Map map = new Map(scene.getWorld(), true, scene.velocityIterations, scene.positionIterations);
+
+
 
             //Adding all of the bodies to the map
             int p = 0;
@@ -109,6 +112,46 @@ public class MapLoader {
         return loadedMaps.get(mapPath);
     }
 
+	/**
+	 * Creating a 'JointData' container for each joint in the world (each joint must have one) and, if custom
+	 *  properties exist then add them to the container (otherwise null by default).
+	 * @param scene The scene containing the joints.
+	 * @param map The map to add the joints with a 'id' parameter to.
+	 */
+	private void setJointData(RubeScene scene, Map map){
+		for (Joint joint : scene.getJoints()){
+			JointData jointData = new JointData();
+			Object id;
+			Object name;
+			id = scene.getCustom(joint, "id");
+			name = scene.getCustom(joint, "name");
+
+			if (id != null){
+				try{
+					jointData.setJointId((Integer) id);
+					//TODO add theese joints to the actionManager in the map (create a system for joint actions in the ActionManager)
+				}
+				catch (ClassCastException e){
+					System.out.println("Error corrected. ClassCastException when getting custom property! (joint id. Wrong input in map editor!)");
+				}
+			}
+			if (name != null){
+				try{
+					jointData.setName((String) name);
+				}
+				catch (ClassCastException e){
+					System.out.println("Error corrected. ClassCastException when getting custom property! (joint name. Wrong input in map editor!)");
+				}
+			}
+			joint.setUserData(jointData);
+		}
+	}
+
+	/**
+	 * Converts the filepaths that the editor outputs when the the json file is exported in a certain way. May become
+	 * absolete as we start setting the enviroment up in another way.
+	 * @param scene The scene in wich to change the filepaths.
+	 */
 	private void convertFilePath(RubeScene scene){
 		//removes the '../' in each image filepath that the editor generates
 		//TODO fix converter that fixes image paths
@@ -117,6 +160,13 @@ public class MapLoader {
 		}
 	}
 
+	/**
+	 * Creates an array of 'RubeSprites' from a array of 'RubeImages'. Used when creating shapes and other things that
+	 * needs drawing.
+	 * @param rubeImages RubeImages loaded from json file, one of the parameters contained in a 'RubeSprite'.
+	 * @param map The map so that the layer depth can be updated.
+	 * @return Returns an array of 'RubeSprites'.
+	 */
 	private Array<RubeSprite> createRubeSprites(Array<RubeImage> rubeImages, Map map){
 		Array<RubeSprite> rubeSprites = new Array<RubeSprite>(1);
 		for (RubeImage rubeImage : rubeImages){
@@ -126,14 +176,21 @@ public class MapLoader {
 		return  rubeSprites;
 	}
 
+	/**
+	 * Creates a turret object.
+	 * @param map The map to add the object to.
+	 * @param shape The shape created with the body specifying this objects creation.
+	 * @param scene The scene from wich to create the object.
+	 */
 	private void createTurret(Map map, Shape shape, RubeScene scene){
 		RubeSceneLoader turretLoader = new RubeSceneLoader(scene.getWorld());
 		RubeScene turretScene;
 		turretScene = turretLoader.loadScene(Gdx.files.internal("turret.json"));
+		setJointData(turretScene, map);
 
+		//getting the needed bodies
 		Body turretBaseBody = null;
 		Body barrelBody = null;
-
 		for (Body body : turretScene.getBodies()){
 			Object partObj = turretScene.getCustom(body, "part");
 			try{
@@ -152,6 +209,23 @@ public class MapLoader {
 			catch (NullPointerException e){
 				System.out.println("Error corrected. NullPointerException when getting custom property! (Turret)");
 				map.addDrawObject(shape);
+			}
+		}
+
+		//Getting the needed joints
+		Joint barrelJoint;
+		for (JointEdge jointEdge : turretBaseBody.getJointList()){
+			if (((JointData) jointEdge.joint.getUserData()) != null){
+				try {
+					String name = ((JointData) jointEdge.joint.getUserData()).getName();
+					if (name.toLowerCase().equals("barreljoint")){
+						barrelJoint = jointEdge.joint;
+					}
+				}
+				catch (ClassCastException e){
+					System.out.println("Error corrected. NullPointerException when getting custom property! (Turret joint (joint 'UserData' not a object of type 'JointData' !)");
+					map.addDrawObject(shape);
+				}
 			}
 		}
 
