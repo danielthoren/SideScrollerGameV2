@@ -29,6 +29,16 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private boolean isBottomSensor, isRightSensor, isLeftSensor;
     private boolean isRunning, isGrounded, isCollisionLeft, isCollisionRight;
 
+    private int interactKey;
+    private int leftKey;
+    private int rightKey;
+    private int upKey;
+
+    private boolean isInteractKey;
+    private boolean isLeftKey;
+    private boolean isRightKey;
+    private boolean isUpKey;
+
     //Default values
     private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(1f, 5f);
     private static final float GROUNDED_THRESHOLD = 0.01f;
@@ -54,6 +64,17 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         sprite.setSize(bodyWidth, bodyHeight);
         sprite.setOrigin(0,0);
         createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, 0.1f);
+
+        //setting default keybindings
+        interactKey = Input.Keys.E;
+        leftKey = Input.Keys.LEFT;
+        rightKey = Input.Keys.RIGHT;
+        upKey = Input.Keys.UP;
+
+        isInteractKey = true;
+        isLeftKey = true;
+        isRightKey = true;
+        isUpKey = true;
 
         body.setUserData(this);
     }
@@ -288,22 +309,22 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * @param keycode one of the constants in {@link Keys}
      * @return whether the input was processed */
     public void keyDown(int keycode){
-        if (keycode == Input.Keys.LEFT){
+        if (isLeftKey && keycode == leftKey){
             isRunning = true;
             direction = Direction.LEFT;
         }
-        else if (keycode == Input.Keys.RIGHT){
+        else if (isRightKey && keycode == rightKey){
             isRunning = true;
             direction = Direction.RIGHT;
         }
-        else if (keycode == Input.Keys.UP){
+        else if (isUpKey && keycode == upKey){
             if(isGrounded) {
                 jump();
             }
         }
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
-        else if (keycode == Input.Keys.E){
+        else if (isInteractKey && keycode == interactKey){
             notifyInteractObjects(collidingBodies, true);
         }
 
@@ -314,12 +335,12 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * @param keycode one of the constants in {@link Keys}
      * @return whether the input was processed */
     public void keyUp (int keycode){
-        if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT){
+        if ((isLeftKey && keycode == leftKey) || (isRightKey && keycode == rightKey)){
             isRunning = false;
         }
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
-        else if (keycode == Input.Keys.E){
+        else if (isInteractKey && keycode == interactKey){
             notifyInteractObjects(collidingBodies, false);
         }
     }
@@ -418,4 +439,28 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             return false;
         }
     }
+
+    public int getInteractKey() {return interactKey;}
+
+    public void setInteractKey(final int interactKey) {this.interactKey = interactKey;}
+
+    public int getLeftKey() {return leftKey;}
+
+    public void setLeftKey(final int leftKey) {this.leftKey = leftKey;}
+
+    public int getRightKey() {return rightKey;}
+
+    public void setRightKey(final int rightKey) {this.rightKey = rightKey;}
+
+    public int getUpKey() {return upKey;}
+
+    public void setUpKey(final int upKey) {this.upKey = upKey;}
+
+    public void setUpKey(final boolean upKey) {this.isUpKey = upKey;}
+
+    public void setRightKey(final boolean rightKey) {this.isRightKey = rightKey;}
+
+    public void setLeftKey(final boolean leftKey) {this.isLeftKey = leftKey;}
+
+    public void setInteractKey(final boolean interactKey) {this.isInteractKey = interactKey;}
 }

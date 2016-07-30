@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
@@ -113,14 +114,14 @@ public class MapLoader {
     }
 
 	/**
-	 * Creating a 'JointData' container for each joint in the world (each joint must have one) and, if custom
-	 *  properties exist then add them to the container (otherwise null by default).
+	 * Creating a 'JointData' container for those joinst that have an id assigned to them. This is used when creating actions
+     * relating to joints.
 	 * @param scene The scene containing the joints.
 	 * @param map The map to add the joints with a 'id' parameter to.
 	 */
 	private void setJointData(RubeScene scene, Map map){
 		for (Joint joint : scene.getJoints()){
-			JointData jointData = new JointData();
+            JointData jointData = new JointData();
 			Object id;
 			Object name;
 			id = scene.getCustom(joint, "id");
@@ -129,21 +130,22 @@ public class MapLoader {
 			if (id != null){
 				try{
 					jointData.setJointId((Integer) id);
+                    joint.setUserData(jointData);
+
+                    if (name != null){
+                        try{
+                            jointData.setName((String) name);
+                        }
+                        catch (ClassCastException e){
+                            System.out.println("Error corrected. ClassCastException when getting custom property! (joint name. Wrong input in map editor!)");
+                        }
+                    }
 					//TODO add theese joints to the actionManager in the map (create a system for joint actions in the ActionManager)
 				}
 				catch (ClassCastException e){
 					System.out.println("Error corrected. ClassCastException when getting custom property! (joint id. Wrong input in map editor!)");
 				}
 			}
-			if (name != null){
-				try{
-					jointData.setName((String) name);
-				}
-				catch (ClassCastException e){
-					System.out.println("Error corrected. ClassCastException when getting custom property! (joint name. Wrong input in map editor!)");
-				}
-			}
-			joint.setUserData(jointData);
 		}
 	}
 
@@ -213,23 +215,28 @@ public class MapLoader {
 		}
 
 		//Getting the needed joints
-		Joint barrelJoint;
+        RevoluteJoint barrelRevoluteJoint = null;
 		for (JointEdge jointEdge : turretBaseBody.getJointList()){
 			if (((JointData) jointEdge.joint.getUserData()) != null){
 				try {
-					String name = ((JointData) jointEdge.joint.getUserData()).getName();
+                    JointData jointData = (JointData) jointEdge.joint.getUserData();
+					String name = jointData.getName();
 					if (name.toLowerCase().equals("barreljoint")){
-						barrelJoint = jointEdge.joint;
+                        barrelRevoluteJoint = (RevoluteJoint) jointEdge.joint;
 					}
 				}
 				catch (ClassCastException e){
 					System.out.println("Error corrected. NullPointerException when getting custom property! (Turret joint (joint 'UserData' not a object of type 'JointData' !)");
 					map.addDrawObject(shape);
 				}
+                catch (NullPointerException e){
+                    System.out.println("Error corrected. NullPointerException when getting custom property! (Turret joint (joint 'UserData' not )");
+                    map.addDrawObject(shape);
+                }
 			}
 		}
 
-		if(turretBaseBody != null && barrelBody != null) {
+		if(turretBaseBody != null && barrelBody != null && barrelRevoluteJoint != null) {
 			convertFilePath(turretScene);
 			Shape turretBase = new Shape(map.getObjectID(), turretBaseBody, createRubeSprites(turretScene.getMappedImage(turretBaseBody), map));
 			Shape barrel = new Shape(map.getObjectID(), barrelBody, createRubeSprites(turretScene.getMappedImage(barrelBody), map));
@@ -238,11 +245,10 @@ public class MapLoader {
 
 			System.out.println(shape.getBody().getPosition());
 
-			Turret turret = new Turret(map.getObjectID(), barrel, turretBase);
+			Turret turret = new Turret(map.getObjectID(), barrel, turretBase, barrelRevoluteJoint);
 
 			map.addDrawObject(barrel);
 			map.addDrawObject(turretBase);
-			map.addUpdateObject(turret);
 		}
 	}
 
