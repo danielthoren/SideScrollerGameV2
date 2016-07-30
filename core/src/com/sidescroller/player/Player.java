@@ -419,7 +419,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
 
-    public long getiD(){return iD;}
+    public long getId(){return iD;}
 
     public TypeOfGameObject getTypeOfGameObject(){return typeOfGameObject;}
 
@@ -433,7 +433,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public boolean equals(Object obj) {
         try{
             GameObject gameObject = (GameObject) obj;
-            return gameObject.getiD() == this.getiD();
+            return gameObject.getId() == this.getId();
         }
         catch (Exception e){
             return false;

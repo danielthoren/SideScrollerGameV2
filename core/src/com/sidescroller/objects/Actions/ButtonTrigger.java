@@ -66,7 +66,11 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 	 */
 	public void endInteract(Player player){}
 
-	public TypeOfGameObject getTypeOfGameObject(){
-		return typeOfGameObject;
+	/**
+	 * Changes the userdata of the body belonging to the shape from 'this' to the actual shape. This is done so that
+     * the JVM Garbagecollector removes 'this' (the garbagecollector removes objects with no references).
+     */
+	public void destroyTrigger(){
+		shape.getBody().setUserData(shape);
 	}
 }

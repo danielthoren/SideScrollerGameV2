@@ -58,6 +58,14 @@ public class SensorTrigger extends Trigger implements CollisionListener
         isTriggered = (fixA == TypeOfGameObject.PLAYER || fixB == TypeOfGameObject.PLAYER);
     }
 
+	/**
+	 * Changes the userdata of the body belonging to the shape from 'this' to the actual shape. This is done so that
+     * the JVM Garbagecollector removes 'this' (the garbagecollector removes objects with no references).
+     */
+    public void destroyTrigger(){
+        shape.getBody().setUserData(shape);
+    }
+
     public boolean hasTriggered(){
         return isTriggered;
     }

@@ -72,4 +72,9 @@ public class BodyAction extends Action
 		}
 		SideScrollerGameV2.getCurrentMap().getActionManager().removeAction(this);
 	}
+
+	/**
+	 * No actions needs to be performed when removing a BodyAction
+	 */
+	public void destroyAction(){}
 }

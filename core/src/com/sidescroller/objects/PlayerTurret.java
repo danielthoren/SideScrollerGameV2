@@ -15,6 +15,8 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
 
     public PlayerTurret(final long id, final Shape barrel, final Shape turretBase, final RevoluteJoint barrelJoint) {
         super(id, barrel, turretBase, barrelJoint);
+        turretBase.getBody().setUserData(this);
+        barrel.getBody().setUserData(this);
         isActivated = false;
     }
 

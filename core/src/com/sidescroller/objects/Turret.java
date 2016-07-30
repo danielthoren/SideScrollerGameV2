@@ -1,18 +1,15 @@
 package com.sidescroller.objects;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.sidescroller.game.Direction;
-import com.sidescroller.game.Draw;
 import com.sidescroller.game.GameObject;
 import com.sidescroller.game.TypeOfGameObject;
-import com.sidescroller.game.Update;
 
 /**
  * Created by daniel on 2016-07-24.
  */
-public class Turret {
+public class Turret implements GameObject {
 
 	private Shape barrel;
 	private Shape turretBase;
@@ -54,13 +51,18 @@ public class Turret {
 		}
 	}
 
+	public long getId(){
+		return id;
+	}
+
+	/**
+	 * Returns wich type of gameobject this specific object is.
+	 * @return The type of gameobject
+	 */
 	public TypeOfGameObject getTypeOfGameObject(){
 		return TypeOfGameObject.OTHER;
 	}
 
-	public long getiD(){
-		return id;
-	}
 
 	/**
   * Overridden version of Equals that ensures that both object pointers are the exact same instantiation of
@@ -72,7 +74,7 @@ public class Turret {
 	public boolean equals(Object obj) {
 		try{
 			GameObject gameObject = (GameObject) obj;
-			return gameObject.getiD() == this.getiD();
+			return gameObject.getId() == this.getId();
 		}
 		catch (Exception e){
 			return false;

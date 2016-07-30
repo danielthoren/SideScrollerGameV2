@@ -88,8 +88,8 @@ public class Map
         List<Long> bodyIDRemoved = new ArrayList<Long>();
         //Destroying all of the bodies that are staged for removal
         for (Body body : bodiesStagedForRemoval){
-            if (!bodyIDRemoved.contains(((GameObject)body.getUserData()).getiD())) {
-                bodyIDRemoved.add(((GameObject)body.getUserData()).getiD());
+            if (!bodyIDRemoved.contains(((GameObject)body.getUserData()).getId())) {
+                bodyIDRemoved.add(((GameObject)body.getUserData()).getId());
                 world.destroyBody(body);
             }
         }
@@ -98,7 +98,7 @@ public class Map
         for (Draw drawObjectRemove : drawObjectsStagedForRemoval){
             for (Iterator<Draw> iterator = drawObjects.iterator(); iterator.hasNext();){
                 Draw object = iterator.next();
-                if (drawObjectRemove.getiD() == object.getiD()){
+                if (drawObjectRemove.getId() == object.getId()){
                     iterator.remove();
                 }
             }
@@ -109,7 +109,7 @@ public class Map
         for (Update objectRemove : updateObjectsStagedForRemoval){
             for (Iterator<Update> iterator = updateObjects.iterator(); iterator.hasNext();){
                 Update object = iterator.next();
-                if (objectRemove.getiD() == object.getiD()){
+                if (objectRemove.getId() == object.getId()){
                     iterator.remove();
                 }
             }
@@ -118,7 +118,7 @@ public class Map
         for (InputListener listenerRemova : inputListenersStagedForRemoval){
             for (Iterator<InputListener> iterator = inputListenerList.iterator(); iterator.hasNext();) {
                 InputListener inputListener = iterator.next();
-                if (inputListener.getiD() == listenerRemova.getiD()){
+                if (inputListener.getId() == listenerRemova.getId()){
                     iterator.remove();
                 }
             }
@@ -127,7 +127,7 @@ public class Map
         for (CollisionListener collisionListenerRemove : collisionListenersStagedForRemoval){
             for (Iterator<CollisionListener> iterator = collisionListenerList.iterator(); iterator.hasNext();){
                 CollisionListener collisionListener = iterator.next();
-                if (collisionListener.getiD() == collisionListenerRemove.getiD()) {
+                if (collisionListener.getId() == collisionListenerRemove.getId()) {
                     iterator.remove();
                 }
             }
@@ -224,9 +224,7 @@ public class Map
      * Steps the world, moving the simulation forward.
      * @param timeParam The timeparameter to send to the world.
      */
-    public void stepWorld(float timeParam){
-        world.step(timeParam, velocityIterations, positionIterations);
-    }
+    public void stepWorld(float timeParam){world.step(timeParam, velocityIterations, positionIterations);}
 
     public void removeBody(Body body){bodiesStagedForRemoval.add(body);}
 

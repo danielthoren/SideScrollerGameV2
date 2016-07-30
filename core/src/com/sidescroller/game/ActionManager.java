@@ -62,7 +62,8 @@ public class ActionManager
 	public void removeTrigger(Trigger trigger){
 		for (Iterator<Trigger> iterator = triggers.iterator(); iterator.hasNext();){
 			Trigger trig = iterator.next();
-			if (trig.getiD() == trigger.getiD()){
+			if (trig.getId() == trigger.getId()){
+				trig.destroyTrigger();
 				iterator.remove();
 			}
 		}
@@ -85,8 +86,13 @@ public class ActionManager
 		}
 
 		//Removing all of the actions staged for removal
-		for (Action action : actionsStagedForRemoval) {
-			actions.get(action.getActionID()).remove(action);
+		for (Action actionRemove : actionsStagedForRemoval) {
+			for (Action action : actions.get(actionRemove.getActionID())){
+				if (action.equals(actionRemove)){
+					action.destroyAction();
+					actions.get(actionRemove.getActionID()).remove(action);
+				}
+			}
 		}
 	}
 }
