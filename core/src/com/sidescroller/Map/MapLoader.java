@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
@@ -243,9 +242,11 @@ public class MapLoader {
 			turretBase.getBody().setTransform(shape.getBody().getPosition(), shape.getBody().getAngle());
 			barrel.getBody().setTransform(shape.getBody().getPosition(), shape.getBody().getAngle());
 
-			System.out.println(shape.getBody().getPosition());
-
 			Turret turret = new Turret(map.getObjectID(), barrel, turretBase, barrelRevoluteJoint);
+
+			//Removing the body giving the position and creation information to the turret. Otherwise nullpointerException is thrown.
+			map.removeDrawObject(shape);
+			map.removeBody(shape.getBody());
 
 			map.addDrawObject(barrel);
 			map.addDrawObject(turretBase);
