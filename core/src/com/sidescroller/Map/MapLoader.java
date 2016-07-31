@@ -215,24 +215,31 @@ public class MapLoader {
 
 		//Getting the needed joints
         RevoluteJoint barrelRevoluteJoint = null;
-		for (JointEdge jointEdge : turretBaseBody.getJointList()){
-			if (((JointData) jointEdge.joint.getUserData()) != null){
-				try {
-                    JointData jointData = (JointData) jointEdge.joint.getUserData();
-					String name = jointData.getName();
-					if (name.toLowerCase().equals("barreljoint")){
-                        barrelRevoluteJoint = (RevoluteJoint) jointEdge.joint;
+		try {
+			for (JointEdge jointEdge : turretBaseBody.getJointList()) {
+				if (((JointData) jointEdge.joint.getUserData()) != null) {
+					try {
+						JointData jointData = (JointData) jointEdge.joint.getUserData();
+						String name = jointData.getName();
+						if (name.toLowerCase().equals("barreljoint")) {
+							barrelRevoluteJoint = (RevoluteJoint) jointEdge.joint;
+						}
+					} catch (ClassCastException e) {
+						System.out.println(
+								"Error corrected. NullPointerException when getting custom property! (Turret joint (joint 'UserData' not a object of type 'JointData' !)");
+						map.addDrawObject(shape);
+					} catch (NullPointerException e) {
+						System.out.println(
+								"Error corrected. NullPointerException when getting custom property! (Turret joint (joint 'UserData' not )");
+						map.addDrawObject(shape);
 					}
 				}
-				catch (ClassCastException e){
-					System.out.println("Error corrected. NullPointerException when getting custom property! (Turret joint (joint 'UserData' not a object of type 'JointData' !)");
-					map.addDrawObject(shape);
-				}
-                catch (NullPointerException e){
-                    System.out.println("Error corrected. NullPointerException when getting custom property! (Turret joint (joint 'UserData' not )");
-                    map.addDrawObject(shape);
-                }
 			}
+		}
+		catch (NullPointerException e) {
+			System.out.println(
+					"Error corrected. NullPointerException when getting custom property! (turretBaseBody.getJointList returned zero)");
+			map.addDrawObject(shape);
 		}
 
 		if(turretBaseBody != null && barrelBody != null && barrelRevoluteJoint != null) {
