@@ -14,10 +14,8 @@ import com.sidescroller.player.Player;
  */
 public class ButtonTrigger extends Trigger implements InteractGameObject
 {
-	private TypeOfGameObject typeOfGameObject = TypeOfGameObject.INTERACTOBJECT;
 	private Shape shape;
 	private boolean hasTriggered;
-	private Sprite sprite;
 
 	public ButtonTrigger(long iD, int targetActionID) {
 		super(iD, targetActionID);
@@ -51,10 +49,12 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 	 */
 	public void startInteract(Player player){
 		hasTriggered = !hasTriggered;
-		if(shape.getRubeSprites() != null) {
-			Array<RubeSprite> rubeSprites = shape.getRubeSprites();
-			for (RubeSprite rubeSprite : rubeSprites) {
-				rubeSprite.getSprite().flip(true, false);
+		if (shape != null) {
+			if (shape.getRubeSprites() != null) {
+				Array<RubeSprite> rubeSprites = shape.getRubeSprites();
+				for (RubeSprite rubeSprite : rubeSprites) {
+					rubeSprite.getSprite().flip(true, false);
+				}
 			}
 		}
 	}
@@ -72,5 +72,10 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
      */
 	public void destroyTrigger(){
 		shape.getBody().setUserData(shape);
+	}
+
+	@Override
+	public TypeOfGameObject getTypeOfGameObject(){
+		return TypeOfGameObject.INTERACTOBJECT;
 	}
 }

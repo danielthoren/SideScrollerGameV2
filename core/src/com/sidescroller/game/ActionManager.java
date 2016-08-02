@@ -87,12 +87,14 @@ public class ActionManager
 
 		//Removing all of the actions staged for removal
 		for (Action actionRemove : actionsStagedForRemoval) {
-			for (Action action : actions.get(actionRemove.getActionID())){
+			for (Iterator<Action> iterator = actions.get(actionRemove.getActionID()).iterator(); iterator.hasNext();){
+				Action action = iterator.next();
 				if (action.equals(actionRemove)){
 					action.destroyAction();
-					actions.get(actionRemove.getActionID()).remove(action);
+					iterator.remove();
 				}
 			}
 		}
+		actionsStagedForRemoval.clear();
 	}
 }

@@ -251,7 +251,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 playerContact = true;
             }
         }
-        if (collidingBodies.contains(otherBody) == false) {
+        if (!collidingBodies.contains(otherBody)) {
             collidingBodies.add(otherBody);
         }
 
@@ -325,7 +325,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
         else if (isInteractKey && keycode == interactKey){
-            notifyInteractObjects(collidingBodies, true);
+            notifyInteractObjects(true);
         }
 
     }
@@ -341,7 +341,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
         else if (isInteractKey && keycode == interactKey){
-            notifyInteractObjects(collidingBodies, false);
+            notifyInteractObjects(false);
         }
     }
 
@@ -354,12 +354,12 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * @param bodies The bodies the player is currently colliding with.
      * @param startInteract True if the interaction is now starting, otherwise false.
      */
-    private void notifyInteractObjects(ArrayList<Body> bodies, boolean startInteract){
+    private void notifyInteractObjects(boolean startInteract){
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
-        for (Body body : bodies){
-            GameObject object;
+        for (Body body : collidingBodies){
             try{
+                GameObject object;
                 object = (GameObject) body.getUserData();
                 if (object.getTypeOfGameObject() == TypeOfGameObject.INTERACTOBJECT){
                     InteractGameObject interactGameObject = (InteractGameObject) object;
@@ -368,6 +368,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 }
             }
             catch (ClassCastException e){
+                System.out.println("Error corrected. Body with wrong type in 'UserData' (either not 'GameObject' or not InteractObject')");
                 SideScrollerGameV2.getCurrentMap().removeBody(body);
             }
         }

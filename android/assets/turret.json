@@ -9,6 +9,14 @@
 			"angle" : 0,
 			"angularVelocity" : 0,
 			"awake" : true,
+			"customProperties" : 
+			[
+				
+				{
+					"name" : "part",
+					"string" : "barrel"
+				}
+			],
 			"linearVelocity" : 0,
 			"massData-mass" : 1,
 			"name" : "barrel",
@@ -20,8 +28,27 @@
 			"angle" : 0,
 			"angularVelocity" : 0,
 			"awake" : true,
+			"customProperties" : 
+			[
+				
+				{
+					"name" : "part",
+					"string" : "turretbase"
+				}
+			],
 			"fixture" : 
 			[
+				
+				{
+					"circle" : 
+					{
+						"center" : 0,
+						"radius" : 0.5
+					},
+					"density" : 1,
+					"friction" : 0.2,
+					"name" : "fixture0"
+				},
 				
 				{
 					"density" : 1,
@@ -47,17 +74,6 @@
 							]
 						}
 					}
-				},
-				
-				{
-					"circle" : 
-					{
-						"center" : 0,
-						"radius" : 0.5
-					},
-					"density" : 1,
-					"friction" : 0.2,
-					"name" : "fixture0"
 				}
 			],
 			"linearVelocity" : 0,
@@ -150,7 +166,7 @@
 		
 		{
 			"aspectScale" : 1,
-			"body" : -1,
+			"body" : 0,
 			"center" : 
 			{
 				"x" : 3.884802572429180e-005,
@@ -202,6 +218,14 @@
 			"anchorB" : 0,
 			"bodyA" : 0,
 			"bodyB" : 1,
+			"customProperties" : 
+			[
+				
+				{
+					"name" : "name",
+					"string" : "barreljoint"
+				}
+			],
 			"enableLimit" : true,
 			"enableMotor" : false,
 			"jointSpeed" : 0,

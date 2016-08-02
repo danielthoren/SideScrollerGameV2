@@ -31,8 +31,6 @@ public class Turret implements GameObject {
 		this.id = id;
 		motorSpeed = barrelJoint.getMotorSpeed();
 
-		turretBase.getBody().setType(BodyDef.BodyType.DynamicBody);
-		barrel.getBody().setType(BodyDef.BodyType.DynamicBody);
 		barrel.getBody().setFixedRotation(false);
 
 		barrel.getBody().setUserData(this);

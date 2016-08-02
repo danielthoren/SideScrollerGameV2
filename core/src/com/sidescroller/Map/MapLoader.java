@@ -19,6 +19,7 @@ import com.sidescroller.objects.Shape;
 import com.sidescroller.objects.Turret;
 import com.sidescroller.player.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -31,6 +32,7 @@ public class MapLoader {
     private RubeSceneLoader loader;
     private HashMap<String, Map> loadedMaps;
 	private Json json;
+	private static final String ERROR_SQUARE = "ErrorSquare.png";
 
     private MapLoader() {
         loadedMaps = new HashMap<String, Map>(1);
@@ -136,13 +138,14 @@ public class MapLoader {
 						System.out.println(
 								"Error corrected. ClassCastException when getting custom property! (joint id. Wrong input in map editor!)");
 					}
-					if (name != null) {
-						try {
-							jointData.setName((String) name);
-						} catch (ClassCastException e) {
-							System.out.println(
-									"Error corrected. ClassCastException when getting custom property! (joint name. Wrong input in map editor!)");
-						}
+				}
+				if (name != null) {
+					try {
+						jointData.setName((String) name);
+						joint.setUserData(jointData);
+					} catch (ClassCastException e) {
+						System.out.println(
+								"Error corrected. ClassCastException when getting custom property! (joint name. Wrong input in map editor!)");
 					}
 				}
 			}
@@ -170,12 +173,17 @@ public class MapLoader {
 	 * @return Returns an array of 'RubeSprites'.
 	 */
 	private Array<RubeSprite> createRubeSprites(Array<RubeImage> rubeImages, Map map){
-		Array<RubeSprite> rubeSprites = new Array<RubeSprite>(1);
-		for (RubeImage rubeImage : rubeImages){
-			rubeSprites.add(new RubeSprite(rubeImage));
+		if (rubeImages != null) {
+			Array<RubeSprite> rubeSprites = new Array<RubeSprite>(1);
+			for (RubeImage rubeImage : rubeImages) {
+				rubeSprites.add(new RubeSprite(rubeImage));
+			}
+			map.updateLayerDepth(rubeSprites);
+			return rubeSprites;
 		}
-		map.updateLayerDepth(rubeSprites);
-		return  rubeSprites;
+		else {
+			return null;
+		}
 	}
 
 	/**
@@ -206,11 +214,11 @@ public class MapLoader {
 			}
 			catch (ClassCastException e){
 				System.out.println("Error corrected. ClassCastException when getting custom property! (Turret)");
-				map.addDrawObject(shape);
+				putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 			}
 			catch (NullPointerException e){
 				System.out.println("Error corrected. NullPointerException when getting custom property! (Turret)");
-				map.addDrawObject(shape);
+				putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 			}
 		}
 
@@ -218,7 +226,8 @@ public class MapLoader {
         RevoluteJoint barrelRevoluteJoint = null;
 		try {
 			for (JointEdge jointEdge : turretBaseBody.getJointList()) {
-				if (((JointData) jointEdge.joint.getUserData()) != null) {
+
+				if (jointEdge.joint.getUserData() != null) {
 					try {
 						JointData jointData = (JointData) jointEdge.joint.getUserData();
 						String name = jointData.getName();
@@ -228,11 +237,11 @@ public class MapLoader {
 					} catch (ClassCastException e) {
 						System.out.println(
 								"Error corrected. NullPointerException when getting custom property! (Turret joint (joint 'UserData' not a object of type 'JointData' !)");
-						map.addDrawObject(shape);
+						putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 					} catch (NullPointerException e) {
 						System.out.println(
 								"Error corrected. NullPointerException when getting custom property! (Turret joint (joint 'UserData' not )");
-						map.addDrawObject(shape);
+						putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 					}
 				}
 			}
@@ -240,7 +249,7 @@ public class MapLoader {
 		catch (NullPointerException e) {
 			System.out.println(
 					"Error corrected. NullPointerException when getting custom property! (turretBaseBody.getJointList returned zero)");
-			map.addDrawObject(shape);
+			putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 		}
 
 		if(turretBaseBody != null && barrelBody != null && barrelRevoluteJoint != null) {
@@ -259,10 +268,29 @@ public class MapLoader {
 			for (Body body : turretScene.getBodies()){
 				scene.getWorld().destroyBody(body);
 			}
+			putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
+			System.out.println("Error corrected. Error when creating turret!");
 		}
 		//Removing the body giving the position and creation information to the turret. Otherwise nullpointerException is thrown.
 		map.removeDrawObject(shape);
 		map.removeBody(shape.getBody());
+	}
+
+	private void putErrorSquare(Map map, Vector2 pos, Vector2 size){
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.position.set(pos);
+		bodyDef.type = BodyDef.BodyType.StaticBody;
+		RubeImage rubeImage = new RubeImage();
+		rubeImage.angleInRads = 0;
+		rubeImage.renderOrder = 0;
+		rubeImage.file = ERROR_SQUARE;
+		rubeImage.width = size.x;
+		rubeImage.height = size.y;
+		Array<RubeImage> rubeImages = new Array<RubeImage>(1);
+		rubeImages.add(rubeImage);
+		Array<RubeSprite> rubeSprites = createRubeSprites(rubeImages, map);
+		Shape shape = new Shape(map.getObjectID(),map.createBody(bodyDef), rubeSprites);
+		map.addDrawObject(shape);
 	}
 
     /**

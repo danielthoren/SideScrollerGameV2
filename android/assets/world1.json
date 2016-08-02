@@ -25,8 +25,8 @@
 			"name" : "body9",
 			"position" : 
 			{
-				"x" : 0.5222028493881226,
-				"y" : 4.344727993011475
+				"x" : 2,
+				"y" : 1
 			},
 			"type" : 0
 		},
@@ -265,7 +265,7 @@
 				
 				{
 					"name" : "type",
-					"string" : "buttontriggerf"
+					"string" : "buttontrigger"
 				},
 				
 				{
