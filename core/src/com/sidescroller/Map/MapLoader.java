@@ -46,10 +46,9 @@ public class MapLoader {
             RubeScene scene = loader.loadScene(Gdx.files.internal(mapPath));
 
 			convertFilePath(scene);
-
             Map map = new Map(scene.getWorld(), true, scene.velocityIterations, scene.positionIterations);
 
-
+			setJointData(scene, map);
 
             //Adding all of the bodies to the map
             int p = 0;
@@ -119,30 +118,32 @@ public class MapLoader {
 	 * @param map The map to add the joints with a 'id' parameter to.
 	 */
 	private void setJointData(RubeScene scene, Map map){
-		for (Joint joint : scene.getJoints()){
-            JointData jointData = new JointData();
-			Object id;
-			Object name;
-			id = scene.getCustom(joint, "id");
-			name = scene.getCustom(joint, "name");
+		if (scene.getJoints() != null) {
+			for (Joint joint : scene.getJoints()) {
+				JointData jointData = new JointData();
+				Object id;
+				Object name;
+				id = scene.getCustom(joint, "id");
+				name = scene.getCustom(joint, "name");
 
-			if (id != null){
-				try{
-					jointData.setJointId((Integer) id);
-                    joint.setUserData(jointData);
+				if (id != null) {
+					try {
+						jointData.setJointId((Integer) id);
+						joint.setUserData(jointData);
 
-                    if (name != null){
-                        try{
-                            jointData.setName((String) name);
-                        }
-                        catch (ClassCastException e){
-                            System.out.println("Error corrected. ClassCastException when getting custom property! (joint name. Wrong input in map editor!)");
-                        }
-                    }
-					//TODO add theese joints to the actionManager in the map (create a system for joint actions in the ActionManager)
-				}
-				catch (ClassCastException e){
-					System.out.println("Error corrected. ClassCastException when getting custom property! (joint id. Wrong input in map editor!)");
+						//TODO add theese joints to the actionManager in the map (create a system for joint actions in the ActionManager)
+					} catch (ClassCastException e) {
+						System.out.println(
+								"Error corrected. ClassCastException when getting custom property! (joint id. Wrong input in map editor!)");
+					}
+					if (name != null) {
+						try {
+							jointData.setName((String) name);
+						} catch (ClassCastException e) {
+							System.out.println(
+									"Error corrected. ClassCastException when getting custom property! (joint name. Wrong input in map editor!)");
+						}
+					}
 				}
 			}
 		}
@@ -251,13 +252,17 @@ public class MapLoader {
 
 			Turret turret = new Turret(map.getObjectID(), barrel, turretBase, barrelRevoluteJoint);
 
-			//Removing the body giving the position and creation information to the turret. Otherwise nullpointerException is thrown.
-			map.removeDrawObject(shape);
-			map.removeBody(shape.getBody());
-
 			map.addDrawObject(barrel);
 			map.addDrawObject(turretBase);
 		}
+		else{
+			for (Body body : turretScene.getBodies()){
+				scene.getWorld().destroyBody(body);
+			}
+		}
+		//Removing the body giving the position and creation information to the turret. Otherwise nullpointerException is thrown.
+		map.removeDrawObject(shape);
+		map.removeBody(shape.getBody());
 	}
 
     /**

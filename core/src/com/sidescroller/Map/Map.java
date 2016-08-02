@@ -85,6 +85,7 @@ public class Map
         //List used to keep track of wich id:s bodies have been removed. Used to prevent multiple removals of the same body.
         //If a item that will be staged for removal when collision occurs with a type of object then two such bodies will
         //be added to the 'stagedForRemoval' if the item collides with two objects of said type between one step.
+        //This will cause an error when trying to remove the body already removed. Thus this prevents that from happening.
         List<Long> bodyIDRemoved = new ArrayList<Long>();
         //Destroying all of the bodies that are staged for removal
         for (Body body : bodiesStagedForRemoval){
@@ -208,9 +209,7 @@ public class Map
      * @param bodyDef The bodydef from wich to create the body.
      * @return Returns the created body.
      */
-    public Body createBody(BodyDef bodyDef){
-        return world.createBody(bodyDef);
-    }
+    public Body createBody(BodyDef bodyDef){return world.createBody(bodyDef);}
 
     /**
      * @return Returns a unique id.
@@ -226,23 +225,70 @@ public class Map
      */
     public void stepWorld(float timeParam){world.step(timeParam, velocityIterations, positionIterations);}
 
-    public void removeBody(Body body){bodiesStagedForRemoval.add(body);}
+    public void removeBody(Body body){
+        if (body != null) {
+            //Controlling so that the body has a object implementing the interface 'GameObject' as userdata. It this is
+            //not the case, then tries to destroy the body with the world and hopes that multiple calls for removal of this
+            //body does not occur. If it does it will result in a crash!
+            try {
+                GameObject gameObject = (GameObject) body.getUserData();
+                bodiesStagedForRemoval.add(body);
+            }
+            catch (ClassCastException e){
+                System.out.println("Error cought! Body with 'UserData' that does not implement 'GameObject'!");
+                world.destroyBody(body);
+            }
 
-    public void removeCollisionListener(CollisionListener listener){collisionListenersStagedForRemoval.add(listener);}
+        }
+    }
 
-    public void removeInputListener(InputListener listener){inputListenersStagedForRemoval.add(listener);}
+    public void removeCollisionListener(CollisionListener listener){
+        if (listener != null) {
+            collisionListenersStagedForRemoval.add(listener);
+        }
+    }
 
-    public void removeDrawObject(Draw object){drawObjectsStagedForRemoval.add(object);}
+    public void removeInputListener(InputListener listener){
+        if (listener != null) {
+            inputListenersStagedForRemoval.add(listener);
+        }
+    }
 
-    public void removeUpdateObject(Update object){updateObjectsStagedForRemoval.add(object);}
+    public void removeDrawObject(Draw object){
+        if (object != null) {
+            drawObjectsStagedForRemoval.add(object);
+        }
+    }
 
-    public void addDrawObject(Draw object) {drawObjectsStagedForAddition.add(object);}
+    public void removeUpdateObject(Update object){
+        if (object != null) {
+            updateObjectsStagedForRemoval.add(object);
+        }
+    }
 
-    public void addUpdateObject(Update object) {updateObjectsStagedForAddition.add(object);}
+    public void addDrawObject(Draw object) {
+        if (object != null) {
+            drawObjectsStagedForAddition.add(object);
+        }
+    }
 
-    public void addInputListener(InputListener object) { inputListenersStagedForAddition.add(object);}
+    public void addUpdateObject(Update object) {
+        if (object != null) {
+            updateObjectsStagedForAddition.add(object);
+        }
+    }
 
-    public void addCollisionListener(CollisionListener object) { collisionListenersStagedForAddition.add(object);}
+    public void addInputListener(InputListener object) {
+        if (object != null) {
+            inputListenersStagedForAddition.add(object);
+        }
+    }
+
+    public void addCollisionListener(CollisionListener object) {
+        if (object != null) {
+            collisionListenersStagedForAddition.add(object);
+        }
+    }
 
     public List<Draw> getDrawObjects() {return drawObjects;}
 
