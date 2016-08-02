@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
 import com.sidescroller.game.*;
 
 import java.util.ArrayList;
@@ -194,6 +195,13 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          body.setUserData(this);
          body.setActive(true);
          body.setSleepingAllowed(false);
+
+         for (Fixture fixture : body.getFixtureList()){
+             Filter filter = new Filter();
+             filter.groupIndex = -1;
+
+             fixture.setFilterData(filter);
+         }
      }
 
     /**
@@ -221,7 +229,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     @Override
     public void draw(SpriteBatch batch, int layer){
         //TODO Fix so that player layer is loaded from file
-        if (layer == 1) {
+        if (layer == 0) {
             sprite.setPosition(body.getPosition().x - (sprite.getWidth() / 2), body.getPosition().y - (sprite.getHeight() / 2));
             sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
             sprite.draw(batch);

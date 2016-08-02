@@ -29,12 +29,15 @@ public class Turret implements GameObject {
 		this.barrelJoint = barrelJoint;
 		this.turretBase = turretBase;
 		this.id = id;
-		motorSpeed = barrelJoint.getMotorSpeed();
+		//motorSpeed = barrelJoint.getMotorSpeed();
+		motorSpeed = 200f;
 
 		barrel.getBody().setFixedRotation(false);
 
 		barrel.getBody().setUserData(this);
 		turretBase.getBody().setUserData(this);
+
+		rotateBarrel(Direction.RIGHT);
 	}
 
 	public void rotateBarrel(Direction direction){
