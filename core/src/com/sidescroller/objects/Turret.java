@@ -29,27 +29,33 @@ public class Turret implements GameObject {
 		this.barrelJoint = barrelJoint;
 		this.turretBase = turretBase;
 		this.id = id;
-		//motorSpeed = barrelJoint.getMotorSpeed();
-		motorSpeed = 200f;
 
+		motorSpeed = barrelJoint.getMotorSpeed();
 		barrel.getBody().setFixedRotation(false);
 
 		barrel.getBody().setUserData(this);
 		turretBase.getBody().setUserData(this);
 
-		rotateBarrel(Direction.RIGHT);
+		for (Fixture fixture : barrel.getBody().getFixtureList()){
+			fixture.setDensity(0.5f);
+			fixture.setSensor(true);
+		}
+		barrelJoint.setMotorSpeed(0);
 	}
 
-	public void rotateBarrel(Direction direction){
+	protected void rotateBarrel(Direction direction){
 		if (direction == Direction.RIGHT) {
-			barrelJoint.setMotorSpeed(-Math.abs(motorSpeed));
+			barrelJoint.setMotorSpeed(Math.abs(motorSpeed));
 		}
 		else if (direction == Direction.LEFT) {
-			barrelJoint.setMotorSpeed(Math.abs(motorSpeed));
+			barrelJoint.setMotorSpeed(-Math.abs(motorSpeed));
 		}
 		else{
 			barrelJoint.setMotorSpeed(0);
 		}
+	}
+
+	protected void shoot(){
 	}
 
 	public long getId(){

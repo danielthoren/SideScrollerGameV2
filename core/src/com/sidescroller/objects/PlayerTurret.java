@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.sidescroller.game.Direction;
 import com.sidescroller.game.InputListener;
 import com.sidescroller.game.InteractGameObject;
+import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.player.Player;
 
 public class PlayerTurret extends Turret implements InteractGameObject, InputListener
@@ -26,6 +27,7 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
      * @param player The player that interacts with the object.
      */
     public void startInteract(Player player){
+        isActivated = !isActivated;
         if (isActivated) {
             player.setLeftKey(false);
             player.setRightKey(false);
@@ -42,7 +44,6 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
             leftKey = Input.Keys.UNKNOWN;
             rightKey = Input.Keys.UNKNOWN;
         }
-        isActivated = !isActivated;
     }
 
     /**
@@ -74,4 +75,12 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
             super.rotateBarrel(Direction.NONE);
         }
     }
+
+    /**
+   	 * Returns wich type of gameobject this specific object is.
+   	 * @return The type of gameobject
+   	 */
+   	public TypeOfGameObject getTypeOfGameObject(){
+   		return TypeOfGameObject.INTERACTOBJECT;
+   	}
 }

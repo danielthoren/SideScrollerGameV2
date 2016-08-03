@@ -167,6 +167,8 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		return (float) (rad * (180/Math.PI));
 	}
 
+	public static float degToRad(float deg) {return (float) (deg * (Math.PI/180f));}
+
 	public static Map getCurrentMap() {return currentMap;}
 
 	public OrthographicCamera getCamera() {return camera;}

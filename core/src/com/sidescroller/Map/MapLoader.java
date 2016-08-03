@@ -14,6 +14,7 @@ import com.sidescroller.objects.Actions.ButtonTrigger;
 import com.sidescroller.objects.Actions.BodyAction;
 import com.sidescroller.objects.Actions.SensorTrigger;
 import com.sidescroller.objects.JointData;
+import com.sidescroller.objects.PlayerTurret;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.Shape;
 import com.sidescroller.objects.Turret;
@@ -252,6 +253,18 @@ public class MapLoader {
 			putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 		}
 
+		String subType = null;
+		try{
+			Object subTypeObj = scene.getCustom(shape.getBody(), "subtype");
+			if (subTypeObj != null) {
+				subType = (String) subTypeObj;
+			}
+		}
+		catch (ClassCastException e){
+			System.out.println(
+								"Error corrected. NullPointerException when getting custom property! ('subtype' property not a string, error in editor!)");
+		}
+
 		if(turretBaseBody != null && barrelBody != null && barrelRevoluteJoint != null) {
 			convertFilePath(turretScene);
 			Shape turretBase = new Shape(map.getObjectID(), turretBaseBody, createRubeSprites(turretScene.getMappedImage(turretBaseBody), map));
@@ -259,7 +272,17 @@ public class MapLoader {
 			turretBase.getBody().setTransform(shape.getBody().getPosition(), shape.getBody().getAngle());
 			barrel.getBody().setTransform(shape.getBody().getPosition(), shape.getBody().getAngle());
 
-			Turret turret = new Turret(map.getObjectID(), barrel, turretBase, barrelRevoluteJoint);
+			//Creating the type of turret specified in the subtype property
+			if (subType == null){
+				Turret turret = new Turret(map.getObjectID(), barrel, turretBase, barrelRevoluteJoint);
+			}
+			else if (subType.equals("manual")){
+				PlayerTurret playerTurret = new PlayerTurret(map.getObjectID(), barrel, turretBase, barrelRevoluteJoint);
+				map.addInputListener(playerTurret);
+			}
+			else{
+				Turret turret = new Turret(map.getObjectID(), barrel, turretBase, barrelRevoluteJoint);
+			}
 
 			map.addDrawObject(barrel);
 			map.addDrawObject(turretBase);

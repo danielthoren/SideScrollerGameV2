@@ -21,22 +21,6 @@
 			[
 				
 				{
-					"circle" : 
-					{
-						"center" : 
-						{
-							"x" : -0.0003092885017395020,
-							"y" : -0.0008461326360702515
-						},
-						"radius" : 0.1549267768859863
-					},
-					"density" : 1,
-					"filter-groupIndex" : -1,
-					"friction" : 0.2,
-					"name" : "fixture3"
-				},
-				
-				{
 					"density" : 1,
 					"filter-groupIndex" : -1,
 					"friction" : 0.2,
@@ -92,16 +76,32 @@
 							]
 						}
 					}
+				},
+				
+				{
+					"circle" : 
+					{
+						"center" : 
+						{
+							"x" : -0.0003092885017395020,
+							"y" : -0.0008461326360702515
+						},
+						"radius" : 0.1549267768859863
+					},
+					"density" : 1,
+					"filter-groupIndex" : -1,
+					"friction" : 0.2,
+					"name" : "fixture3"
 				}
 			],
 			"linearVelocity" : 0,
 			"massData-I" : 0.03520274162292481,
 			"massData-center" : 
 			{
-				"x" : -0.0004548901633825153,
-				"y" : 0.3027805089950562
+				"x" : -0.0004548901342786849,
+				"y" : 0.3027804791927338
 			},
-			"massData-mass" : 0.1902494281530380,
+			"massData-mass" : 0.1902494430541992,
 			"name" : "barrel",
 			"position" : 0,
 			"type" : 2
@@ -121,6 +121,21 @@
 			],
 			"fixture" : 
 			[
+				
+				{
+					"density" : 1,
+					"friction" : 0.2,
+					"name" : "fixture4",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : [ 0.5, 0.5, -0.5, -0.5 ],
+							"y" : [ -0.5, 0.5, 0.5, -0.5 ]
+						}
+					},
+					"sensor" : true
+				},
 				
 				{
 					"circle" : 
@@ -314,14 +329,14 @@
 			],
 			"enableLimit" : true,
 			"enableMotor" : true,
-			"jointSpeed" : 20,
-			"lowerLimit" : 0.1745329201221466,
-			"maxMotorTorque" : 20,
-			"motorSpeed" : 20,
+			"jointSpeed" : 0,
+			"lowerLimit" : 0,
+			"maxMotorTorque" : 20.0,
+			"motorSpeed" : 0.3490658402442932,
 			"name" : "joint0",
-			"refAngle" : 0,
+			"refAngle" : -1.570796370506287,
 			"type" : "revolute",
-			"upperLimit" : 2.967059612274170
+			"upperLimit" : 3.141592741012573
 		}
 	],
 	"positionIterations" : 3,
