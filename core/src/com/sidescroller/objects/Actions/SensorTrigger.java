@@ -4,17 +4,17 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.sidescroller.game.CollisionListener;
 import com.sidescroller.game.GameObject;
 import com.sidescroller.game.TypeOfGameObject;
-import com.sidescroller.objects.Shape;
+import com.sidescroller.objects.GameShape;
 
 public class SensorTrigger extends Trigger implements CollisionListener
 {
-    private Shape shape;
+    private GameShape gameShape;
     private boolean isTriggered;
 
-    public SensorTrigger(long iD, int targetActionID, Shape shape) {
+    public SensorTrigger(long iD, int targetActionID, GameShape gameShape) {
         super(iD, targetActionID);
-        this.shape = shape;
-        shape.getBody().setUserData(this);
+        this.gameShape = gameShape;
+        gameShape.getBody().setUserData(this);
     }
 
     /**
@@ -59,11 +59,11 @@ public class SensorTrigger extends Trigger implements CollisionListener
     }
 
 	/**
-	 * Changes the userdata of the body belonging to the shape from 'this' to the actual shape. This is done so that
+	 * Changes the userdata of the body belonging to the gameShape from 'this' to the actual gameShape. This is done so that
      * the JVM Garbagecollector removes 'this' (the garbagecollector removes objects with no references).
      */
     public void destroyTrigger(){
-        shape.getBody().setUserData(shape);
+        gameShape.getBody().setUserData(gameShape);
     }
 
     public boolean hasTriggered(){

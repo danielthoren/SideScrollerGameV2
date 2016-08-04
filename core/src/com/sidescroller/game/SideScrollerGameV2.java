@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sidescroller.Map.Map;
 import com.sidescroller.Map.MapLoader;
-import com.sidescroller.objects.Shape;
+import com.sidescroller.objects.GameShape;
 
 public class SideScrollerGameV2 extends ApplicationAdapter {
 	private static Map currentMap;
@@ -42,7 +42,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 
 	private Body body;
 
-	private Shape shapeObj;
+	private GameShape gameShapeObj;
 
 
 	@Override
@@ -80,7 +80,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		body = currentMap.createBody(bodyDef);
 		body.createFixture(fixtureDef);
 
-		shapeObj = new Shape(currentMap.getObjectID(), body);
+		gameShapeObj = new GameShape(currentMap.getObjectID(), body);
 
 	}
 
@@ -114,7 +114,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 			}
 		}
 
-		drawTrojectory(batch, shapeObj.getBody(), new Vector2(-2, 10));
+		drawTrojectory(batch, gameShapeObj.getBody(), new Vector2(-2, 10));
 
 		batch.end();
 

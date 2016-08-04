@@ -1,4 +1,4 @@
-package com.sidescroller.objects;
+package com.sidescroller.objects.Turret;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
@@ -6,15 +6,17 @@ import com.sidescroller.game.Direction;
 import com.sidescroller.game.InputListener;
 import com.sidescroller.game.InteractGameObject;
 import com.sidescroller.game.TypeOfGameObject;
+import com.sidescroller.objects.GameShape;
 import com.sidescroller.player.Player;
 
 public class PlayerTurret extends Turret implements InteractGameObject, InputListener
 {
     private int leftKey;
     private int rightKey;
+    private int upKey;
     private boolean isActivated;
 
-    public PlayerTurret(final long id, final Shape barrel, final Shape turretBase, final RevoluteJoint barrelJoint) {
+    public PlayerTurret(final long id, final GameShape barrel, final GameShape turretBase, final RevoluteJoint barrelJoint) {
         super(id, barrel, turretBase, barrelJoint);
         turretBase.getBody().setUserData(this);
         barrel.getBody().setUserData(this);
@@ -33,6 +35,7 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
             player.setRightKey(false);
             player.setUpKey(false);
 
+            upKey = player.getUpKey();
             leftKey = player.getLeftKey();
             rightKey = player.getRightKey();
         }
@@ -41,6 +44,7 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
             player.setRightKey(true);
             player.setUpKey(true);
 
+            upKey = Input.Keys.UNKNOWN;
             leftKey = Input.Keys.UNKNOWN;
             rightKey = Input.Keys.UNKNOWN;
         }
@@ -59,10 +63,13 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
      * @return whether the input was processed */
     public void keyDown(int keycode){
         if (keycode == leftKey){
-            super.rotateBarrel(Direction.LEFT);
+            rotateBarrel(Direction.LEFT);
         }
         else if (keycode == rightKey){
-            super.rotateBarrel(Direction.RIGHT);
+            rotateBarrel(Direction.RIGHT);
+        }
+        else if (keycode == upKey){
+            shoot();
         }
     }
 

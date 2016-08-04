@@ -11,22 +11,22 @@ import com.sidescroller.game.SideScrollerGameV2;
 import com.sidescroller.game.TypeOfGameObject;
 
 /**
- * Creates a 'Shape' object that contains a physical body with fixtures etc. Also may contain many textures in the form of
+ * Creates a 'GameShape' object that contains a physical body with fixtures etc. Also may contain many textures in the form of
  * 'RubeSprite' that is drawn on the map.
  */
-public class Shape implements Draw {
+public class GameShape implements Draw {
 
     private Array<RubeSprite> rubeSprites;
     private Body body;
     private final long iD;
 
     /**
-     * Creates a Shape object.
+     * Creates a GameShape object.
      * @param iD The unique id of the object.
      * @param body The body of the object.
      * @param rubeSprites The 'RubeSprite' of the object (contains a 'RubeImage' and a 'Sprite').
      */
-    public Shape(long iD, Body body, Array<RubeSprite> rubeSprites) {
+    public GameShape(long iD, Body body, Array<RubeSprite> rubeSprites) {
         this.iD = iD;
         this.rubeSprites = rubeSprites;
         body.setUserData(this);
@@ -34,11 +34,11 @@ public class Shape implements Draw {
     }
 
     /**
-     * Cteates a Shape object.
+     * Cteates a GameShape object.
      * @param iD The unique id of the object.
      * @param body The body of the object.
      */
-    public Shape(long iD, Body body) {
+    public GameShape(long iD, Body body) {
         this.iD = iD;
         rubeSprites = null;
         body.setUserData(this);

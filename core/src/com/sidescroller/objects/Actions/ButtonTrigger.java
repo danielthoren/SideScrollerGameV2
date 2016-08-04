@@ -1,12 +1,10 @@
 package com.sidescroller.objects.Actions;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.sidescroller.game.InteractGameObject;
 import com.sidescroller.game.TypeOfGameObject;
+import com.sidescroller.objects.GameShape;
 import com.sidescroller.objects.RubeSprite;
-import com.sidescroller.objects.Shape;
 import com.sidescroller.player.Player;
 
 /**
@@ -14,7 +12,7 @@ import com.sidescroller.player.Player;
  */
 public class ButtonTrigger extends Trigger implements InteractGameObject
 {
-	private Shape shape;
+	private GameShape gameShape;
 	private boolean hasTriggered;
 
 	public ButtonTrigger(long iD, int targetActionID) {
@@ -25,12 +23,12 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 	 * Creates a 'ButtonTrigger'.
 	 * @param iD The unique id of the object.
 	 * @param targetActionID The id of the target action/actions.
-	 * @param shape The shape of the button.
+	 * @param gameShape The gameShape of the button.
      */
-	public ButtonTrigger(long iD, int targetActionID, Shape shape) {
+	public ButtonTrigger(long iD, int targetActionID, GameShape gameShape) {
 		super(iD, targetActionID);
-		this.shape = shape;
-		shape.getBody().setUserData(this);
+		this.gameShape = gameShape;
+		gameShape.getBody().setUserData(this);
 		hasTriggered = false;
 	}
 
@@ -49,9 +47,9 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 	 */
 	public void startInteract(Player player){
 		hasTriggered = !hasTriggered;
-		if (shape != null) {
-			if (shape.getRubeSprites() != null) {
-				Array<RubeSprite> rubeSprites = shape.getRubeSprites();
+		if (gameShape != null) {
+			if (gameShape.getRubeSprites() != null) {
+				Array<RubeSprite> rubeSprites = gameShape.getRubeSprites();
 				for (RubeSprite rubeSprite : rubeSprites) {
 					rubeSprite.getSprite().flip(true, false);
 				}
@@ -67,11 +65,11 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 	public void endInteract(Player player){}
 
 	/**
-	 * Changes the userdata of the body belonging to the shape from 'this' to the actual shape. This is done so that
+	 * Changes the userdata of the body belonging to the gameShape from 'this' to the actual gameShape. This is done so that
      * the JVM Garbagecollector removes 'this' (the garbagecollector removes objects with no references).
      */
 	public void destroyTrigger(){
-		shape.getBody().setUserData(shape);
+		gameShape.getBody().setUserData(gameShape);
 	}
 
 	@Override

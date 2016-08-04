@@ -13,14 +13,13 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.R
 import com.sidescroller.objects.Actions.ButtonTrigger;
 import com.sidescroller.objects.Actions.BodyAction;
 import com.sidescroller.objects.Actions.SensorTrigger;
+import com.sidescroller.objects.GameShape;
 import com.sidescroller.objects.JointData;
-import com.sidescroller.objects.PlayerTurret;
+import com.sidescroller.objects.Turret.PlayerTurret;
 import com.sidescroller.objects.RubeSprite;
-import com.sidescroller.objects.Shape;
-import com.sidescroller.objects.Turret;
+import com.sidescroller.objects.Turret.Turret;
 import com.sidescroller.player.Player;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -58,13 +57,13 @@ public class MapLoader {
             for (int x = 0; x < scene.getBodies().size; x++){
                 Body body = scene.getBodies().get(x);
                 Array<RubeImage> rubeImages = scene.getMappedImage(body);
-                //Creating the arrays for the hashmap and adding images to the map if there are images then creating a Shape.
-                Shape shape;
+                //Creating the arrays for the hashmap and adding images to the map if there are images then creating a GameShape.
+                GameShape gameShape;
                 if (rubeImages != null) {
-					shape = new Shape(map.getObjectID(), body, createRubeSprites(rubeImages, map));
+					gameShape = new GameShape(map.getObjectID(), body, createRubeSprites(rubeImages, map));
                 }
                 else{
-                    shape = new Shape(map.getObjectID(), body);
+					gameShape = new GameShape(map.getObjectID(), body);
                 }
 
                 //Checking for the type variable in custom and creating object accordingly
@@ -85,19 +84,19 @@ public class MapLoader {
 
                 //Creating the object that the 'type' variable specifies.
                 if (type.toLowerCase().equals("bodyaction")){
-                    createBodyAction(shape, scene, map);
+                    createBodyAction(gameShape, scene, map);
                 }
                 else if (type.toLowerCase().equals("buttontrigger")){
-                    createButtonTrigger(shape, scene, map);
+                    createButtonTrigger(gameShape, scene, map);
                 }
                 else if (type.toLowerCase().equals("sensortrigger")){
-                    createSensorTrigger(shape, scene, map);
+                    createSensorTrigger(gameShape, scene, map);
                 }
 				else if (type.toLowerCase().equals("turret")){
-					createTurret(map, shape, scene);
+					createTurret(map, gameShape, scene);
 				}
                 else{
-                    map.addDrawObject(shape);
+                    map.addDrawObject(gameShape);
                 }
             }
 
@@ -190,10 +189,10 @@ public class MapLoader {
 	/**
 	 * Creates a turret object.
 	 * @param map The map to add the object to.
-	 * @param shape The shape created with the body specifying this objects creation.
+	 * @param gameShape The gameShape created with the body specifying this objects creation.
 	 * @param scene The scene from wich to create the object.
 	 */
-	private void createTurret(Map map, Shape shape, RubeScene scene){
+	private void createTurret(Map map, GameShape gameShape, RubeScene scene){
 		RubeSceneLoader turretLoader = new RubeSceneLoader(scene.getWorld());
 		RubeScene turretScene;
 		turretScene = turretLoader.loadScene(Gdx.files.internal("turret.json"));
@@ -215,11 +214,11 @@ public class MapLoader {
 			}
 			catch (ClassCastException e){
 				System.out.println("Error corrected. ClassCastException when getting custom property! (Turret)");
-				putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
+				putErrorSquare(map, gameShape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 			}
 			catch (NullPointerException e){
 				System.out.println("Error corrected. NullPointerException when getting custom property! (Turret)");
-				putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
+				putErrorSquare(map, gameShape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 			}
 		}
 
@@ -238,11 +237,11 @@ public class MapLoader {
 					} catch (ClassCastException e) {
 						System.out.println(
 								"Error corrected. NullPointerException when getting custom property! (Turret joint (joint 'UserData' not a object of type 'JointData' !)");
-						putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
+						putErrorSquare(map, gameShape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 					} catch (NullPointerException e) {
 						System.out.println(
 								"Error corrected. NullPointerException when getting custom property! (Turret joint (joint 'UserData' not )");
-						putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
+						putErrorSquare(map, gameShape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 					}
 				}
 			}
@@ -250,12 +249,12 @@ public class MapLoader {
 		catch (NullPointerException e) {
 			System.out.println(
 					"Error corrected. NullPointerException when getting custom property! (turretBaseBody.getJointList returned zero)");
-			putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
+			putErrorSquare(map, gameShape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 		}
 
 		String subType = null;
 		try{
-			Object subTypeObj = scene.getCustom(shape.getBody(), "subtype");
+			Object subTypeObj = scene.getCustom(gameShape.getBody(), "subtype");
 			if (subTypeObj != null) {
 				subType = (String) subTypeObj;
 			}
@@ -267,10 +266,10 @@ public class MapLoader {
 
 		if(turretBaseBody != null && barrelBody != null && barrelRevoluteJoint != null) {
 			convertFilePath(turretScene);
-			Shape turretBase = new Shape(map.getObjectID(), turretBaseBody, createRubeSprites(turretScene.getMappedImage(turretBaseBody), map));
-			Shape barrel = new Shape(map.getObjectID(), barrelBody, createRubeSprites(turretScene.getMappedImage(barrelBody), map));
-			turretBase.getBody().setTransform(shape.getBody().getPosition(), shape.getBody().getAngle());
-			barrel.getBody().setTransform(shape.getBody().getPosition(), shape.getBody().getAngle());
+			GameShape turretBase = new GameShape(map.getObjectID(), turretBaseBody, createRubeSprites(turretScene.getMappedImage(turretBaseBody), map));
+			GameShape barrel = new GameShape(map.getObjectID(), barrelBody, createRubeSprites(turretScene.getMappedImage(barrelBody), map));
+			turretBase.getBody().setTransform(gameShape.getBody().getPosition(), gameShape.getBody().getAngle());
+			barrel.getBody().setTransform(gameShape.getBody().getPosition(), gameShape.getBody().getAngle());
 
 			//Creating the type of turret specified in the subtype property
 			if (subType == null){
@@ -291,12 +290,12 @@ public class MapLoader {
 			for (Body body : turretScene.getBodies()){
 				scene.getWorld().destroyBody(body);
 			}
-			putErrorSquare(map, shape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
+			putErrorSquare(map, gameShape.getBody().getPosition(), new Vector2(0.5f, 0.5f));
 			System.out.println("Error corrected. Error when creating turret!");
 		}
 		//Removing the body giving the position and creation information to the turret. Otherwise nullpointerException is thrown.
-		map.removeDrawObject(shape);
-		map.removeBody(shape.getBody());
+		map.removeDrawObject(gameShape);
+		map.removeBody(gameShape.getBody());
 	}
 
 	private void putErrorSquare(Map map, Vector2 pos, Vector2 size){
@@ -312,67 +311,67 @@ public class MapLoader {
 		Array<RubeImage> rubeImages = new Array<RubeImage>(1);
 		rubeImages.add(rubeImage);
 		Array<RubeSprite> rubeSprites = createRubeSprites(rubeImages, map);
-		Shape shape = new Shape(map.getObjectID(),map.createBody(bodyDef), rubeSprites);
-		map.addDrawObject(shape);
+		GameShape gameShape = new GameShape(map.getObjectID(), map.createBody(bodyDef), rubeSprites);
+		map.addDrawObject(gameShape);
 	}
 
     /**
      * Creates a 'ButtonTrigger' of specified type and adding it to the world.
-     * @param shape The shape that belongs to the object.
+     * @param gameShape The gameShape that belongs to the object.
      * @param scene The scene from wich to create the object.
      * @param map The map to add the object to.
      */
-    private void createButtonTrigger(Shape shape, RubeScene scene, Map map){
+    private void createButtonTrigger(GameShape gameShape, RubeScene scene, Map map){
 
-        Object actionIDObj = scene.getCustom(shape.getBody(), "id");
+        Object actionIDObj = scene.getCustom(gameShape.getBody(), "id");
         try{
             int actionID = (Integer) actionIDObj;
-            ButtonTrigger buttonTrigger = new ButtonTrigger(map.getObjectID(), actionID, shape);
+            ButtonTrigger buttonTrigger = new ButtonTrigger(map.getObjectID(), actionID, gameShape);
             map.getActionManager().addTrigger(buttonTrigger);
-            map.addDrawObject(shape);
+            map.addDrawObject(gameShape);
         }
         catch (ClassCastException e){
             System.out.println("Error corrected. ClassCastException when getting custom property! (ButtonTrigger)");
-            map.addDrawObject(shape);
+            map.addDrawObject(gameShape);
         }
         catch (NullPointerException e){
             System.out.println("Error corrected. NullPointerException when getting custom property! (ButtonTrigger)");
-            map.addDrawObject(shape);
+            map.addDrawObject(gameShape);
         }
     }
 
-    public void createSensorTrigger(Shape shape, RubeScene scene, Map map){
+    public void createSensorTrigger(GameShape gameShape, RubeScene scene, Map map){
 
-        Object actionIDObj = scene.getCustom(shape.getBody(), "id");
+        Object actionIDObj = scene.getCustom(gameShape.getBody(), "id");
         try{
             int actionID = (Integer) actionIDObj;
-            SensorTrigger sensorTrigger = new SensorTrigger(map.getObjectID(), actionID, shape);
+            SensorTrigger sensorTrigger = new SensorTrigger(map.getObjectID(), actionID, gameShape);
             map.getActionManager().addTrigger(sensorTrigger);
-            map.addDrawObject(shape);
+            map.addDrawObject(gameShape);
             map.addCollisionListener(sensorTrigger);
         }
         catch (ClassCastException e){
             System.out.println("Error corrected. ClassCastException when getting custom property! (SensorTrigger)");
-            map.addDrawObject(shape);
+            map.addDrawObject(gameShape);
         }
         catch (NullPointerException e){
             System.out.println("Error corrected. NullPointerException when getting custom property! (SensorTrigger)");
-            map.addDrawObject(shape);
+            map.addDrawObject(gameShape);
         }
 
     }
 
     /**
      * Creating a object of type 'BodyAction' and adding it to the world.
-     * @param shape The shape that belongs to the object.
+     * @param gameShape The gameShape that belongs to the object.
      * @param scene The scene from wich to construct the object.
      * @param map The map to add the object to.
      */
-    private void createBodyAction(Shape shape, RubeScene scene, Map map){
+    private void createBodyAction(GameShape gameShape, RubeScene scene, Map map){
 
-        Object subTypeObj = scene.getCustom(shape.getBody(), "subtype");
-        Object actionIDObj = scene.getCustom(shape.getBody(), "id");
-        Object drawObj = scene.getCustom(shape.getBody(), "draw");
+        Object subTypeObj = scene.getCustom(gameShape.getBody(), "subtype");
+        Object actionIDObj = scene.getCustom(gameShape.getBody(), "id");
+        Object drawObj = scene.getCustom(gameShape.getBody(), "draw");
         try {
             String subType = (String) subTypeObj;
             int actionID = (Integer) actionIDObj;
@@ -398,18 +397,18 @@ public class MapLoader {
 
             //Needs '==' since the value may be null.
             if (!subType.equals("spawn") && draw){
-                map.addDrawObject(shape);
+                map.addDrawObject(gameShape);
             }
-            BodyAction bodyAction = new BodyAction(actionID, shape, typeOfBodyAction);
+            BodyAction bodyAction = new BodyAction(actionID, gameShape, typeOfBodyAction);
             map.getActionManager().addAction(bodyAction);
         }
         catch (ClassCastException e){
             System.out.println("Error corrected. ClassCastException when getting custom property! (BodyAction)'");
-            map.addDrawObject(shape);
+            map.addDrawObject(gameShape);
         }
         catch (NullPointerException e){
             System.out.println("Error corrected. NullPointerException when getting custom property! (BodyAction)'");
-            map.addDrawObject(shape);
+            map.addDrawObject(gameShape);
         }
     }
 }

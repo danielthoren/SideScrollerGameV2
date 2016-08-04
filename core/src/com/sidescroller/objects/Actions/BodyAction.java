@@ -4,7 +4,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import com.sidescroller.game.SideScrollerGameV2;
-import com.sidescroller.objects.Shape;
+import com.sidescroller.objects.GameShape;
+
 import java.util.ArrayList;
 
 public class BodyAction extends Action
@@ -16,26 +17,26 @@ public class BodyAction extends Action
 		SPAWN, REMOVE, MAKE_DYNAMIC
 	}
 
-    private Shape shape;
+    private GameShape gameShape;
     private BodyDef.BodyType bodyType;
     private ArrayList<Boolean> tempFixtureSensorData;
 	private TypeOfBodyAction typeOfBodyAction;
 
 	/**
-	 * Makes a BodyAction object that can either spawn a shape object, remove a shape object or make it dynamic.
+	 * Makes a BodyAction object that can either spawn a gameShape object, remove a gameShape object or make it dynamic.
 	 * @param id The id of the action object.
-	 * @param shape The shape that will be worked on.
+	 * @param gameShape The gameShape that will be worked on.
 	 * @param typeOfBodyAction The type of body action.
      */
-    public BodyAction(final int id, final Shape shape, TypeOfBodyAction typeOfBodyAction) {
-		this.shape = shape;
+    public BodyAction(final int id, final GameShape gameShape, TypeOfBodyAction typeOfBodyAction) {
+		this.gameShape = gameShape;
 		this.typeOfBodyAction = typeOfBodyAction;
 		this.actionID = id;
 		tempFixtureSensorData = new ArrayList<Boolean>(1);
-		bodyType = shape.getBody().getType();
+		bodyType = gameShape.getBody().getType();
 		if (typeOfBodyAction ==TypeOfBodyAction.SPAWN) {
-			shape.getBody().setType(BodyDef.BodyType.StaticBody);
-			Array<Fixture> fixtures = shape.getBody().getFixtureList();
+			gameShape.getBody().setType(BodyDef.BodyType.StaticBody);
+			Array<Fixture> fixtures = gameShape.getBody().getFixtureList();
 			for (Fixture fixture : fixtures) {
 				tempFixtureSensorData.add(fixture.isSensor());
 				fixture.setSensor(true);
@@ -49,26 +50,26 @@ public class BodyAction extends Action
 	 */
     public void act() {
 		if (typeOfBodyAction == TypeOfBodyAction.SPAWN) {
-			Array<Fixture> fixtures = shape.getBody().getFixtureList();
+			Array<Fixture> fixtures = gameShape.getBody().getFixtureList();
 			for (int x = 0; x < fixtures.size; x++) {
 				if (!tempFixtureSensorData.get(x)) {
 					fixtures.get(x).setSensor(false);
 				}
 			}
 			if (bodyType == BodyDef.BodyType.StaticBody) {
-				shape.getBody().setType(BodyDef.BodyType.DynamicBody);
+				gameShape.getBody().setType(BodyDef.BodyType.DynamicBody);
 			}
 			else{
-				shape.getBody().setType(bodyType);
+				gameShape.getBody().setType(bodyType);
 			}
-			SideScrollerGameV2.getCurrentMap().addDrawObject(shape);
+			SideScrollerGameV2.getCurrentMap().addDrawObject(gameShape);
 		}
 		else if (typeOfBodyAction == TypeOfBodyAction.MAKE_DYNAMIC){
-			shape.getBody().setType(BodyDef.BodyType.DynamicBody);
+			gameShape.getBody().setType(BodyDef.BodyType.DynamicBody);
 		}
 		else if(typeOfBodyAction == TypeOfBodyAction.REMOVE){
-			SideScrollerGameV2.getCurrentMap().removeBody(shape.getBody());
-			SideScrollerGameV2.getCurrentMap().removeDrawObject(shape);
+			SideScrollerGameV2.getCurrentMap().removeBody(gameShape.getBody());
+			SideScrollerGameV2.getCurrentMap().removeDrawObject(gameShape);
 		}
 		SideScrollerGameV2.getCurrentMap().getActionManager().removeAction(this);
 	}

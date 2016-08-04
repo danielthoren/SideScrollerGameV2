@@ -133,4 +133,8 @@ public class SpriteAnimation  {
 	public int getFramesPerSek() {return framesPerSek;}
 
 	public void setFramesPerSek(final int framesPerSek) {this.framesPerSek = framesPerSek;}
+
+	public boolean isDone(){return animation.isAnimationFinished(stateTime);}
+
+	public void reset(){stateTime = 0;}
 }
