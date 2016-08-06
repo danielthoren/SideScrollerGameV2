@@ -16,7 +16,6 @@ public class ActionManager
 	private HashMap<Integer, ArrayList<Action>> actions;
 	private List<Trigger> triggers;
 	private List<Action> actionsStagedForRemoval;
-	private List<Trigger> triggersStagedForRemoval;
 
 	/**
 	 * Creates a actionmanager.
@@ -25,7 +24,6 @@ public class ActionManager
 		actions = new HashMap<Integer, ArrayList<Action>>(5);
 		triggers = new ArrayList<Trigger>(5);
 		actionsStagedForRemoval = new ArrayList<Action>(1);
-		triggersStagedForRemoval = new ArrayList<Trigger>(1);
 	}
 
 	/**
@@ -90,6 +88,19 @@ public class ActionManager
 			for (Iterator<Action> iterator = actions.get(actionRemove.getActionID()).iterator(); iterator.hasNext();){
 				Action action = iterator.next();
 				if (action.equals(actionRemove)){
+
+					//If this is the last action with this action id then remove all triggers with that id.
+					if (actions.get(actionRemove.getActionID()).size() == 1){
+						for (Iterator<Trigger> triggerIterator = triggers.iterator(); iterator.hasNext();){
+							Trigger trigger = triggerIterator.next();
+							if (trigger.getTargetActionID() == actionRemove.getActionID()){
+								trigger.destroyTrigger();
+								triggers.remove(trigger);
+							}
+						}
+					}
+
+					//Then remove the action.
 					action.destroyAction();
 					iterator.remove();
 				}
