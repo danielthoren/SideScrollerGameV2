@@ -3,7 +3,10 @@ package com.sidescroller.objects;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
+import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.GameObject;
@@ -61,7 +64,7 @@ public class GameShape implements Draw {
                     sprite.setPosition(body.getPosition().x + rubeImage.center.x - (rubeImage.width / 2),
                                        body.getPosition().y + rubeImage.center.y - (rubeImage.height / 2));
 					sprite.setOrigin(rubeImage.width/2 - rubeImage.center.x, rubeImage.height/2 - rubeImage.center.y);
-					sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
+					sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle() + rubeSprite.getRubeImage().angleInRads));
                     if (rubeImage.flip) {
                         sprite.flip(true, false);
                     }
@@ -79,6 +82,14 @@ public class GameShape implements Draw {
 
     public Array<RubeSprite> getRubeSprites(){
         return rubeSprites;
+    }
+
+    public void setGroupIndex(short index){
+        Filter filter = new Filter();
+        filter.groupIndex = index;
+        for (Fixture fixture : body.getFixtureList()){
+            fixture.setFilterData(filter);
+        }
     }
 
     /**

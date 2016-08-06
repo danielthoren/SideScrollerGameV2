@@ -19,22 +19,51 @@ import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.objects.GameShape;
 import com.sidescroller.objects.RubeSprite;
 
-public class Granade implements CollisionListener, Draw
+/**
+ * A basic granade that explodes upon impact.
+ */
+public class OnTouchGranade implements CollisionListener, Draw
 {
 	private final long id;
 	private GameShape gameShape;
 	private SpriteAnimation explosion;
-	private Texture explosionTexture;
+	private Texture explosionSpriteTexture;
+	private int explosionTextureRows;
+	private int explosionTextureColumns;
+	private int layer;
 	private float radious;
+	private float blastRatio;
+	private float explosionTime;
 
-	public Granade(final long id, Vector2 position, Texture explosionTexture, Texture granadeTexture) {
+	/**
+	 * @TODO Set a default sprite texture for the explosion using the assetmanager when it has been created.
+	 * Creates a granade that explodes on the first impact with another body that is not a sensor.
+	 * @param id The id of the granade.
+	 * @param position The position that the granade will spawn on.
+	 * @param explosionSpriteTexture The spriteSheet of the explosion. If not using the default value, the fields 'explosionTextureRows' and
+	 *                         'explosionTextureColumns' must be set accordingly.
+	 * @param granadeTexture The texture of the granade.
+	 * @param layer The layer at wich the granade will be drawn.
+	 * @param radious The radious of the granade.
+	 */
+	public OnTouchGranade(final long id, Vector2 position, Texture explosionSpriteTexture, Texture granadeTexture, int layer, float radious) {
 		this.id = id;
-		this.explosionTexture = explosionTexture;
+		this.layer = layer;
+		this.explosionSpriteTexture = explosionSpriteTexture;
+		this.radious = radious;
+		blastRatio = 5;
+		explosionTime = 0.2f;
+		explosionTextureColumns = 8;
+		explosionTextureRows = 6;
 
-		radious = 0.1f;
 		createBody(position, granadeTexture);
 	}
 
+	/**
+	 * Creates the body of the granade. This is just a simple circle.
+	 * @param position The position at wich the body will be created.
+	 * @param granadeTexture The texture to represent the body with (creating a GameShape object with it).
+	 */
 	private void createBody(Vector2 position, Texture granadeTexture){
 		Shape fixtureShape = new CircleShape();
 		fixtureShape.setRadius(radious);
@@ -64,7 +93,6 @@ public class Granade implements CollisionListener, Draw
 		rubeSprites.add(new RubeSprite(rubeImage, granadeTexture));
 
 		gameShape = new GameShape(id, body, rubeSprites);
-		SideScrollerGameV2.getCurrentMap().addDrawObject(gameShape);
 	}
 
 	/**
@@ -79,11 +107,11 @@ public class Granade implements CollisionListener, Draw
 			if ((contact.getFixtureA().getBody().equals(gameShape.getBody()) && !contact.getFixtureB().isSensor()) ||
 				(contact.getFixtureB().getBody().equals(gameShape.getBody()) && !contact.getFixtureA().isSensor())) {
 				Vector2 bodyPos = gameShape.getBody().getPosition();
-				Vector2 explosionPos = new Vector2(bodyPos.x - radious, bodyPos.y - radious);
-				explosion =
-						new SpriteAnimation(5, 8, 6, explosionPos, new Vector2(radious * 2, radious * 2), 0, explosionTexture);
+				Vector2 explosionPos = new Vector2(bodyPos.x - radious * blastRatio, bodyPos.y - radious * blastRatio);
+				Float framesPerSek = ((explosionTextureColumns * explosionTextureRows) / explosionTime);
+				explosion = new SpriteAnimation(framesPerSek.intValue(), explosionTextureColumns, explosionTextureRows, explosionPos, new Vector2(radious * 2 * blastRatio, radious * 2 * blastRatio), 0,
+												explosionSpriteTexture);
 				SideScrollerGameV2.getCurrentMap().removeBody(gameShape.getBody());
-				SideScrollerGameV2.getCurrentMap().removeDrawObject(gameShape);
 			}
 		}
 	}
@@ -105,12 +133,16 @@ public class Granade implements CollisionListener, Draw
   * @param layer The draw layer that is supposed to be drawn
   */
  public void draw(SpriteBatch batch, int layer){
-	 System.out.println(explosion);
-	 if (explosion != null){
-		 explosion.draw(batch, layer);
-		 if (explosion.isDone()){
-			 SideScrollerGameV2.getCurrentMap().removeDrawObject(this);
-			 SideScrollerGameV2.getCurrentMap().removeCollisionListener(this);
+	 if (this.layer == layer) {
+		 if (explosion != null) {
+			 explosion.draw(batch, layer);
+			 if (explosion.isDone()) {
+				 SideScrollerGameV2.getCurrentMap().removeDrawObject(this);
+				 SideScrollerGameV2.getCurrentMap().removeCollisionListener(this);
+			 }
+		 }
+		 else {
+			 gameShape.draw(batch, layer);
 		 }
 	 }
  }
@@ -130,4 +162,10 @@ public class Granade implements CollisionListener, Draw
 	}
 
 	public GameShape getGameShape() {return gameShape;}
+
+	public void setBlastRatio(final float blastRatio) {this.blastRatio = blastRatio;}
+
+	public void setGroudIndex(short index){
+		gameShape.setGroupIndex(index);
+	}
 }

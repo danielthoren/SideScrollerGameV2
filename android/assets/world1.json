@@ -1613,7 +1613,7 @@
 			],
 			"name" : "image0",
 			"opacity" : 0.50,
-			"renderOrder" : 3.0,
+			"renderOrder" : 3,
 			"scale" : 7.353720664978027
 		}
 	],

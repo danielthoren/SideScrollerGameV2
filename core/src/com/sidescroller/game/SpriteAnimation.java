@@ -28,7 +28,7 @@ public class SpriteAnimation  {
 	private float angle;
 	private float stateTime;
 
-	private boolean loopAnimation;
+	protected boolean loopAnimation;
 
 	/**
 	 * Creates a simple 2d animation. Only workes with evenly spaced spriteSheets without gaps.
@@ -73,8 +73,9 @@ public class SpriteAnimation  {
 		//TODO check if the creation of a new sprite every frame could be circumvented
 		Sprite sprite = new Sprite(currentFrame);
 
-		sprite.setPosition(position.x, position.y);
 		sprite.setSize(size.x, size.y);
+		sprite.setPosition(position.x , position.y );
+		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 		sprite.setRotation(SideScrollerGameV2.radToDeg(angle));
 
 		sprite.draw(batch);
@@ -114,9 +115,7 @@ public class SpriteAnimation  {
 	 * take effect one must call the 'reverseAnimation' function after calling this one.
 	 * @param loopAnimation
      */
-	public void setLoopAnimation(final boolean loopAnimation) {
-		this.loopAnimation = loopAnimation;
-	}
+	public void setLoopAnimation(final boolean loopAnimation) {this.loopAnimation = loopAnimation;}
 
 	public Vector2 getPosition() {return position;}
 

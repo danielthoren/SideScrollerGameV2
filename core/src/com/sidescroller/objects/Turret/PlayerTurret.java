@@ -9,6 +9,9 @@ import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.objects.GameShape;
 import com.sidescroller.player.Player;
 
+/**
+ * A subclass to turret that enables players to control the turret.
+ */
 public class PlayerTurret extends Turret implements InteractGameObject, InputListener
 {
     private int leftKey;
@@ -16,6 +19,14 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
     private int upKey;
     private boolean isActivated;
 
+	/**
+     * Creates a turret that players can control.
+     * @param id The id of the turret.
+     * @param barrel The gameShape representing the barrel.
+     * @param turretBase The gameShape representing the base of the turret.
+     * @param barrelJoint The joint joining the barrel and the turretbase together, needs to have motor enabled and must hav
+     *                    a set speed/torque.
+     */
     public PlayerTurret(final long id, final GameShape barrel, final GameShape turretBase, final RevoluteJoint barrelJoint) {
         super(id, barrel, turretBase, barrelJoint);
         turretBase.getBody().setUserData(this);
@@ -69,7 +80,7 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
             rotateBarrel(Direction.RIGHT);
         }
         else if (keycode == upKey){
-            shoot();
+            shoot(10);
         }
     }
 
