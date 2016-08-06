@@ -27,7 +27,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 
     private long groundResetTimer;
 
-    private boolean isBottomSensor, isRightSensor, isLeftSensor;
     private boolean isRunning, isGrounded, isCollisionLeft, isCollisionRight;
 
     private int interactKey;
@@ -53,9 +52,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         acceleration = new Vector2(10f, 20f);
         deceleration = new Vector2(100f, 0f);
         groundResetTimer = -1;
-        isBottomSensor = false;
-        isLeftSensor = false;
-        isRightSensor = false;
         isRunning = false;
         isGrounded = false;
         isCollisionLeft = false;
@@ -315,7 +311,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     /** Called when a key was pressed
      *
      * @param keycode one of the constants in {@link Keys}
-     * @return whether the input was processed */
+     */
     public void keyDown(int keycode){
         if (isLeftKey && keycode == leftKey){
             isRunning = true;
@@ -341,7 +337,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     /** Called when a key was released
      *
      * @param keycode one of the constants in {@link Keys}
-     * @return whether the input was processed */
+     */
     public void keyUp (int keycode){
         if ((isLeftKey && keycode == leftKey) || (isRightKey && keycode == rightKey)){
             isRunning = false;
@@ -359,7 +355,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * interacted with. All of the objects in the game world should implement the interface 'GameObject'. Thus we tre to
      * cast the bodies userdata value to a 'GameObject' then checks if it is of the type 'InteractGameObject'. If one or both
      * of these casts fails, the body is removed from the world.
-     * @param bodies The bodies the player is currently colliding with.
      * @param startInteract True if the interaction is now starting, otherwise false.
      */
     private void notifyInteractObjects(boolean startInteract){

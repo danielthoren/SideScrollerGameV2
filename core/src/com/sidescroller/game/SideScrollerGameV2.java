@@ -2,6 +2,7 @@ package com.sidescroller.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -10,10 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sidescroller.Map.Map;
@@ -21,29 +19,22 @@ import com.sidescroller.Map.MapLoader;
 import com.sidescroller.objects.GameShape;
 
 public class SideScrollerGameV2 extends ApplicationAdapter {
+	//Ignore warnings regarding fields not being initialized. Theese occur because there is no constructor. All fields are
+	//initialized in the 'create' method instead. This is because libGDX works this way.
 	private static Map currentMap;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
-	private Texture texture;
-	private Box2DDebugRenderer box2DDebugRenderer;
-	private InputHandler inputHandler;
 	private Viewport viewport;
 	private Vector2 cameraPosition;
 
 	private long nanoTimeLastUpdate;
 	private int velocityIterations, positionIterations;             //Values deciding the accuracy of velocity and position
 	private static float pixPerMeter = 10;
-	private static float aspectRatio;
 	private static final float UPDATE_INTERVAL = 1f / 60.0f;
 	public static final Vector2 WINDOW_VIEW = new Vector2(16f, 9f);  //The constant camera size (the window in to the world)
 	public static final int NANOS_PER_SECOND = 1000000000;
 
 	private static final boolean DEBUGRENDERER = true;
-
-	private Body body;
-
-	private GameShape gameShapeObj;
-
 
 	@Override
 	public void create () {
@@ -53,35 +44,13 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		viewport = new FillViewport(16, 9, camera);
 		viewport.apply();
 
-		box2DDebugRenderer = new Box2DDebugRenderer();
 		batch = new SpriteBatch();
-		aspectRatio = (float)Gdx.graphics.getHeight() / (float)Gdx.graphics.getWidth();
-		inputHandler = new InputHandler();
+		InputProcessor inputHandler = new InputHandler();
 		Gdx.input.setInputProcessor(inputHandler);
 		currentMap = MapLoader.getInstance().loadMap("world1.json");
 		//Setting the worlds contactlistener
-		ContactListenerGame contactListenerGame = new ContactListenerGame();
+		ContactListener contactListenerGame = new ContactListenerGame();
 		currentMap.setContactListener(contactListenerGame);
-
-		CircleShape shape = new CircleShape();
-		shape.setPosition(new Vector2(0,0));
-		shape.setRadius(0.2f);
-
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.density = 1;
-		fixtureDef.friction = 0.1f;
-		fixtureDef.restitution = 0.01f;
-		fixtureDef.shape = shape;
-
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyDef.BodyType.DynamicBody;
-		bodyDef.position.set(3,3);
-
-		body = currentMap.createBody(bodyDef);
-		body.createFixture(fixtureDef);
-
-		gameShapeObj = new GameShape(currentMap.getObjectID(), body);
-
 	}
 
 	@Override
@@ -113,8 +82,6 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 				obj.draw(batch, layer);
 			}
 		}
-
-		drawTrojectory(batch, gameShapeObj.getBody(), new Vector2(-2, 10));
 
 		batch.end();
 
@@ -172,6 +139,4 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	public static Map getCurrentMap() {return currentMap;}
 
 	public OrthographicCamera getCamera() {return camera;}
-
-	public static float getAspectRatio(){return aspectRatio;}
 }

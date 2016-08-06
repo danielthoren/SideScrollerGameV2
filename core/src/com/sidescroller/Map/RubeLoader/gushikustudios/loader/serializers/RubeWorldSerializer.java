@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Json.ReadOnlySerializer;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class RubeWorldSerializer extends ReadOnlySerializer<RubeScene>
 {
 	private WorldSerializer mWorldSerializer;

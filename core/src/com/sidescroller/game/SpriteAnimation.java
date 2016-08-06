@@ -13,13 +13,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class SpriteAnimation  {
 
-	private int frameColumns;
-	private int frameRows;
-
 	private Animation animation;
-	private Texture spriteSheet;
-	private TextureRegion[] walkFrames;
-	private TextureRegion currentFrame;
 
 	private Vector2 position;
 	private Vector2 size;
@@ -41,21 +35,22 @@ public class SpriteAnimation  {
      * @param spriteSheet The spriteSheet.
      */
 	public SpriteAnimation(int framesPerSek, int frameColumns, int frameRows, Vector2 position, Vector2 size, float angle, Texture spriteSheet) {
-		this.frameColumns = frameColumns;
 		this.angle = angle;
 		this.size = size;
 		this.position = position;
-		this.frameRows = frameRows;
-		this.spriteSheet = spriteSheet;
 		this.framesPerSek = framesPerSek;
 		loopAnimation = true;
+
+		TextureRegion[] walkFrames;
+		TextureRegion currentFrame;
 
 		TextureRegion[][] tmp = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/frameColumns, spriteSheet.getHeight()/frameRows);
 		walkFrames = new TextureRegion[frameColumns * frameRows];
 		int index = 0;
 		for (int i = 0; i < frameRows; i++) {
 			for (int j = 0; j < frameColumns; j++) {
-				walkFrames[index++] = tmp[i][j];
+				walkFrames[index] = tmp[i][j];
+				index++;
 			}
 		}
 		animation = new Animation((float) (1f / framesPerSek), walkFrames);
@@ -69,7 +64,7 @@ public class SpriteAnimation  {
 	 */
 	public void draw(SpriteBatch batch, int layer){
 		stateTime += Gdx.graphics.getDeltaTime();
-		currentFrame = animation.getKeyFrame(stateTime, loopAnimation);
+		TextureRegion currentFrame = animation.getKeyFrame(stateTime, loopAnimation);
 		//TODO check if the creation of a new sprite every frame could be circumvented
 		Sprite sprite = new Sprite(currentFrame);
 
@@ -113,7 +108,7 @@ public class SpriteAnimation  {
 	/**
 	 * Sets if the animation sould run continuesly or just one time. Due note that, to make the changes to this parameter
 	 * take effect one must call the 'reverseAnimation' function after calling this one.
-	 * @param loopAnimation
+	 * @param loopAnimation if true, then loop animation.
      */
 	public void setLoopAnimation(final boolean loopAnimation) {this.loopAnimation = loopAnimation;}
 

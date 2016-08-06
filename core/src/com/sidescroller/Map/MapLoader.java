@@ -26,18 +26,15 @@ import java.util.HashMap;
  * Singelton class that loads and unloads maps.
  */
 public class MapLoader {
-    public static final int LAYERS = 16;
 
     private static MapLoader instance = new MapLoader();
     private RubeSceneLoader loader;
     private HashMap<String, Map> loadedMaps;
-	private Json json;
 	private static final String ERROR_SQUARE = "ErrorSquare.png";
 
     private MapLoader() {
         loadedMaps = new HashMap<String, Map>(1);
         loader = new RubeSceneLoader();
-		json = new Json();
     }
 
     public static MapLoader getInstance(){return instance;}
