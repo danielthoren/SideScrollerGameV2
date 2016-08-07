@@ -189,6 +189,9 @@ public class Map
             boundryCheck();
             updateTimer = 0;
         }
+
+        addStagedObjects();
+        removeStagedOBjects();
     }
 
     public void draw(SpriteBatch batch){

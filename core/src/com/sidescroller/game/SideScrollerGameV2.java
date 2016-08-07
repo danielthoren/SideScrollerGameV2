@@ -3,6 +3,7 @@ package com.sidescroller.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -28,6 +29,8 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private Viewport viewport;
 	private Vector2 cameraPosition;
+	private AssetManager assetManager;
+	private MapLoader mapLoader;
 
 	private static float updateInterval;
 	public static final Vector2 WINDOW_VIEW = new Vector2(16, 9);  //The constant camera size (the window in to the world)
@@ -40,11 +43,13 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		camera = new OrthographicCamera(WINDOW_VIEW.x, WINDOW_VIEW.y);
 		viewport = new FillViewport(16, 9, camera);
 		viewport.apply();
+		assetManager = new AssetManager();
 
+		mapLoader = new MapLoader(this);
 		batch = new SpriteBatch();
 		InputProcessor inputHandler = new InputHandler();
 		Gdx.input.setInputProcessor(inputHandler);
-		currentMap = MapLoader.getInstance().loadMap("world1.json");
+		currentMap = mapLoader.loadMap("world1.json");
 		updateInterval = currentMap.getUpdateTime();
 		//Setting the worlds contactlistener
 		ContactListener contactListenerGame = new ContactListenerGame();
@@ -54,9 +59,6 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	@Override
 	public void render () {
 		currentMap.stepWorld(updateInterval);
-
-		currentMap.removeStagedOBjects();
-		currentMap.addStagedObjects();
 
 		camera.update();
 		Gdx.gl.glClearColor(0,0,0.2f,1);
@@ -129,6 +131,8 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	public static float degToRad(float deg) {return (float) (deg * (Math.PI/180f));}
 
 	public static Map getCurrentMap() {return currentMap;}
+
+	public AssetManager getAssetManager(){return assetManager;}
 
 	public OrthographicCamera getCamera() {return camera;}
 }

@@ -1,12 +1,14 @@
 package com.sidescroller.map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.sidescroller.game.SideScrollerGameV2;
 import com.sidescroller.map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
@@ -31,25 +33,29 @@ import java.util.HashMap;
 @SuppressWarnings("ProhibitedExceptionCaught")
 public final class MapLoader {
 
-    private static MapLoader instance = new MapLoader();
     private RubeSceneLoader loader;
 	//Needs to be 'HashMap'. 'Map' does not accept type parameters.
     @SuppressWarnings("CollectionDeclaredAsConcreteClass")
 	private HashMap<String, Map> loadedMaps;
+	private AssetManager assetManager;
+
 	private static final String ERROR_SQUARE = "ErrorSquare.png";
 	private static final float SIZE_OF_ERROR_SQUARE = 0.5f;
 
-    private MapLoader() {
+    public MapLoader(SideScrollerGameV2 sideScrollerGameV2) {
+		assetManager = sideScrollerGameV2.getAssetManager();
         loadedMaps = new HashMap<String, Map>(1);
         loader = new RubeSceneLoader();
     }
-
-    public static MapLoader getInstance(){return instance;}
 
     public Map loadMap(String mapPath){
         //If the map is not yet loaded, then load it
         if (!loadedMaps.containsKey(mapPath)){
             RubeScene scene = loader.loadScene(Gdx.files.internal(mapPath));
+
+			for (RubeImage rubeImage : scene.getImages()){
+				assetManager.load(rubeImage.file, Texture.class);
+			}
 
 			convertFilePath(scene);
             Map map = new Map(scene.getWorld(), true, scene.velocityIterations, scene.positionIterations);
@@ -179,7 +185,7 @@ public final class MapLoader {
 		if (rubeImages != null) {
 			Array<RubeSprite> rubeSprites = new Array<RubeSprite>(1);
 			for (RubeImage rubeImage : rubeImages) {
-				rubeSprites.add(new RubeSprite(rubeImage));
+				rubeSprites.add(new RubeSprite(rubeImage, assetManager.get(rubeImage.file, Texture.class)));
 			}
 			map.updateLayerDepth(rubeSprites);
 			return rubeSprites;
@@ -199,6 +205,9 @@ public final class MapLoader {
 		RubeSceneLoader turretLoader = new RubeSceneLoader(scene.getWorld());
 		RubeScene turretScene;
 		turretScene = turretLoader.loadScene(Gdx.files.internal("turret.json"));
+		for (RubeImage rubeImage : turretScene.getImages()){
+			assetManager.load(rubeImage.file, Texture.class);
+		}
 		setJointData(turretScene, map);
 
 		//getting the needed bodies
