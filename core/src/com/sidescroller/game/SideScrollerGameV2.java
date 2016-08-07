@@ -29,18 +29,13 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	private Viewport viewport;
 	private Vector2 cameraPosition;
 
-	private long nanoTimeLastUpdate;
-	private int velocityIterations, positionIterations;             //Values deciding the accuracy of velocity and position
-	private static float pixPerMeter = 10;
-	private static final float UPDATE_INTERVAL = 1f / 60.0f;
+	private static float updateInterval;
 	public static final Vector2 WINDOW_VIEW = new Vector2(16, 9);  //The constant camera size (the window in to the world)
-	public static final int NANOS_PER_SECOND = 1000000000;
 
 	private static final boolean DEBUGRENDERER = true;
 
 	@Override
 	public void create () {
-		nanoTimeLastUpdate = System.nanoTime();
 		cameraPosition = new Vector2(0,0);
 		camera = new OrthographicCamera(WINDOW_VIEW.x, WINDOW_VIEW.y);
 		viewport = new FillViewport(16, 9, camera);
@@ -50,6 +45,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		InputProcessor inputHandler = new InputHandler();
 		Gdx.input.setInputProcessor(inputHandler);
 		currentMap = MapLoader.getInstance().loadMap("world1.json");
+		updateInterval = currentMap.getUpdateTime();
 		//Setting the worlds contactlistener
 		ContactListener contactListenerGame = new ContactListenerGame();
 		currentMap.setContactListener(contactListenerGame);
@@ -57,8 +53,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		nanoTimeLastUpdate = System.nanoTime();
-		currentMap.stepWorld(UPDATE_INTERVAL);
+		currentMap.stepWorld(updateInterval);
 
 		currentMap.removeStagedOBjects();
 		currentMap.addStagedObjects();
@@ -70,19 +65,13 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 
 		//Updating the updateobjects
-		for (Update obj : currentMap.getUpdateObjects()){
-			obj.update();
-		}
+		currentMap.update();
 		currentMap.getActionManager().update();
 
 		batch.begin();
 
 		//Drawing the drawobjects
-		for (int layer = currentMap.getLayerCount(); layer >= 0; layer--) {
-			for (Draw obj : currentMap.getDrawObjects()) {
-				obj.draw(batch, layer);
-			}
-		}
+		currentMap.draw(batch);
 
 		batch.end();
 
@@ -106,9 +95,11 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
      */
 	public static Vector2 getTrojectoryPoint(Vector2 startPosition, Vector2 startVelocity, float n){
 		//The velocity each step of the world.
-		Vector2 stepVelocity = new Vector2(UPDATE_INTERVAL * startVelocity.x, UPDATE_INTERVAL * startVelocity.y);
+		Vector2 stepVelocity = new Vector2(updateInterval * startVelocity.x, updateInterval * startVelocity.y);
 		//The gravity each step of the world.
-		Vector2 stepGravity = new Vector2(currentMap.getGravity().x * UPDATE_INTERVAL * UPDATE_INTERVAL, currentMap.getGravity().y * UPDATE_INTERVAL * UPDATE_INTERVAL);
+		Vector2 stepGravity = new Vector2(currentMap.getGravity().x * updateInterval * updateInterval, currentMap.getGravity().y *
+																									   updateInterval *
+																									   updateInterval);
 
 		return new Vector2(startPosition.x + n * stepVelocity.x + 0.5f * (n*n + n) * stepGravity.x, startPosition.y + n * stepVelocity.y + 0.5f * (n*n + n) * stepGravity.y);
 	}

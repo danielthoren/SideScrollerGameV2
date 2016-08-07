@@ -71,12 +71,9 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 	public void endInteract(Player player){}
 
 	/**
-	 * Changes the userdata of the body belonging to the gameShape from 'this' to the actual gameShape. This is done so that
-     * the JVM Garbagecollector removes 'this' (the garbagecollector removes objects with no references).
+	 * Does nothing since the lever/button should still be pressable.
      */
-	public void destroyTrigger(){
-		gameShape.getBody().setUserData(gameShape);
-	}
+	public void destroyTrigger(){}
 
 	@Override
 	public TypeOfGameObject getTypeOfGameObject(){

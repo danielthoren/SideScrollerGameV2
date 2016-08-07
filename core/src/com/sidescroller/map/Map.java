@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
 import com.sidescroller.game.*;
 import com.sidescroller.objects.RubeSprite;
 
@@ -30,10 +31,10 @@ public class Map
     private List<InputListener> inputListenerList;
     private List<CollisionListener> collisionListenerList;
 
-    private List<Draw> drawObjectsStagedForRemoval;
-    private List<Update> updateObjectsStagedForRemoval;
-    private List<InputListener> inputListenersStagedForRemoval;
-    private List<CollisionListener> collisionListenersStagedForRemoval;
+    private List<Long> drawObjectsStagedForRemoval;
+    private List<Long> updateObjectsStagedForRemoval;
+    private List<Long> inputListenersStagedForRemoval;
+    private List<Long> collisionListenersStagedForRemoval;
     private List<Body> bodiesStagedForRemoval;
 
     private List<Draw> drawObjectsStagedForAddition;
@@ -41,9 +42,14 @@ public class Map
     private List<InputListener> inputListenersStagedForAddition;
     private List<CollisionListener> collisionListenersStagedForAddition;
 
+    private Array<Body> tmpBodies;
+
     private final int velocityIterations;
     private final int positionIterations;
 
+    private final float updateTime = 1f / 60f;
+
+    private float updateTimer;
     private long objectID;
     private int layerCount;
 
@@ -59,21 +65,23 @@ public class Map
         this.positionIterations = positionIterations;
         objectID = 0;
         layerCount = 1;
+        updateTimer = 0;
         debugRenderer = new Box2DDebugRenderer();
         drawObjects = new ArrayList<Draw>(layerCount);
         updateObjects = new ArrayList<Update>(10);
         collisionListenerList = new ArrayList<CollisionListener>(10);
         inputListenerList = new ArrayList<InputListener>(10);
-        drawObjectsStagedForRemoval = new ArrayList<Draw>(2);
-        updateObjectsStagedForRemoval = new ArrayList<Update>(2);
-        inputListenersStagedForRemoval = new ArrayList<InputListener>(2);
-        collisionListenersStagedForRemoval = new ArrayList<CollisionListener>(2);
+        drawObjectsStagedForRemoval = new ArrayList<Long>(2);
+        updateObjectsStagedForRemoval = new ArrayList<Long>(2);
+        inputListenersStagedForRemoval = new ArrayList<Long>(2);
+        collisionListenersStagedForRemoval = new ArrayList<Long>(2);
         bodiesStagedForRemoval = new ArrayList<Body>(2);
         drawObjectsStagedForAddition = new ArrayList<Draw>(layerCount);
         updateObjectsStagedForAddition = new ArrayList<Update>(2);
         inputListenersStagedForAddition = new ArrayList<InputListener>(2);
         collisionListenersStagedForAddition = new ArrayList<CollisionListener>(2);
 		actionManager = new ActionManager();
+        tmpBodies = new Array<Body>(10);
     }
 
     /**
@@ -96,10 +104,10 @@ public class Map
         }
 
         //Removing all of the 'Draw' objects from the maps global list
-        for (Draw drawObjectRemove : drawObjectsStagedForRemoval){
+        for (long drawObjectRemove : drawObjectsStagedForRemoval){
             for (Iterator<Draw> iterator = drawObjects.iterator(); iterator.hasNext();){
                 Draw object = iterator.next();
-                if (drawObjectRemove.getId() == object.getId()){
+                if (drawObjectRemove == object.getId()){
                     iterator.remove();
                 }
             }
@@ -107,28 +115,28 @@ public class Map
         }
 
         //Removing all of the 'Update' objects from the maps global list
-        for (Update objectRemove : updateObjectsStagedForRemoval){
+        for (long objectRemove : updateObjectsStagedForRemoval){
             for (Iterator<Update> iterator = updateObjects.iterator(); iterator.hasNext();){
                 Update object = iterator.next();
-                if (objectRemove.getId() == object.getId()){
+                if (objectRemove == object.getId()){
                     iterator.remove();
                 }
             }
         }
         //Removing all of the 'gamelogic.InputListener' objects from the maps global list
-        for (InputListener listenerRemova : inputListenersStagedForRemoval){
+        for (long listenerRemova : inputListenersStagedForRemoval){
             for (Iterator<InputListener> iterator = inputListenerList.iterator(); iterator.hasNext();) {
                 InputListener inputListener = iterator.next();
-                if (inputListener.getId() == listenerRemova.getId()){
+                if (inputListener.getId() == listenerRemova){
                     iterator.remove();
                 }
             }
         }
         //Removing all of the 'gamelogic.CollisionListener' objects from the maps global list
-        for (CollisionListener collisionListenerRemove : collisionListenersStagedForRemoval){
+        for (long collisionListenerRemove : collisionListenersStagedForRemoval){
             for (Iterator<CollisionListener> iterator = collisionListenerList.iterator(); iterator.hasNext();){
                 CollisionListener collisionListener = iterator.next();
-                if (collisionListener.getId() == collisionListenerRemove.getId()) {
+                if (collisionListener.getId() == collisionListenerRemove) {
                     iterator.remove();
                 }
             }
@@ -176,6 +184,11 @@ public class Map
             updateObj.update();
         }
         actionManager.update();
+        updateTimer += updateTime;
+        if (updateTimer >= 5){
+            boundryCheck();
+            updateTimer = 0;
+        }
     }
 
     public void draw(SpriteBatch batch){
@@ -183,6 +196,30 @@ public class Map
         for (int layer = layerCount; layer >= 0; layer--) {
             for (Draw obj : drawObjects) {
                 obj.draw(batch, layer);
+            }
+        }
+    }
+
+	/**
+     * Checks if any bodies have fallen to far. If so then removes thoose bodies. This is done to prevent crashes from the
+     * y-coordinate being to big to fit in a float.
+     */
+    private void boundryCheck(){
+        world.getBodies(tmpBodies);
+        for (Body body : tmpBodies){
+            if (body.getPosition().y < -1000){
+                try{
+                    GameObject gameObject = (GameObject) (body.getUserData());
+                    drawObjectsStagedForRemoval.add(gameObject.getId());
+                    updateObjectsStagedForRemoval.add(gameObject.getId());
+                    inputListenersStagedForRemoval.add(gameObject.getId());
+                    collisionListenersStagedForRemoval.add(gameObject.getId());
+                    updateObjectsStagedForRemoval.add(gameObject.getId());
+                    world.destroyBody(body);
+                }
+                catch (ClassCastException e){
+                    world.destroyBody(body);
+                }
             }
         }
     }
@@ -244,25 +281,25 @@ public class Map
 
     public void removeCollisionListener(CollisionListener listener){
         if (listener != null) {
-            collisionListenersStagedForRemoval.add(listener);
+            collisionListenersStagedForRemoval.add(listener.getId());
         }
     }
 
     public void removeInputListener(InputListener listener){
         if (listener != null) {
-            inputListenersStagedForRemoval.add(listener);
+            inputListenersStagedForRemoval.add(listener.getId());
         }
     }
 
     public void removeDrawObject(Draw object){
         if (object != null) {
-            drawObjectsStagedForRemoval.add(object);
+            drawObjectsStagedForRemoval.add(object.getId());
         }
     }
 
     public void removeUpdateObject(Update object){
         if (object != null) {
-            updateObjectsStagedForRemoval.add(object);
+            updateObjectsStagedForRemoval.add(object.getId());
         }
     }
 
@@ -289,6 +326,8 @@ public class Map
             collisionListenersStagedForAddition.add(object);
         }
     }
+
+    public float getUpdateTime() {return updateTime;}
 
     public Iterable<Draw> getDrawObjects() {return drawObjects;}
 

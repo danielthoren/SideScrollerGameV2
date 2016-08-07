@@ -96,7 +96,7 @@ public class ActionManager
 							Trigger trigger = triggerIterator.next();
 							if (trigger.getTargetActionID() == actionRemove.getActionID()){
 								trigger.destroyTrigger();
-								triggers.remove(trigger);
+								triggerIterator.remove();
 							}
 						}
 					}
