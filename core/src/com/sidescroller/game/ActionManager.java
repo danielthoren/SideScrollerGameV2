@@ -1,11 +1,12 @@
 package com.sidescroller.game;
 
-import com.sidescroller.objects.Actions.Action;
-import com.sidescroller.objects.Actions.Trigger;
+import com.sidescroller.objects.actions.Action;
+import com.sidescroller.objects.actions.Trigger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The actionmanager manages all of the actions and triggers of the map. It updates the triggers and calls the act method
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class ActionManager
 {
-	private HashMap<Integer, ArrayList<Action>> actions;
+	private Map<Integer, ArrayList<Action>> actions;
 	private List<Trigger> triggers;
 	private List<Action> actionsStagedForRemoval;
 
@@ -57,7 +58,7 @@ public class ActionManager
 	 * Removes a trigger from the actionmanager.
 	 * @param trigger The trigger to be removed.
      */
-	public void removeTrigger(Trigger trigger){
+	public void removeTrigger(GameObject trigger){
 		for (Iterator<Trigger> iterator = triggers.iterator(); iterator.hasNext();){
 			Trigger trig = iterator.next();
 			if (trig.getId() == trigger.getId()){
@@ -91,7 +92,7 @@ public class ActionManager
 
 					//If this is the last action with this action id then remove all triggers with that id.
 					if (actions.get(actionRemove.getActionID()).size() == 1){
-						for (Iterator<Trigger> triggerIterator = triggers.iterator(); iterator.hasNext();){
+						for (Iterator<Trigger> triggerIterator = triggers.iterator(); triggerIterator.hasNext();){
 							Trigger trigger = triggerIterator.next();
 							if (trigger.getTargetActionID() == actionRemove.getActionID()){
 								trigger.destroyTrigger();

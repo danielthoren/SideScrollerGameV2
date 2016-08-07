@@ -6,8 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
-import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
-import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
+import com.sidescroller.map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.GameObject;
 import com.sidescroller.game.SideScrollerGameV2;
@@ -21,16 +20,16 @@ public class GameShape implements Draw {
 
     private Array<RubeSprite> rubeSprites;
     private Body body;
-    private final long iD;
+    private final long id;
 
     /**
      * Creates a GameShape object.
-     * @param iD The unique id of the object.
+     * @param id The unique id of the object.
      * @param body The body of the object.
      * @param rubeSprites The 'RubeSprite' of the object (contains a 'RubeImage' and a 'Sprite').
      */
-    public GameShape(long iD, Body body, Array<RubeSprite> rubeSprites) {
-        this.iD = iD;
+    public GameShape(long id, Body body, Array<RubeSprite> rubeSprites) {
+        this.id = id;
         this.rubeSprites = rubeSprites;
         body.setUserData(this);
         this.body = body;
@@ -38,11 +37,11 @@ public class GameShape implements Draw {
 
     /**
      * Cteates a GameShape object.
-     * @param iD The unique id of the object.
+     * @param id The unique id of the object.
      * @param body The body of the object.
      */
-    public GameShape(long iD, Body body) {
-        this.iD = iD;
+    public GameShape(long id, Body body) {
+        this.id = id;
         rubeSprites = null;
         body.setUserData(this);
         this.body = body;
@@ -76,7 +75,7 @@ public class GameShape implements Draw {
 
     public Body getBody(){return body;}
 
-    public long getId(){return iD;}
+    public long getId(){return id;}
 
     public TypeOfGameObject getTypeOfGameObject(){return TypeOfGameObject.SHAPE;}
 
@@ -102,7 +101,7 @@ public class GameShape implements Draw {
     public boolean equals(Object obj) {
         try{
             GameObject gameObject = (GameObject) obj;
-            return gameObject.getId() == this.getId();
+            return gameObject.getId() == id;
         }
         catch (Exception e){
             return false;

@@ -1,6 +1,6 @@
 package com.sidescroller.game;
 
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 
 /**
@@ -11,7 +11,7 @@ public class InputHandler extends InputAdapter {
 
     /** Called when a key was pressed
      *
-     * @param keycode one of the constants in {@link Input.Keys}
+     * @param keycode one of the constants in {@link Keys}
      * @return whether the input was processed */
     public boolean keyDown (int keycode){
         for (InputListener listener : SideScrollerGameV2.getCurrentMap().getInputListenerList()){
@@ -22,7 +22,7 @@ public class InputHandler extends InputAdapter {
 
     /** Called when a key was released
      *
-     * @param keycode one of the constants in {@link Input.Keys}
+     * @param keycode one of the constants in {@link Keys}
      * @return whether the input was processed */
     public boolean keyUp (int keycode){
         for (InputListener listener : SideScrollerGameV2.getCurrentMap().getInputListenerList()){

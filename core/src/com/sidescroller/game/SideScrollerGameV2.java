@@ -6,7 +6,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -14,13 +16,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sidescroller.Map.Map;
-import com.sidescroller.Map.MapLoader;
-import com.sidescroller.objects.GameShape;
+import com.sidescroller.map.Map;
+import com.sidescroller.map.MapLoader;
 
+@SuppressWarnings("InstanceVariableMayNotBeInitialized")
+//Ignore warnings regarding fields not being initialized. Theese occur because there is no constructor. All fields are
+//initialized in the 'create' method instead. This is because libGDX works this way.
 public class SideScrollerGameV2 extends ApplicationAdapter {
-	//Ignore warnings regarding fields not being initialized. Theese occur because there is no constructor. All fields are
-	//initialized in the 'create' method instead. This is because libGDX works this way.
 	private static Map currentMap;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -31,7 +33,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	private int velocityIterations, positionIterations;             //Values deciding the accuracy of velocity and position
 	private static float pixPerMeter = 10;
 	private static final float UPDATE_INTERVAL = 1f / 60.0f;
-	public static final Vector2 WINDOW_VIEW = new Vector2(16f, 9f);  //The constant camera size (the window in to the world)
+	public static final Vector2 WINDOW_VIEW = new Vector2(16, 9);  //The constant camera size (the window in to the world)
 	public static final int NANOS_PER_SECOND = 1000000000;
 
 	private static final boolean DEBUGRENDERER = true;
@@ -55,7 +57,6 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		float deltaTime = System.nanoTime() - nanoTimeLastUpdate;
 		nanoTimeLastUpdate = System.nanoTime();
 		currentMap.stepWorld(UPDATE_INTERVAL);
 
@@ -112,8 +113,8 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		return new Vector2(startPosition.x + n * stepVelocity.x + 0.5f * (n*n + n) * stepGravity.x, startPosition.y + n * stepVelocity.y + 0.5f * (n*n + n) * stepGravity.y);
 	}
 
-	public void drawTrojectory(SpriteBatch batch, Body body, Vector2 startVelocity){
-		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
+	public void drawTrojectory(Batch batch, Body body, Vector2 startVelocity){
+		Pixmap pixmap = new Pixmap(1, 1, Format.RGB888);
 		Texture texture = new Texture(pixmap);
 		Sprite sprite = new Sprite(texture);
 		sprite.setSize(0.05f, 0.05f);

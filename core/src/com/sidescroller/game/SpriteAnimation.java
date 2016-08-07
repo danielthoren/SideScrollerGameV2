@@ -3,6 +3,7 @@ package com.sidescroller.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -42,7 +43,6 @@ public class SpriteAnimation  {
 		loopAnimation = true;
 
 		TextureRegion[] walkFrames;
-		TextureRegion currentFrame;
 
 		TextureRegion[][] tmp = TextureRegion.split(spriteSheet, spriteSheet.getWidth()/frameColumns, spriteSheet.getHeight()/frameRows);
 		walkFrames = new TextureRegion[frameColumns * frameRows];
@@ -53,8 +53,8 @@ public class SpriteAnimation  {
 				index++;
 			}
 		}
-		animation = new Animation((float) (1f / framesPerSek), walkFrames);
-		stateTime = 0f;
+		animation = new Animation( (1f / framesPerSek), walkFrames);
+		stateTime = 0;
 	}
 
 	/**
@@ -83,17 +83,17 @@ public class SpriteAnimation  {
 	public void reverseAnimation(boolean reversed){
 		if (reversed) {
 			if (loopAnimation) {
-				animation.setPlayMode(Animation.PlayMode.LOOP_REVERSED);
+				animation.setPlayMode(PlayMode.LOOP_REVERSED);
 			} else {
-				animation.setPlayMode(Animation.PlayMode.REVERSED);
+				animation.setPlayMode(PlayMode.REVERSED);
 			}
 		}
 		else{
 			if (loopAnimation) {
-				animation.setPlayMode(Animation.PlayMode.LOOP);
+				animation.setPlayMode(PlayMode.LOOP);
 			}
 			else {
-				animation.setPlayMode(Animation.PlayMode.NORMAL);
+				animation.setPlayMode(PlayMode.NORMAL);
 			}
 		}
 	}
@@ -102,7 +102,7 @@ public class SpriteAnimation  {
 	 * Makes the animation move, first forward then backward and so on.
 	 */
 	public void pingPongAnimation(){
-		animation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
+		animation.setPlayMode(PlayMode.LOOP_PINGPONG);
 	}
 
 	/**

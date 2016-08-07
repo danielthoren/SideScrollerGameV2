@@ -1,15 +1,16 @@
 package com.sidescroller.player;
 
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.sidescroller.game.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by daniel on 2016-06-06.
@@ -19,11 +20,10 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private Body body;
     private Sprite sprite;
     private Direction direction;
-    private ArrayList<Body> collidingBodies;
+    private List<Body> collidingBodies;
 
     private Vector2 acceleration, maxVelocity, deceleration;
-    private final long iD;
-    private static final TypeOfGameObject typeOfGameObject = TypeOfGameObject.PLAYER;
+    private final long id;
 
     private long groundResetTimer;
 
@@ -40,17 +40,19 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private boolean isUpKey;
 
     //Default values
-    private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(1f, 5f);
+    private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(1, 5);
+    private static final Vector2 ACCELERATION_DEFAULT = new Vector2(10, 0.6f);
+    private static final Vector2 DECELERATION_DEFAULT = new Vector2(100, 0);
     private static final float GROUNDED_THRESHOLD = 0.01f;
     private static final int GROUNDED_RESET_THRESHOLD = 50;
 
-    public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
-        this.iD = iD;
+    public Player(long id, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
+        this.id = id;
         collidingBodies = new ArrayList<Body>(1);
         direction = Direction.RIGHT;
         maxVelocity = DEFAULT_MAX_VELOCITY;
-        acceleration = new Vector2(10f, 20f);
-        deceleration = new Vector2(100f, 0f);
+        acceleration = ACCELERATION_DEFAULT;
+        deceleration = DECELERATION_DEFAULT;
         groundResetTimer = -1;
         isRunning = false;
         isGrounded = false;
@@ -60,13 +62,13 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         float bodyHeight = bodyWidth * ((float) texture.getHeight()/texture.getWidth());
         sprite.setSize(bodyWidth, bodyHeight);
         sprite.setOrigin(0,0);
-        createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, 0.1f);
+        createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, (float) (0.1 * bodyWidth));
 
         //setting default keybindings
-        interactKey = Input.Keys.E;
-        leftKey = Input.Keys.LEFT;
-        rightKey = Input.Keys.RIGHT;
-        upKey = Input.Keys.UP;
+        interactKey = Keys.E;
+        leftKey = Keys.LEFT;
+        rightKey = Keys.RIGHT;
+        upKey = Keys.UP;
 
         isInteractKey = true;
         isLeftKey = true;
@@ -114,7 +116,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          Vector2 bottomCirclePos;
          if (size.y >= size.x) {
              radious = size.x/2;
-             useMiddleBox = (size.y/size.x > 2) ? true : false;
+             useMiddleBox = (size.y/size.x > 2);
              //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
              middleBoxSize = new Vector2(size.x - size.x / 50 , size.y - 2*radious);
              bottomCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ? -((size.y - radious * 4) / 2) - radious : -((size.y - 2*radious)/2)));
@@ -122,7 +124,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          }
          else{
              radious = size.y/2;
-             useMiddleBox = (size.x/size.y > 2) ? true : false;
+             useMiddleBox = (size.x/size.y > 2);
              //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
              middleBoxSize = new Vector2(size.y - size.y / 50, size.x - 2*radious);
              bottomCirclePos = (new Vector2((size.x - radious * 4) / 2 > 0 ? -((size.x - radious * 4) / 2) - radious : -((size.x - 2*radious)/2), 0));
@@ -179,7 +181,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          //Creating the body using the fixtureDef and the BodyDef created beneath
          BodyDef bodyDef = new BodyDef();
          bodyDef.position.set(position);
-         bodyDef.type = BodyDef.BodyType.DynamicBody;
+         bodyDef.type = BodyType.DynamicBody;
          body = world.createBody(bodyDef);
          if (useMiddleBox){body.createFixture(middleBox);}
          body.createFixture(upperCircle);
@@ -384,10 +386,10 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         //Decelerating the player from running to a stop
         if (!isRunning && isGrounded){
             if (body.getLinearVelocity().x > deceleration.x / 4){
-                body.applyForceToCenter(-deceleration.x, 0f, true);
+                body.applyForceToCenter(-deceleration.x, 0, true);
             }
             else if (body.getLinearVelocity().x < -deceleration.x / 4){
-                body.applyForceToCenter(deceleration.x, 0f, true);
+                body.applyForceToCenter(deceleration.x, 0, true);
             }
             else{
                 body.setLinearVelocity(0f, body.getLinearVelocity().y);
@@ -396,19 +398,19 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         if (isRunning && isGrounded){
             //Code for smooth acceleration when on the ground
             if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
-                body.applyForceToCenter(acceleration.x, 0f, true);
+                body.applyForceToCenter(acceleration.x, 0, true);
             }
             else if (direction == Direction.LEFT && body.getLinearVelocity().x > -maxVelocity.x){
-                body.applyForceToCenter(-acceleration.x, 0f, true);
+                body.applyForceToCenter(-acceleration.x, 0, true);
             }
         }
         else if (isRunning && !isGrounded){
             //Code for smooth acceleration when in the air
             if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
-                body.applyForceToCenter(acceleration.x / 10, 0f, true);
+                body.applyForceToCenter(acceleration.x / 10, 0, true);
             }
             else if (direction == Direction.LEFT && body.getLinearVelocity().x > -maxVelocity.x){
-                body.applyForceToCenter(-acceleration.x / 10, 0f, true);
+                body.applyForceToCenter(-acceleration.x / 10, 0, true);
             }
         }
     }
@@ -418,14 +420,14 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      */
     private void jump(){
         //Impuls is calculated by F = m * g (Force = mass * gravity) where g = 9.82
-        Vector2 impuls = new Vector2(0, (float) (9.82 * body.getMass()));
+        Vector2 impuls = new Vector2(0, acceleration.y);
         body.applyLinearImpulse(impuls, body.getLocalCenter(), true);
     }
 
 
-    public long getId(){return iD;}
+    public long getId(){return id;}
 
-    public TypeOfGameObject getTypeOfGameObject(){return typeOfGameObject;}
+    public TypeOfGameObject getTypeOfGameObject(){return TypeOfGameObject.PLAYER;}
 
     /**
      * Overridden version of Equals that ensures that both object pointers are the exact same instantiation of
@@ -437,7 +439,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public boolean equals(Object obj) {
         try{
             GameObject gameObject = (GameObject) obj;
-            return gameObject.getId() == this.getId();
+            return gameObject.getId() == id;
         }
         catch (Exception e){
             return false;
@@ -460,11 +462,11 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 
     public void setUpKey(final int upKey) {this.upKey = upKey;}
 
-    public void setUpKey(final boolean upKey) {this.isUpKey = upKey;}
+    public void setIsUpKey(final boolean upKey) {this.isUpKey = upKey;}
 
-    public void setRightKey(final boolean rightKey) {this.isRightKey = rightKey;}
+    public void setIsRightKey(final boolean rightKey) {this.isRightKey = rightKey;}
 
-    public void setLeftKey(final boolean leftKey) {this.isLeftKey = leftKey;}
+    public void setIsLeftKey(final boolean leftKey) {this.isLeftKey = leftKey;}
 
-    public void setInteractKey(final boolean interactKey) {this.isInteractKey = interactKey;}
+    public void setIsInteractKey(final boolean interactKey) {this.isInteractKey = interactKey;}
 }
