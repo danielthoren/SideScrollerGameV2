@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.sidescroller.map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.GameObject;
-import com.sidescroller.game.SideScrollerGameV2;
+import com.sidescroller.game.SideScrollGameV2;
 import com.sidescroller.game.TypeOfGameObject;
 
 /**
@@ -63,7 +63,7 @@ public class GameShape implements Draw {
                     sprite.setPosition(body.getPosition().x + rubeImage.center.x - (rubeImage.width / 2),
                                        body.getPosition().y + rubeImage.center.y - (rubeImage.height / 2));
 					sprite.setOrigin(rubeImage.width/2 - rubeImage.center.x, rubeImage.height/2 - rubeImage.center.y);
-					sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle() + rubeSprite.getRubeImage().angleInRads));
+					sprite.setRotation(SideScrollGameV2.radToDeg(body.getAngle() + rubeSprite.getRubeImage().angleInRads));
                     if (rubeImage.flip) {
                         sprite.flip(true, false);
                     }

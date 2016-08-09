@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.sidescroller.game.Direction;
 import com.sidescroller.game.GameObject;
-import com.sidescroller.game.SideScrollerGameV2;
+import com.sidescroller.game.SideScrollGameV2;
 import com.sidescroller.game.SpriteAnimationObject;
 import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.objects.*;
@@ -19,6 +19,7 @@ public class Turret implements GameObject {
 	protected GameShape barrel;
 	protected GameShape turretBase;
 	protected RevoluteJoint barrelJoint;
+	private SideScrollGameV2 sideScrollGameV2;
 	protected Texture granadeTexture;
 	protected Texture explosionTexture;
 	private Texture barrelSmokeSpriteTexture;
@@ -34,9 +35,9 @@ public class Turret implements GameObject {
 	private final long id;
 
 	//@TODO Load texture from assetmanager when it is created.
-	private static final Texture BARREL_SMOKE_TEXTURE_DEFAULT = new Texture(Gdx.files.internal("barrelSmoke.png"));
-	private static final Texture EXPLOTION_TEXTURE_DEFAULT = new Texture(Gdx.files.internal("explosion.png"));
-	private static final Texture GRANADE_TEXTURE_DEFAULT = new Texture(Gdx.files.internal("circler.png"));
+	private static final String BARREL_SMOKE_TEXTURE_DEFAULT = "barrelSmoke.png";
+	private static final String EXPLOTION_TEXTURE_DEFAULT = "explosion.png";
+	private static final String GRANADE_TEXTURE_DEFAULT = "circler.png";
 	private static final int EXPLOSION_TEXTURE_ROWS_DEFAULT = 6;
 	private static final int EXPLOSION_TEXTURE_COLUMNS_DEFAULT = 8;
 	private static final float BARREL_SMOKE_TIME_DEFAULT = 0.5f;
@@ -59,23 +60,37 @@ public class Turret implements GameObject {
 	 * @param barrelJoint The joint joining the turretbase and the barrel to eachother. Must have motor enabled and a set
 	 *                    speed/tourque.
 	 */
-	public Turret(long id, GameShape barrel, GameShape turretBase, RevoluteJoint barrelJoint) {
+	public Turret(long id, SideScrollGameV2 sideScrollGameV2, GameShape barrel, GameShape turretBase, RevoluteJoint barrelJoint) {
 		this.barrel = barrel;
+		this.sideScrollGameV2 = sideScrollGameV2;
 		this.barrelJoint = barrelJoint;
 		this.turretBase = turretBase;
 		this.id = id;
 
-		barrelSmokeSpriteTexture = BARREL_SMOKE_TEXTURE_DEFAULT;
-
 		barrelSmokeRows = BARREL_SMOKE_ROWS_DEFAULT;
 		barrelSmokeColumns = BARREL_SMOKE_COLUMNS_DEFAULT;
 		barrelSmokeTime = BARREL_SMOKE_TIME_DEFAULT;
-		barrelSmokeSpriteTexture = BARREL_SMOKE_TEXTURE_DEFAULT;
-		granadeTexture = GRANADE_TEXTURE_DEFAULT;
-		explosionTexture = EXPLOTION_TEXTURE_DEFAULT;
 		explosionColumns = EXPLOSION_TEXTURE_COLUMNS_DEFAULT;
 		explosionRows = EXPLOSION_TEXTURE_ROWS_DEFAULT;
 		granadeRadious = GRANADE_RADIOUS_DEFAULT;
+		//Checking if default textures are loaded, if not then loading them
+		if (!sideScrollGameV2.getAssetManager().isLoaded(GRANADE_TEXTURE_DEFAULT)){
+			sideScrollGameV2.getAssetManager().load(GRANADE_TEXTURE_DEFAULT, Texture.class);
+			sideScrollGameV2.getAssetManager().update();
+		}
+		if (!sideScrollGameV2.getAssetManager().isLoaded(EXPLOTION_TEXTURE_DEFAULT)){
+			sideScrollGameV2.getAssetManager().load(EXPLOTION_TEXTURE_DEFAULT, Texture.class);
+			sideScrollGameV2.getAssetManager().update();
+		}
+		if (!sideScrollGameV2.getAssetManager().isLoaded(BARREL_SMOKE_TEXTURE_DEFAULT)){
+			sideScrollGameV2.getAssetManager().load(BARREL_SMOKE_TEXTURE_DEFAULT, Texture.class);
+			sideScrollGameV2.getAssetManager().update();
+		}
+		sideScrollGameV2.getAssetManager().finishLoading();
+
+		barrelSmokeSpriteTexture = sideScrollGameV2.getAssetManager().get(BARREL_SMOKE_TEXTURE_DEFAULT);
+		granadeTexture = sideScrollGameV2.getAssetManager().get(GRANADE_TEXTURE_DEFAULT);
+		explosionTexture = sideScrollGameV2.getAssetManager().get(EXPLOTION_TEXTURE_DEFAULT);
 
 		motorSpeed = barrelJoint.getMotorSpeed();
 		barrel.getBody().setFixedRotation(false);
@@ -123,23 +138,23 @@ public class Turret implements GameObject {
 		int layer = 1;
 		Vector2 granadePos = new Vector2(barrel.getBody().getPosition().x + (float) (barrelLength * Math.cos(barrel.getBody().getAngle())),
 										 barrel.getBody().getPosition().y + (float) (barrelLength * Math.sin(barrel.getBody().getAngle())));
-		OnTouchGranade onTouchGranade = new OnTouchGranade(SideScrollerGameV2.getCurrentMap().getObjectID(), granadePos, explosionTexture, explosionColumns, explosionRows, granadeTexture, layer, granadeRadious);
+		OnTouchGranade onTouchGranade = new OnTouchGranade(sideScrollGameV2.getCurrentMap().getObjectID(), sideScrollGameV2, granadePos, explosionTexture, explosionColumns, explosionRows, granadeTexture, layer, granadeRadious);
 		//@Todo fix layers with maskbits!
 		onTouchGranade.setGroudIndex((short)-1);
 
 		Float barreleSmokeFrames = barrelSmokeRows * barrelSmokeColumns / barrelSmokeTime;
 		SpriteAnimationObject barrelSmoke = new SpriteAnimationObject(barreleSmokeFrames.intValue(), barrelSmokeColumns,
 																	  barrelSmokeRows, new Vector2(granadePos.x - (granadeRadious * 5), granadePos.y - (granadeRadious * 5)), new Vector2(granadeRadious * 10, granadeRadious * 10),
-																	  barrel.getBody().getAngle() - (float) (Math.PI/2), barrelSmokeSpriteTexture, SideScrollerGameV2.getCurrentMap().getObjectID(), layer);
+																	  barrel.getBody().getAngle() - (float) (Math.PI/2), barrelSmokeSpriteTexture, sideScrollGameV2.getCurrentMap().getObjectID(), layer, sideScrollGameV2);
 		barrelSmoke.setLoopAnimation(false);
 		barrelSmoke.reverseAnimation(false);
-		SideScrollerGameV2.getCurrentMap().addDrawObject(barrelSmoke);
+		sideScrollGameV2.getCurrentMap().addDrawObject(barrelSmoke);
 
 		//Calculating the relative x and y forces when applying the angle of the barrelbody.
 		Vector2 appliedForce = new Vector2((float) (force * Math.cos(barrel.getBody().getAngle())) , (float) (force * Math.sin(barrel.getBody().getAngle())));
-		onTouchGranade.getGameShape().getBody().applyForce(appliedForce, onTouchGranade.getGameShape().getBody().getLocalCenter(), true);
-		SideScrollerGameV2.getCurrentMap().addDrawObject(onTouchGranade);
-		SideScrollerGameV2.getCurrentMap().addCollisionListener(onTouchGranade);
+		onTouchGranade.getGranadeShape().getBody().applyForce(appliedForce, onTouchGranade.getGranadeShape().getBody().getLocalCenter(), true);
+		sideScrollGameV2.getCurrentMap().addDrawObject(onTouchGranade);
+		sideScrollGameV2.getCurrentMap().addCollisionListener(onTouchGranade);
 	}
 
 	public long getId(){

@@ -11,6 +11,7 @@ public class SpriteAnimationObject extends SpriteAnimation implements Draw
 {
 	private final long id;
 	private int layer;
+	private SideScrollGameV2 sideScrollGameV2;
 
 	/**
 	 * Creates a simple 2d animation. Only workes with evenly spaced spriteSheets without gaps. Can be placed in the gameworld.
@@ -24,10 +25,11 @@ public class SpriteAnimationObject extends SpriteAnimation implements Draw
 	 * @param id The id of the object
      */
 	public SpriteAnimationObject(final int framesPerSek, final int frameColumns, final int frameRows, final Vector2 position,
-								 final Vector2 size, final float angle, final Texture spriteSheet, final long id, int layer)
+								 final Vector2 size, final float angle, final Texture spriteSheet, final long id, int layer, SideScrollGameV2 sideScrollGameV2)
 	{
 		super(framesPerSek, frameColumns, frameRows, position, size, angle, spriteSheet);
 		this.id = id;
+		this.sideScrollGameV2 = sideScrollGameV2;
 		this.layer = layer;
 	}
 
@@ -41,7 +43,7 @@ public class SpriteAnimationObject extends SpriteAnimation implements Draw
 			if (!isDone() || loopAnimation) {
 				super.draw(batch, layer);
 			} else {
-				SideScrollerGameV2.getCurrentMap().removeDrawObject(this);
+				sideScrollGameV2.getCurrentMap().removeDrawObject(this);
 			}
 		}
 	}

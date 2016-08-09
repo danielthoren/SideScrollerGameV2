@@ -3,7 +3,7 @@ package com.sidescroller.objects.actions;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
-import com.sidescroller.game.SideScrollerGameV2;
+import com.sidescroller.game.SideScrollGameV2;
 import com.sidescroller.objects.GameShape;
 
 import java.util.ArrayList;
@@ -22,6 +22,7 @@ public class BodyAction extends Action
     private BodyType bodyType;
     private List<Boolean> tempFixtureSensorData;
 	private TypeOfBodyAction typeOfBodyAction;
+	private SideScrollGameV2 sideScrollGameV2;
 
 	/**
 	 * Makes a BodyAction object that can either spawn a gameShape object, remove a gameShape object or make it dynamic.
@@ -29,8 +30,9 @@ public class BodyAction extends Action
 	 * @param gameShape The gameShape that will be worked on.
 	 * @param typeOfBodyAction The type of body action.
      */
-    public BodyAction(final long id, final int actionId, final GameShape gameShape, TypeOfBodyAction typeOfBodyAction) {
+    public BodyAction(final long id, SideScrollGameV2 sideScrollGameV2, final int actionId, final GameShape gameShape, TypeOfBodyAction typeOfBodyAction) {
 		super(id, actionId);
+		this.sideScrollGameV2 = sideScrollGameV2;
 		this.gameShape = gameShape;
 		this.typeOfBodyAction = typeOfBodyAction;
 		tempFixtureSensorData = new ArrayList<Boolean>(1);
@@ -63,16 +65,16 @@ public class BodyAction extends Action
 			else{
 				gameShape.getBody().setType(bodyType);
 			}
-			SideScrollerGameV2.getCurrentMap().addDrawObject(gameShape);
+			sideScrollGameV2.getCurrentMap().addDrawObject(gameShape);
 		}
 		else if (typeOfBodyAction == TypeOfBodyAction.MAKE_DYNAMIC){
 			gameShape.getBody().setType(BodyType.DynamicBody);
 		}
 		else if(typeOfBodyAction == TypeOfBodyAction.REMOVE){
-			SideScrollerGameV2.getCurrentMap().removeBody(gameShape.getBody());
-			SideScrollerGameV2.getCurrentMap().removeDrawObject(gameShape);
+			sideScrollGameV2.getCurrentMap().removeBody(gameShape.getBody());
+			sideScrollGameV2.getCurrentMap().removeDrawObject(gameShape);
 		}
-		SideScrollerGameV2.getCurrentMap().getActionManager().removeAction(this);
+		sideScrollGameV2.getCurrentMap().getActionManager().removeAction(this);
 	}
 
 	/**

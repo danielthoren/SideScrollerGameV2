@@ -23,8 +23,8 @@ import com.sidescroller.map.MapLoader;
 @SuppressWarnings("InstanceVariableMayNotBeInitialized")
 //Ignore warnings regarding fields not being initialized. Theese occur because there is no constructor. All fields are
 //initialized in the 'create' method instead. This is because libGDX works this way.
-public class SideScrollerGameV2 extends ApplicationAdapter {
-	private static Map currentMap;
+public class SideScrollGameV2 extends ApplicationAdapter {
+	private Map currentMap;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private Viewport viewport;
@@ -47,12 +47,12 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 
 		mapLoader = new MapLoader(this);
 		batch = new SpriteBatch();
-		InputProcessor inputHandler = new InputHandler();
+		InputProcessor inputHandler = new InputHandler(this);
 		Gdx.input.setInputProcessor(inputHandler);
 		currentMap = mapLoader.loadMap("world1.json");
 		updateInterval = currentMap.getUpdateTime();
 		//Setting the worlds contactlistener
-		ContactListener contactListenerGame = new ContactListenerGame();
+		ContactListener contactListenerGame = new ContactListenerGame(this);
 		currentMap.setContactListener(contactListenerGame);
 	}
 
@@ -71,7 +71,6 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 		currentMap.getActionManager().update();
 
 		batch.begin();
-
 		//Drawing the drawobjects
 		currentMap.draw(batch);
 
@@ -95,7 +94,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 	 * @param n The step at wich to calculate the approximate posotion.
      * @return A vector with the calculated position.
      */
-	public static Vector2 getTrojectoryPoint(Vector2 startPosition, Vector2 startVelocity, float n){
+	public Vector2 getTrojectoryPoint(Vector2 startPosition, Vector2 startVelocity, float n){
 		//The velocity each step of the world.
 		Vector2 stepVelocity = new Vector2(updateInterval * startVelocity.x, updateInterval * startVelocity.y);
 		//The gravity each step of the world.
@@ -130,7 +129,7 @@ public class SideScrollerGameV2 extends ApplicationAdapter {
 
 	public static float degToRad(float deg) {return (float) (deg * (Math.PI/180f));}
 
-	public static Map getCurrentMap() {return currentMap;}
+	public Map getCurrentMap() {return currentMap;}
 
 	public AssetManager getAssetManager(){return assetManager;}
 

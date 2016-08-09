@@ -2,10 +2,7 @@ package com.sidescroller.objects.turret;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
-import com.sidescroller.game.Direction;
-import com.sidescroller.game.InputListener;
-import com.sidescroller.game.InteractGameObject;
-import com.sidescroller.game.TypeOfGameObject;
+import com.sidescroller.game.*;
 import com.sidescroller.objects.GameShape;
 import com.sidescroller.player.Player;
 
@@ -27,8 +24,8 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
      * @param barrelJoint The joint joining the barrel and the turretbase together, needs to have motor enabled and must hav
      *                    a set speed/torque.
      */
-    public PlayerTurret(final long id, final GameShape barrel, final GameShape turretBase, final RevoluteJoint barrelJoint) {
-        super(id, barrel, turretBase, barrelJoint);
+    public PlayerTurret(final long id, SideScrollGameV2 sideScrollGameV2, final GameShape barrel, final GameShape turretBase, final RevoluteJoint barrelJoint) {
+        super(id, sideScrollGameV2, barrel, turretBase, barrelJoint);
         turretBase.getBody().setUserData(this);
         barrel.getBody().setUserData(this);
         isActivated = false;

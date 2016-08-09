@@ -13,12 +13,18 @@ import com.badlogic.gdx.physics.box2d.Contact;
  */
 public class ContactListenerGame implements ContactListener
 {
-    /**
+	private SideScrollGameV2 sideScrollGameV2;
+
+	public ContactListenerGame(SideScrollGameV2 sideScrollGameV2) {
+		this.sideScrollGameV2 = sideScrollGameV2;
+	}
+
+	/**
      * Called when two fixtures begin to touch.
      * @param contact An object containing information about the collision.
      */
     public void beginContact(Contact contact) {
-	Iterable<CollisionListener> listeners = SideScrollerGameV2.getCurrentMap().getCollisionListenerList();
+	Iterable<CollisionListener> listeners = sideScrollGameV2.getCurrentMap().getCollisionListenerList();
 	for (CollisionListener obj : listeners){
 	    if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
 			obj.beginContact(contact);
@@ -31,7 +37,7 @@ public class ContactListenerGame implements ContactListener
      * @param contact An object containing information about the collision.
      */
 	public void endContact(Contact contact){
-		Iterable<CollisionListener> listeners = SideScrollerGameV2.getCurrentMap().getCollisionListenerList();
+		Iterable<CollisionListener> listeners = sideScrollGameV2.getCurrentMap().getCollisionListenerList();
 		for (CollisionListener obj : listeners){
 			if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
 				obj.endContact(contact);

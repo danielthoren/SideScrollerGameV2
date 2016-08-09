@@ -9,24 +9,31 @@ import com.badlogic.gdx.InputAdapter;
  */
 public class InputHandler extends InputAdapter {
 
-    /** Called when a key was pressed
+	private SideScrollGameV2 sideScrollGameV2;
+
+	public InputHandler(SideScrollGameV2 sideScrollGameV2) {
+		super();
+		this.sideScrollGameV2 = sideScrollGameV2;
+	}
+
+	/** Called when a key is pressed
      *
-     * @param keycode one of the constants in {@link Keys}
+     * @param keyCode one of the constants in {@link Keys}
      * @return whether the input was processed */
-    public boolean keyDown (int keycode){
-        for (InputListener listener : SideScrollerGameV2.getCurrentMap().getInputListenerList()){
-            listener.keyDown(keycode);
+    public boolean keyDown (int keyCode){
+        for (InputListener listener : sideScrollGameV2.getCurrentMap().getInputListenerList()){
+            listener.keyDown(keyCode);
         }
         return true;
     }
 
-    /** Called when a key was released
+    /** Called when a key is released
      *
-     * @param keycode one of the constants in {@link Keys}
+     * @param keyCode one of the constants in {@link Keys}
      * @return whether the input was processed */
-    public boolean keyUp (int keycode){
-        for (InputListener listener : SideScrollerGameV2.getCurrentMap().getInputListenerList()){
-            listener.keyUp(keycode);
+    public boolean keyUp (int keyCode){
+        for (InputListener listener : sideScrollGameV2.getCurrentMap().getInputListenerList()){
+            listener.keyUp(keyCode);
         }
         return true;
     }

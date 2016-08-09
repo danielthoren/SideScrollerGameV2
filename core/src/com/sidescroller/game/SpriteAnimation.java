@@ -71,7 +71,7 @@ public class SpriteAnimation  {
 		sprite.setSize(size.x, size.y);
 		sprite.setPosition(position.x , position.y );
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-		sprite.setRotation(SideScrollerGameV2.radToDeg(angle));
+		sprite.setRotation(SideScrollGameV2.radToDeg(angle));
 
 		sprite.draw(batch);
 	}

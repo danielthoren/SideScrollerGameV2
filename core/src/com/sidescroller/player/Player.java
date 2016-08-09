@@ -21,6 +21,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private Sprite sprite;
     private Direction direction;
     private List<Body> collidingBodies;
+	private SideScrollGameV2 sideScrollGameV2;
 
     private Vector2 acceleration, maxVelocity, deceleration;
     private final long id;
@@ -46,8 +47,9 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private static final float GROUNDED_THRESHOLD = 0.01f;
     private static final int GROUNDED_RESET_THRESHOLD = 50;
 
-    public Player(long id, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
+    public Player(long id, SideScrollGameV2 sideScrollGameV2, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
         this.id = id;
+		this.sideScrollGameV2 = sideScrollGameV2;
         collidingBodies = new ArrayList<Body>(1);
         direction = Direction.RIGHT;
         maxVelocity = DEFAULT_MAX_VELOCITY;
@@ -229,7 +231,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         //TODO Fix so that player layer is loaded from file
         if (layer == 0) {
             sprite.setPosition(body.getPosition().x - (sprite.getWidth() / 2), body.getPosition().y - (sprite.getHeight() / 2));
-            sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
+            sprite.setRotation(SideScrollGameV2.radToDeg(body.getAngle()));
             sprite.draw(batch);
         }
     }
@@ -374,7 +376,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             }
             catch (ClassCastException e){
                 System.out.println("Error corrected. Body with wrong type in 'UserData' (either not 'GameObject' or not InteractObject')");
-                SideScrollerGameV2.getCurrentMap().removeBody(body);
+                sideScrollGameV2.getCurrentMap().removeBody(body);
             }
         }
     }

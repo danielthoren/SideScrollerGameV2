@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.sidescroller.map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.game.CollisionListener;
 import com.sidescroller.game.Draw;
-import com.sidescroller.game.SideScrollerGameV2;
+import com.sidescroller.game.SideScrollGameV2;
 import com.sidescroller.game.SpriteAnimation;
 import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.objects.GameShape;
@@ -26,8 +26,9 @@ import com.sidescroller.objects.RubeSprite;
 public class OnTouchGranade implements CollisionListener, Draw
 {
 	private final long id;
-	private GameShape gameShape;
+	private GameShape granadeShape;
 	private SpriteAnimation explosion;
+	private SideScrollGameV2 sideScrollGameV2;
 	private Texture explosionSpriteTexture;
 	private int explosionTextureRows;
 	private int explosionTextureColumns;
@@ -49,8 +50,9 @@ public class OnTouchGranade implements CollisionListener, Draw
 	 * @param layer The layer at wich the granade will be drawn.
 	 * @param radious The radious of the granade.
 	 */
-	public OnTouchGranade(final long id, Vector2 position, Texture explosionSpriteTexture, int explosionTextureColumns, int explosionTextureRows, Texture granadeTexture, int layer, float radious) {
+	public OnTouchGranade(final long id, SideScrollGameV2 sideScrollGameV2, Vector2 position, Texture explosionSpriteTexture, int explosionTextureColumns, int explosionTextureRows, Texture granadeTexture, int layer, float radious) {
 		this.id = id;
+		this.sideScrollGameV2 = sideScrollGameV2;
 		this.layer = layer;
 		this.explosionSpriteTexture = explosionSpriteTexture;
 		this.radious = radious;
@@ -85,7 +87,7 @@ public class OnTouchGranade implements CollisionListener, Draw
 		bodyDef.position.x = position.x;
 
 		Body body;
-		body = SideScrollerGameV2.getCurrentMap().createBody(bodyDef);
+		body = sideScrollGameV2.getCurrentMap().createBody(bodyDef);
 
 		body.createFixture(fixtureDef);
 
@@ -96,7 +98,7 @@ public class OnTouchGranade implements CollisionListener, Draw
 		Array<RubeSprite> rubeSprites = new Array<RubeSprite>(1);
 		rubeSprites.add(new RubeSprite(rubeImage, granadeTexture));
 
-		gameShape = new GameShape(id, body, rubeSprites);
+		granadeShape = new GameShape(id, body, rubeSprites);
 	}
 
 	/**
@@ -108,14 +110,14 @@ public class OnTouchGranade implements CollisionListener, Draw
 	 */
 	public void beginContact(Contact contact){
 		if (explosion == null) {
-			if ((contact.getFixtureA().getBody().equals(gameShape.getBody()) && !contact.getFixtureB().isSensor()) ||
-				(contact.getFixtureB().getBody().equals(gameShape.getBody()) && !contact.getFixtureA().isSensor())) {
-				Vector2 bodyPos = gameShape.getBody().getPosition();
+			if ((contact.getFixtureA().getBody().equals(granadeShape.getBody()) && !contact.getFixtureB().isSensor()) ||
+				(contact.getFixtureB().getBody().equals(granadeShape.getBody()) && !contact.getFixtureA().isSensor())) {
+				Vector2 bodyPos = granadeShape.getBody().getPosition();
 				Vector2 explosionPos = new Vector2(bodyPos.x - radious * blastRatio, bodyPos.y - radious * blastRatio);
 				Float framesPerSek = ((explosionTextureColumns * explosionTextureRows) / explosionTime);
 				explosion = new SpriteAnimation(framesPerSek.intValue(), explosionTextureColumns, explosionTextureRows, explosionPos, new Vector2(radious * 2 * blastRatio, radious * 2 * blastRatio), 0,
 												explosionSpriteTexture);
-				SideScrollerGameV2.getCurrentMap().removeBody(gameShape.getBody());
+				sideScrollGameV2.getCurrentMap().removeBody(granadeShape.getBody());
 			}
 		}
 	}
@@ -141,12 +143,12 @@ public class OnTouchGranade implements CollisionListener, Draw
 		 if (explosion != null) {
 			 explosion.draw(batch, layer);
 			 if (explosion.isDone()) {
-				 SideScrollerGameV2.getCurrentMap().removeDrawObject(this);
-				 SideScrollerGameV2.getCurrentMap().removeCollisionListener(this);
+				 sideScrollGameV2.getCurrentMap().removeDrawObject(this);
+				 sideScrollGameV2.getCurrentMap().removeCollisionListener(this);
 			 }
 		 }
 		 else {
-			 gameShape.draw(batch, layer);
+			 granadeShape.draw(batch, layer);
 		 }
 	 }
  }
@@ -165,11 +167,11 @@ public class OnTouchGranade implements CollisionListener, Draw
 		return TypeOfGameObject.OTHER;
 	}
 
-	public GameShape getGameShape() {return gameShape;}
+	public GameShape getGranadeShape() {return granadeShape;}
 
 	public void setBlastRatio(final float blastRatio) {this.blastRatio = blastRatio;}
 
 	public void setGroudIndex(short index){
-		gameShape.setGroupIndex(index);
+		granadeShape.setGroupIndex(index);
 	}
 }

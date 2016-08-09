@@ -5,14 +5,13 @@ import org.robovm.apple.uikit.UIApplication;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
-import com.sidescroller.game.SideScrollerGameV2;
 
 @SuppressWarnings("ALL")
 public class IOSLauncher extends IOSApplication.Delegate {
     @Override
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
-        return new IOSApplication(new SideScrollerGameV2(), config);
+        return new IOSApplication(new SideScrollGameV2(), config);
     }
 
     public static void main(String[] argv) {

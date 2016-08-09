@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.sidescroller.game.SideScrollerGameV2;
+import com.sidescroller.game.SideScrollGameV2;
 import com.sidescroller.map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
@@ -38,12 +38,14 @@ public final class MapLoader {
     @SuppressWarnings("CollectionDeclaredAsConcreteClass")
 	private HashMap<String, Map> loadedMaps;
 	private AssetManager assetManager;
+	private SideScrollGameV2 sideScrollGameV2;
 
 	private static final String ERROR_SQUARE = "ErrorSquare.png";
 	private static final float SIZE_OF_ERROR_SQUARE = 0.5f;
 
-    public MapLoader(SideScrollerGameV2 sideScrollerGameV2) {
-		assetManager = sideScrollerGameV2.getAssetManager();
+    public MapLoader(SideScrollGameV2 sideScrollGameV2) {
+		this.sideScrollGameV2 = sideScrollGameV2;
+		assetManager = sideScrollGameV2.getAssetManager();
         loadedMaps = new HashMap<String, Map>(1);
         loader = new RubeSceneLoader();
     }
@@ -107,7 +109,7 @@ public final class MapLoader {
 
             //adding a player at specific position
             //@TODO Load playerinformation from file
-            Player player = new Player(map.getObjectID(), scene.getWorld(), new Vector2(2, 2), new Texture(Gdx.files.internal("body.png")), 1, 1, 0.01f, 0.3f);
+            Player player = new Player(map.getObjectID(), sideScrollGameV2, scene.getWorld(), new Vector2(2, 2), new Texture(Gdx.files.internal("body.png")), 1, 1, 0.01f, 0.3f);
             map.addInputListener(player);
             map.addUpdateObject(player);
             map.addDrawObject(player);
@@ -286,14 +288,14 @@ public final class MapLoader {
 
 			//Creating the type of turret specified in the subtype property
 			if (subType == null){
-				Turret turret = new Turret(map.getObjectID(), barrel, turretBase, barrelRevoluteJoint);
+				Turret turret = new Turret(map.getObjectID(), sideScrollGameV2, barrel, turretBase, barrelRevoluteJoint);
 			}
 			else if (subType.equals("manual")){
-				InputListener playerTurret = new PlayerTurret(map.getObjectID(), barrel, turretBase, barrelRevoluteJoint);
+				InputListener playerTurret = new PlayerTurret(map.getObjectID(), sideScrollGameV2, barrel, turretBase, barrelRevoluteJoint);
 				map.addInputListener(playerTurret);
 			}
 			else{
-				Turret turret = new Turret(map.getObjectID(), barrel, turretBase, barrelRevoluteJoint);
+				Turret turret = new Turret(map.getObjectID(), sideScrollGameV2, barrel, turretBase, barrelRevoluteJoint);
 			}
 
 			map.addDrawObject(barrel);
@@ -412,7 +414,7 @@ public final class MapLoader {
             if (!subType.equals("spawn") && draw){
                 map.addDrawObject(gameShape);
             }
-            BodyAction bodyAction = new BodyAction(map.getObjectID(), actionID, gameShape, typeOfBodyAction);
+            BodyAction bodyAction = new BodyAction(map.getObjectID(), sideScrollGameV2,  actionID, gameShape, typeOfBodyAction);
             map.getActionManager().addAction(bodyAction);
         }
         catch (ClassCastException e){
