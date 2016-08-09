@@ -53,11 +53,7 @@ public final class MapLoader {
         if (!loadedMaps.containsKey(mapPath)){
             RubeScene scene = loader.loadScene(Gdx.files.internal(mapPath));
 
-			for (RubeImage rubeImage : scene.getImages()){
-				assetManager.load(rubeImage.file, Texture.class);
-			}
-
-			convertFilePath(scene);
+			loadRubeImages(scene);
             Map map = new Map(scene.getWorld(), true, scene.velocityIterations, scene.positionIterations);
 
 			setJointData(scene, map);
@@ -166,12 +162,19 @@ public final class MapLoader {
 	 * absolete as we start setting the enviroment up in another way.
 	 * @param scene The scene in wich to change the filepaths.
 	 */
-	private void convertFilePath(RubeScene scene){
+	private void loadRubeImages(RubeScene scene){
 		//removes the '../' in each image filepath that the editor generates
 		//TODO fix converter that fixes image paths
 		for (RubeImage rubeImage : scene.getImages()){
 			rubeImage.file = rubeImage.file.substring(3);
 		}
+
+		//Loading the images in to the assetmanager
+		for (RubeImage rubeImage : scene.getImages()){
+			assetManager.load(rubeImage.file, Texture.class);
+		}
+		assetManager.update();
+		assetManager.finishLoading();
 	}
 
 	/**
@@ -205,9 +208,7 @@ public final class MapLoader {
 		RubeSceneLoader turretLoader = new RubeSceneLoader(scene.getWorld());
 		RubeScene turretScene;
 		turretScene = turretLoader.loadScene(Gdx.files.internal("turret.json"));
-		for (RubeImage rubeImage : turretScene.getImages()){
-			assetManager.load(rubeImage.file, Texture.class);
-		}
+
 		setJointData(turretScene, map);
 
 		//getting the needed bodies
@@ -277,7 +278,7 @@ public final class MapLoader {
 		}
 
 		if(turretBaseBody != null && barrelBody != null && barrelRevoluteJoint != null) {
-			convertFilePath(turretScene);
+			loadRubeImages(turretScene);
 			GameShape turretBase = new GameShape(map.getObjectID(), turretBaseBody, createRubeSprites(turretScene.getMappedImage(turretBaseBody), map));
 			GameShape barrel = new GameShape(map.getObjectID(), barrelBody, createRubeSprites(turretScene.getMappedImage(barrelBody), map));
 			turretBase.getBody().setTransform(gameShape.getBody().getPosition(), gameShape.getBody().getAngle());
