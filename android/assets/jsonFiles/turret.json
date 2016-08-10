@@ -32,7 +32,7 @@
 					},
 					"density" : 1,
 					"filter-categoryBits" : 2,
-					"filter-groupIndex" : 2,
+					"filter-maskBits" : 2,
 					"friction" : 0.2,
 					"name" : "fixture3"
 				},
@@ -127,36 +127,6 @@
 				
 				{
 					"density" : 1,
-					"filter-categoryBits" : 1,
-					"filter-maskBits" : 4,
-					"friction" : 0.2,
-					"name" : "fixture4",
-					"polygon" : 
-					{
-						"vertices" : 
-						{
-							"x" : [ 0.5, 0.5, -0.5, -0.5 ],
-							"y" : [ -0.5, 0.5, 0.5, -0.5 ]
-						}
-					},
-					"sensor" : true
-				},
-				
-				{
-					"circle" : 
-					{
-						"center" : 0,
-						"radius" : 0.5
-					},
-					"density" : 1,
-					"filter-categoryBits" : 2,
-					"filter-maskBits" : 2,
-					"friction" : 0.2,
-					"name" : "fixture0"
-				},
-				
-				{
-					"density" : 1,
 					"filter-categoryBits" : 2,
 					"filter-maskBits" : 2,
 					"friction" : 0.2,
@@ -181,6 +151,36 @@
 							]
 						}
 					}
+				},
+				
+				{
+					"circle" : 
+					{
+						"center" : 0,
+						"radius" : 0.5
+					},
+					"density" : 1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 2,
+					"friction" : 0.2,
+					"name" : "fixture0"
+				},
+				
+				{
+					"density" : 1,
+					"filter-categoryBits" : 4,
+					"filter-maskBits" : 4,
+					"friction" : 0.2,
+					"name" : "fixture4",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : [ 0.5, 0.5, -0.5, -0.5 ],
+							"y" : [ -0.5, 0.5, 0.5, -0.5 ]
+						}
+					},
+					"sensor" : true
 				}
 			],
 			"linearVelocity" : 0,
@@ -267,8 +267,8 @@
 				0.5
 			],
 			"name" : "image0",
-			"renderOrder" : 1,
 			"opacity" : 1,
+			"renderOrder" : 1,
 			"scale" : 1
 		},
 		
@@ -278,8 +278,8 @@
 			"body" : 0,
 			"center" : 
 			{
-				"x" : 0,
-				"y" : 0.3431990146636963
+				"x" : 0.3431990146636963,
+				"y" : 0
 			},
 			"corners" : 
 			{

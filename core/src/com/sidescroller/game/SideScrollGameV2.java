@@ -60,7 +60,7 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		InputProcessor inputHandler = new InputHandler(this);
 		Gdx.input.setInputProcessor(inputHandler);
-		currentMap = mapLoader.loadMap("jsonFiles/world1.json");
+		currentMap = mapLoader.loadMap("jsonFiles/world2.json");
 		updateInterval = currentMap.getUpdateTime();
 		//Setting the worlds contactlistener
 		ContactListener contactListenerGame = new ContactListenerGame(this);
