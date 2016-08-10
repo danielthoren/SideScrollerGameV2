@@ -46,6 +46,7 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
             upKey = player.getUpKey();
             leftKey = player.getLeftKey();
             rightKey = player.getRightKey();
+            player.setRunning(false);
         }
         else{
             player.setIsLeftKey(true);

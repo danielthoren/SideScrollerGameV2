@@ -448,6 +448,10 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         }
     }
 
+    public boolean isRunning() {return isRunning;}
+
+    public void setRunning(final boolean running) {isRunning = running;}
+
     public int getInteractKey() {return interactKey;}
 
     public void setInteractKey(final int interactKey) {this.interactKey = interactKey;}
