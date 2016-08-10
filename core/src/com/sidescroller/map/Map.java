@@ -196,7 +196,7 @@ public class Map
 
     public void draw(SpriteBatch batch){
         //Drawing the drawobjects
-        for (int layer = layerCount; layer >= 0; layer--) {
+        for (int layer = 0; layer <= layerCount; layer++) {
             for (Draw obj : drawObjects) {
                 obj.draw(batch, layer);
             }
@@ -356,5 +356,13 @@ public class Map
                 layerCount = rubeSprite.getRubeImage().renderOrder;
             }
         }
+    }
+
+	/**
+     * Updates the layerdepth with the given integer.
+     * @param layer The depth of layer to update with.
+     */
+    public void updateLayerDepth(int layer){
+        layerCount = (layerCount > layer) ?  layerCount : layer;
     }
 }

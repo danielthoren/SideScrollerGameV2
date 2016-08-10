@@ -31,14 +31,16 @@
 						"radius" : 0.1549267768859863
 					},
 					"density" : 1,
-					"filter-groupIndex" : -1,
+					"filter-categoryBits" : 2,
+					"filter-groupIndex" : 2,
 					"friction" : 0.2,
 					"name" : "fixture3"
 				},
 				
 				{
 					"density" : 1,
-					"filter-groupIndex" : -1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 2,
 					"friction" : 0.2,
 					"name" : "fixture2",
 					"polygon" : 
@@ -69,7 +71,8 @@
 				
 				{
 					"density" : 1,
-					"filter-groupIndex" : -1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 2,
 					"friction" : 0.2,
 					"name" : "fixture2",
 					"polygon" : 
@@ -123,19 +126,9 @@
 			[
 				
 				{
-					"circle" : 
-					{
-						"center" : 0,
-						"radius" : 0.5
-					},
 					"density" : 1,
-					"filter-groupIndex" : -1,
-					"friction" : 0.2,
-					"name" : "fixture0"
-				},
-				
-				{
-					"density" : 1,
+					"filter-categoryBits" : 1,
+					"filter-maskBits" : 4,
 					"friction" : 0.2,
 					"name" : "fixture4",
 					"polygon" : 
@@ -150,8 +143,22 @@
 				},
 				
 				{
+					"circle" : 
+					{
+						"center" : 0,
+						"radius" : 0.5
+					},
 					"density" : 1,
-					"filter-groupIndex" : -1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 2,
+					"friction" : 0.2,
+					"name" : "fixture0"
+				},
+				
+				{
+					"density" : 1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 2,
 					"friction" : 0.2,
 					"name" : "fixture1",
 					"polygon" : 
@@ -244,7 +251,7 @@
 				],
 				"y" : [ -0.5, -0.5, 0.5, 0.5 ]
 			},
-			"file" : "../turretBase.png",
+			"file" : "textures/turretBase.png",
 			"filter" : 1,
 			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
 			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
@@ -260,6 +267,7 @@
 				0.5
 			],
 			"name" : "image0",
+			"renderOrder" : 1,
 			"opacity" : 1,
 			"scale" : 1
 		},
@@ -290,7 +298,7 @@
 					0.1562499850988388
 				]
 			},
-			"file" : "../barrel.png",
+			"file" : "textures/barrel.png",
 			"filter" : 1,
 			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
 			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
@@ -307,7 +315,7 @@
 			],
 			"name" : "image1",
 			"opacity" : 0.5,
-			"renderOrder" : 1,
+			"renderOrder" : 2,
 			"scale" : 1
 		}
 	],

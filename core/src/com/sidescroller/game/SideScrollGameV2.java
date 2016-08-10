@@ -19,6 +19,9 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sidescroller.map.Map;
 import com.sidescroller.map.MapLoader;
+import org.omg.CORBA.PRIVATE_MEMBER;
+
+import javax.swing.plaf.PanelUI;
 
 @SuppressWarnings("InstanceVariableMayNotBeInitialized")
 //Ignore warnings regarding fields not being initialized. Theese occur because there is no constructor. All fields are
@@ -36,6 +39,14 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 	public static final Vector2 WINDOW_VIEW = new Vector2(16, 9);  //The constant camera size (the window in to the world)
 
 	private static final boolean DEBUGRENDERER = true;
+	public static final short ENVIROMENT_CATEGORY = 0x0001;
+	public static final short BACKGROUND_ENVIROMENT_CATEGORY = 0x0002;
+	public static final short PLAYER_CATEGORY = 0x0004;
+	public static final short ENEMY_CATEGORY = 0x0008;
+
+	public static final int FOREGROUND_DRAW_LAYER = 4;
+	public static final int PLAYER_DRAW_LAYER = 3;
+	public static final int BACKGROUND_DRAW_LAYER = 1;
 
 	@Override
 	public void create () {
@@ -49,7 +60,7 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		InputProcessor inputHandler = new InputHandler(this);
 		Gdx.input.setInputProcessor(inputHandler);
-		currentMap = mapLoader.loadMap("world1.json");
+		currentMap = mapLoader.loadMap("jsonFiles/world1.json");
 		updateInterval = currentMap.getUpdateTime();
 		//Setting the worlds contactlistener
 		ContactListener contactListenerGame = new ContactListenerGame(this);

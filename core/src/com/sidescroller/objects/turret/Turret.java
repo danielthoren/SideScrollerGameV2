@@ -3,6 +3,8 @@ package com.sidescroller.objects.turret;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.sidescroller.game.Direction;
 import com.sidescroller.game.GameObject;
@@ -10,6 +12,7 @@ import com.sidescroller.game.SideScrollGameV2;
 import com.sidescroller.game.SpriteAnimationObject;
 import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.objects.*;
+import javafx.geometry.Side;
 
 /**
  * Basic turret object
@@ -20,6 +23,7 @@ public class Turret implements GameObject {
 	protected GameShape turretBase;
 	protected RevoluteJoint barrelJoint;
 	private SideScrollGameV2 sideScrollGameV2;
+	private Filter granadeFilter;
 	protected Texture granadeTexture;
 	protected Texture explosionTexture;
 	private Texture barrelSmokeSpriteTexture;
@@ -35,9 +39,9 @@ public class Turret implements GameObject {
 	private final long id;
 
 	//@TODO Load texture from assetmanager when it is created.
-	private static final String BARREL_SMOKE_TEXTURE_DEFAULT = "barrelSmoke.png";
-	private static final String EXPLOTION_TEXTURE_DEFAULT = "explosion.png";
-	private static final String GRANADE_TEXTURE_DEFAULT = "circler.png";
+	private static final String BARREL_SMOKE_TEXTURE_DEFAULT = "textures/barrelSmoke.png";
+	private static final String EXPLOTION_TEXTURE_DEFAULT = "textures/explosion.png";
+	private static final String GRANADE_TEXTURE_DEFAULT = "textures/circler.png";
 	private static final int EXPLOSION_TEXTURE_ROWS_DEFAULT = 6;
 	private static final int EXPLOSION_TEXTURE_COLUMNS_DEFAULT = 8;
 	private static final float BARREL_SMOKE_TIME_DEFAULT = 0.5f;
@@ -66,6 +70,10 @@ public class Turret implements GameObject {
 		this.barrelJoint = barrelJoint;
 		this.turretBase = turretBase;
 		this.id = id;
+
+		granadeFilter = new Filter();
+		granadeFilter.categoryBits = SideScrollGameV2.ENVIROMENT_CATEGORY;
+		granadeFilter.maskBits = SideScrollGameV2.ENVIROMENT_CATEGORY | SideScrollGameV2.ENEMY_CATEGORY | SideScrollGameV2.PLAYER_CATEGORY;
 
 		barrelSmokeRows = BARREL_SMOKE_ROWS_DEFAULT;
 		barrelSmokeColumns = BARREL_SMOKE_COLUMNS_DEFAULT;
@@ -134,18 +142,20 @@ public class Turret implements GameObject {
 	 * @param force The force with wich to shoot.
 	 */
 	protected void shoot(float force){
-		//@TODO get drawlayer from SideScrollerGame class. Create specific playerlayer osv
-		int layer = 1;
+		int layer = SideScrollGameV2.PLAYER_DRAW_LAYER;
 		Vector2 granadePos = new Vector2(barrel.getBody().getPosition().x + (float) (barrelLength * Math.cos(barrel.getBody().getAngle())),
 										 barrel.getBody().getPosition().y + (float) (barrelLength * Math.sin(barrel.getBody().getAngle())));
-		OnTouchGranade onTouchGranade = new OnTouchGranade(sideScrollGameV2.getCurrentMap().getObjectID(), sideScrollGameV2, granadePos, explosionTexture, explosionColumns, explosionRows, granadeTexture, layer, granadeRadious);
-		//@Todo fix layers with maskbits!
-		onTouchGranade.setGroudIndex((short)-1);
+		OnTouchGranade onTouchGranade = new OnTouchGranade(sideScrollGameV2.getCurrentMap().getObjectID(), sideScrollGameV2, granadePos,
+														   explosionTexture, explosionColumns, explosionRows, granadeTexture, layer,
+														   granadeRadious, granadeFilter);
 
 		Float barreleSmokeFrames = barrelSmokeRows * barrelSmokeColumns / barrelSmokeTime;
-		SpriteAnimationObject barrelSmoke = new SpriteAnimationObject(barreleSmokeFrames.intValue(), barrelSmokeColumns,
-																	  barrelSmokeRows, new Vector2(granadePos.x - (granadeRadious * 5), granadePos.y - (granadeRadious * 5)), new Vector2(granadeRadious * 10, granadeRadious * 10),
-																	  barrel.getBody().getAngle() - (float) (Math.PI/2), barrelSmokeSpriteTexture, sideScrollGameV2.getCurrentMap().getObjectID(), layer, sideScrollGameV2);
+		Vector2 barrelSmokeSize = new Vector2(granadeRadious * 10, granadeRadious * 10);
+		Vector2 barrelSmokePos = new Vector2(granadePos.x - (granadeRadious * 5), granadePos.y - (granadeRadious * 5));
+		SpriteAnimationObject barrelSmoke = new SpriteAnimationObject(barreleSmokeFrames.intValue(), barrelSmokeColumns, barrelSmokeRows, barrelSmokePos, barrelSmokeSize,
+																	  barrel.getBody().getAngle() - (float) (Math.PI/2),
+																	  barrelSmokeSpriteTexture, sideScrollGameV2.getCurrentMap().getObjectID(),
+																	  layer, sideScrollGameV2);
 		barrelSmoke.setLoopAnimation(false);
 		barrelSmoke.reverseAnimation(false);
 		sideScrollGameV2.getCurrentMap().addDrawObject(barrelSmoke);

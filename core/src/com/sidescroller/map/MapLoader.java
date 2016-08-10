@@ -109,7 +109,7 @@ public final class MapLoader {
 
             //adding a player at specific position
             //@TODO Load playerinformation from file
-            Player player = new Player(map.getObjectID(), sideScrollGameV2, scene.getWorld(), new Vector2(2, 2), new Texture(Gdx.files.internal("body.png")), 1, 1, 0.01f, 0.3f);
+            Player player = new Player(map.getObjectID(), map, sideScrollGameV2, new Vector2(2, 2), new Texture(Gdx.files.internal("textures/body.png")), 1, 1, 0.01f, 0.3f);
             map.addInputListener(player);
             map.addUpdateObject(player);
             map.addDrawObject(player);
@@ -165,12 +165,6 @@ public final class MapLoader {
 	 * @param scene The scene in wich to change the filepaths.
 	 */
 	private void loadRubeImages(RubeScene scene){
-		//removes the '../' in each image filepath that the editor generates
-		//TODO fix converter that fixes image paths
-		for (RubeImage rubeImage : scene.getImages()){
-			rubeImage.file = rubeImage.file.substring(3);
-		}
-
 		//Loading the images in to the assetmanager
 		for (RubeImage rubeImage : scene.getImages()){
 			assetManager.load(rubeImage.file, Texture.class);
@@ -209,7 +203,7 @@ public final class MapLoader {
 	private void createTurret(Map map, GameShape gameShape, RubeScene scene){
 		RubeSceneLoader turretLoader = new RubeSceneLoader(scene.getWorld());
 		RubeScene turretScene;
-		turretScene = turretLoader.loadScene(Gdx.files.internal("turret.json"));
+		turretScene = turretLoader.loadScene(Gdx.files.internal("jsonFiles/turret.json"));
 
 		setJointData(turretScene, map);
 

@@ -1,0 +1,340 @@
+
+{
+	"allowSleep" : true,
+	"autoClearForces" : true,
+	"body" : 
+	[
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"fixedRotation" : true,
+			"fixture" : 
+			[
+				
+				{
+					"customProperties" : 
+					[
+						
+						{
+							"name" : "fixturePart",
+							"string" : "uppersensor"
+						}
+					],
+					"density" : 1,
+					"filter-categoryBits" : 4,
+					"filter-maskBits" : 1,
+					"friction" : 0.2,
+					"name" : "fixture6",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.1086736768484116,
+								0.05734698474407196,
+								-0.05010150745511055,
+								-0.1074512302875519
+							],
+							"y" : 
+							[
+								0.1302646696567535,
+								0.2086455076932907,
+								0.2086455225944519,
+								0.1279078423976898
+							]
+						}
+					},
+					"sensor" : true
+				},
+				
+				{
+					"customProperties" : 
+					[
+						
+						{
+							"name" : "fixturePart",
+							"string" : "bottomsensor"
+						}
+					],
+					"density" : 1,
+					"filter-categoryBits" : 4,
+					"filter-maskBits" : 1,
+					"friction" : 0.2,
+					"name" : "fixture5",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.05813249573111534,
+								-0.05762265995144844,
+								-0.02824656665325165,
+								0.02386038750410080
+							],
+							"y" : 
+							[
+								-0.1839798986911774,
+								-0.1839798986911774,
+								-0.2024533450603485,
+								-0.2020276039838791
+							]
+						}
+					},
+					"sensor" : true
+				},
+				
+				{
+					"customProperties" : 
+					[
+						
+						{
+							"name" : "fixturePart",
+							"string" : "rightsensor"
+						}
+					],
+					"density" : 1,
+					"filter-categoryBits" : 4,
+					"filter-maskBits" : 1,
+					"friction" : 0.2,
+					"name" : "fixture4",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.1085206121206284,
+								0.08847785741090775,
+								0.08847785741090775,
+								0.1063183471560478
+							],
+							"y" : 
+							[
+								0.1009737774729729,
+								0.1014142259955406,
+								-0.1014142259955406,
+								-0.1000928804278374
+							]
+						}
+					},
+					"sensor" : true
+				},
+				
+				{
+					"customProperties" : 
+					[
+						
+						{
+							"name" : "fixturePart",
+							"string" : "leftsensor"
+						}
+					],
+					"density" : 1,
+					"filter-categoryBits" : 4,
+					"filter-maskBits" : 1,
+					"friction" : 0.2,
+					"name" : "fixture3",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								-0.09263206273317337,
+								-0.1086332947015762,
+								-0.1106379404664040,
+								-0.09824503213167191
+							],
+							"y" : 
+							[
+								0.09861011058092117,
+								0.101015679538250,
+								-0.09780827164649963,
+								-0.1002138331532478
+							]
+						}
+					},
+					"sensor" : true
+				},
+				
+				{
+					"circle" : 
+					{
+						"center" : 
+						{
+							"x" : 0.0001024293014779687,
+							"y" : -0.09823548048734665
+						},
+						"radius" : 0.09826828539371491
+					},
+					"customProperties" : 
+					[
+						
+						{
+							"name" : "fixturePart",
+							"string" : "bottomcircle"
+						}
+					],
+					"density" : 1,
+					"filter-categoryBits" : 4,
+					"filter-maskBits" : 1,
+					"friction" : 0.2,
+					"name" : "fixture0"
+				},
+				
+				{
+					"circle" : 
+					{
+						"center" : 
+						{
+							"x" : 0.0005094973603263497,
+							"y" : 0.09444810450077057
+						},
+						"radius" : 0.1002105847001076
+					},
+					"density" : 1,
+					"filter-categoryBits" : 4,
+					"filter-maskBits" : 1,
+					"friction" : 0.2,
+					"name" : "fixture1"
+				},
+				
+				{
+					"density" : 1,
+					"filter-categoryBits" : 4,
+					"filter-maskBits" : 1,
+					"friction" : 0.2,
+					"name" : "fixture2",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.09910095483064652,
+								0.09910095483064652,
+								-0.09910095483064652,
+								-0.09910095483064652
+							],
+							"y" : 
+							[
+								-0.09910095483064652,
+								0.09910095483064652,
+								0.09910095483064652,
+								-0.09910095483064652
+							]
+						}
+					}
+				}
+			],
+			"linearVelocity" : 0,
+			"massData-I" : 2.789840618788730e-005,
+			"massData-center" : 
+			{
+				"x" : 0.001012280932627618,
+				"y" : 0.01507405284792185
+			},
+			"massData-mass" : 0.1222264543175697,
+			"name" : "body0",
+			"position" : 0,
+			"type" : 2
+		}
+	],
+	"collisionbitplanes" : 
+	{
+		"names" : 
+		[
+			"bitplane1",
+			"bitplane2",
+			"bitplane3",
+			"bitplane4",
+			"bitplane5",
+			"bitplane6",
+			"bitplane7",
+			"bitplane8",
+			"bitplane9",
+			"bitplane10",
+			"bitplane11",
+			"bitplane12",
+			"bitplane13",
+			"bitplane14",
+			"bitplane15",
+			"bitplane16",
+			"bitplane17",
+			"bitplane18",
+			"bitplane19",
+			"bitplane20",
+			"bitplane21",
+			"bitplane22",
+			"bitplane23",
+			"bitplane24",
+			"bitplane25",
+			"bitplane26",
+			"bitplane27",
+			"bitplane28",
+			"bitplane29",
+			"bitplane30",
+			"bitplane31",
+			"bitplane32"
+		]
+	},
+	"continuousPhysics" : true,
+	"gravity" : 
+	{
+		"x" : 0,
+		"y" : -10
+	},
+	"image" : 
+	[
+		
+		{
+			"aspectScale" : 1,
+			"body" : 0,
+			"center" : 0,
+			"corners" : 
+			{
+				"x" : 
+				[
+					-0.09839581698179245,
+					0.09839581698179245,
+					0.09839581698179245,
+					-0.09839581698179245
+				],
+				"y" : 
+				[
+					-0.1967916339635849,
+					-0.1967916339635849,
+					0.1967916339635849,
+					0.1967916339635849
+				]
+			},
+			"file" : "textures/body.png",
+			"filter" : 1,
+			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
+			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
+			"glVertexPointer" : 
+			[
+				-0.09839581698179245,
+				-0.1967916339635849,
+				0.09839581698179245,
+				-0.1967916339635849,
+				0.09839581698179245,
+				0.1967916339635849,
+				-0.09839581698179245,
+				0.1967916339635849
+			],
+			"name" : "image0",
+			"opacity" : 0.5,
+			"scale" : 0.3935832679271698
+		}
+	],
+	"positionIterations" : 3,
+	"stepsPerSecond" : 60.0,
+	"subStepping" : false,
+	"velocityIterations" : 8,
+	"warmStarting" : true
+}

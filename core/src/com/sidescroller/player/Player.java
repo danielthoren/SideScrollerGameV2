@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.sidescroller.game.*;
+import com.sidescroller.map.Map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private static final float GROUNDED_THRESHOLD = 0.01f;
     private static final int GROUNDED_RESET_THRESHOLD = 50;
 
-    public Player(long id, SideScrollGameV2 sideScrollGameV2, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
+    public Player(long id, Map map, SideScrollGameV2 sideScrollGameV2, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
         this.id = id;
 		this.sideScrollGameV2 = sideScrollGameV2;
         collidingBodies = new ArrayList<Body>(1);
@@ -64,7 +65,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         float bodyHeight = bodyWidth * ((float) texture.getHeight()/texture.getWidth());
         sprite.setSize(bodyWidth, bodyHeight);
         sprite.setOrigin(0,0);
-        createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, (float) (0.1 * bodyWidth));
+        createBody(position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, (float) (0.1 * bodyWidth), map);
 
         //setting default keybindings
         interactKey = Keys.E;
@@ -77,6 +78,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         isRightKey = true;
         isUpKey = true;
 
+        map.updateLayerDepth(SideScrollGameV2.PLAYER_DRAW_LAYER);
         body.setUserData(this);
     }
 
@@ -93,7 +95,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
       * of the body, how the parts shoudl look, be sized and positioned relative to each other. Thus the function is left as it is.
       * @param world The world in wich to create the player body.
       */
-     private void createBody(World world, Vector2 position, Vector2 size, float density, float friction, float restitution, float sensorThickness){
+     private void createBody(Vector2 position, Vector2 size, float density, float friction, float restitution, float sensorThickness, Map map) {
          FixtureDef upperCircle = new FixtureDef();
          FixtureDef middleBox = new FixtureDef();
          FixtureDef bottomCircle = new FixtureDef();
@@ -117,32 +119,37 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          Vector2 upperCirclePos;
          Vector2 bottomCirclePos;
          if (size.y >= size.x) {
-             radious = size.x/2;
-             useMiddleBox = (size.y/size.x > 2);
+             radious = size.x / 2;
+             useMiddleBox = (size.y / size.x > 2);
              //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
-             middleBoxSize = new Vector2(size.x - size.x / 50 , size.y - 2*radious);
-             bottomCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ? -((size.y - radious * 4) / 2) - radious : -((size.y - 2*radious)/2)));
-             upperCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ? (size.y - radious * 4) / 2 + radious : (size.y - 2*radious)/2));
-         }
-         else{
-             radious = size.y/2;
-             useMiddleBox = (size.x/size.y > 2);
+             middleBoxSize = new Vector2(size.x - size.x / 50, size.y - 2 * radious);
+             bottomCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ?
+                                               -((size.y - radious * 4) / 2) - radious :
+                                               -((size.y - 2 * radious) / 2)));
+             upperCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ?
+                                              (size.y - radious * 4) / 2 + radious :
+                                              (size.y - 2 * radious) / 2));
+         } else {
+             radious = size.y / 2;
+             useMiddleBox = (size.x / size.y > 2);
              //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
-             middleBoxSize = new Vector2(size.y - size.y / 50, size.x - 2*radious);
-             bottomCirclePos = (new Vector2((size.x - radious * 4) / 2 > 0 ? -((size.x - radious * 4) / 2) - radious : -((size.x - 2*radious)/2), 0));
-             upperCirclePos = (new Vector2((size.x - radious * 4) / 2 > 0 ? (size.x - radious * 4) / 2 + radious : ((size.x - 2*radious)/2), 0));
+             middleBoxSize = new Vector2(size.y - size.y / 50, size.x - 2 * radious);
+             bottomCirclePos = (new Vector2(
+                     (size.x - radious * 4) / 2 > 0 ? -((size.x - radious * 4) / 2) - radious : -((size.x - 2 * radious) / 2), 0));
+             upperCirclePos = (new Vector2(
+                     (size.x - radious * 4) / 2 > 0 ? (size.x - radious * 4) / 2 + radious : ((size.x - 2 * radious) / 2), 0));
          }
          Vector2 bottomSensorPos = new Vector2(0, bottomCirclePos.y - radious);
          Vector2 bottomSensorSize = new Vector2(size.x - size.x / 4, sensorThickness * 2);
          Vector2 leftSensorPos = new Vector2(-size.x / 2 - sensorThickness, 0);
-         Vector2 leftSensorSize = new Vector2(sensorThickness, size.y - size.y/5);
-         Vector2 rightSensorPos = new Vector2(size.x/2 + sensorThickness, 0);
-         Vector2 rightSensorSize = new Vector2(sensorThickness, size.y - size.y/5);
+         Vector2 leftSensorSize = new Vector2(sensorThickness, size.y - size.y / 5);
+         Vector2 rightSensorPos = new Vector2(size.x / 2 + sensorThickness, 0);
+         Vector2 rightSensorSize = new Vector2(sensorThickness, size.y - size.y / 5);
 
          //Initializing the shapes
          upperCircleShape.setRadius(radious);
          bottomCircleShape.setRadius(radious);
-         middleBoxShape.setAsBox(middleBoxSize.x/2, middleBoxSize.y / 2);
+         middleBoxShape.setAsBox(middleBoxSize.x / 2, middleBoxSize.y / 2);
          bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2, bottomSensorPos, 0);
          leftSensorShape.setAsBox(leftSensorSize.x / 2, leftSensorSize.y / 2, leftSensorPos, 0);
          rightSensorShape.setAsBox(rightSensorSize.x / 2, rightSensorSize.y / 2, rightSensorPos, 0);
@@ -151,41 +158,57 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          upperCircleShape.setPosition(upperCirclePos);
          bottomCircleShape.setPosition(bottomCirclePos);
 
+         Filter filter = new Filter();
+         filter.categoryBits = SideScrollGameV2.PLAYER_CATEGORY;
+         filter.maskBits = SideScrollGameV2.ENVIROMENT_CATEGORY;
+
          //Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
          upperCircle.shape = upperCircleShape;
          upperCircle.density = density;
          upperCircle.friction = 0;
          upperCircle.restitution = restitution;
          upperCircle.isSensor = false;
+         upperCircle.filter.maskBits = filter.maskBits;
+         upperCircle.filter.categoryBits = filter.categoryBits;
          middleBox.shape = middleBoxShape;
          middleBox.density = density;
          middleBox.friction = 0;
          middleBox.restitution = restitution;
          middleBox.isSensor = false;
+         middleBox.filter.categoryBits = filter.categoryBits;
+         middleBox.filter.maskBits = filter.maskBits;
          bottomCircle.shape = bottomCircleShape;
          bottomCircle.density = density;
          bottomCircle.friction = friction;
          bottomCircle.restitution = restitution;
          bottomCircle.isSensor = false;
+         bottomCircle.filter.maskBits = filter.maskBits;
+         bottomCircle.filter.categoryBits = filter.categoryBits;
          bottomSensor.shape = bottomSensorShape;
          bottomSensor.isSensor = true;
          bottomSensor.density = 0;
          bottomSensor.friction = 0;
+         bottomSensor.filter.categoryBits = filter.categoryBits;
+         bottomSensor.filter.maskBits = filter.maskBits;
          leftSensor.shape = leftSensorShape;
          leftSensor.isSensor = true;
          leftSensor.density = 0;
          leftSensor.friction = 0;
+         leftSensor.filter.maskBits = filter.maskBits;
+         leftSensor.filter.categoryBits = filter.categoryBits;
          rightSensor.shape = rightSensorShape;
          rightSensor.isSensor = true;
          rightSensor.density = 0;
          rightSensor.friction = 0;
+         rightSensor.filter.categoryBits = filter.categoryBits;
+         rightSensor.filter.maskBits = filter.maskBits;
 
          //Creating the body using the fixtureDef and the BodyDef created beneath
          BodyDef bodyDef = new BodyDef();
          bodyDef.position.set(position);
          bodyDef.type = BodyType.DynamicBody;
-         body = world.createBody(bodyDef);
-         if (useMiddleBox){body.createFixture(middleBox);}
+         body = map.createBody(bodyDef);
+         if (useMiddleBox) {body.createFixture(middleBox);}
          body.createFixture(upperCircle);
          body.createFixture(bottomCircle);
          body.createFixture(bottomSensor).setUserData(Direction.DOWN);
@@ -195,13 +218,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          body.setUserData(this);
          body.setActive(true);
          body.setSleepingAllowed(false);
-
-         for (Fixture fixture : body.getFixtureList()){
-             Filter filter = new Filter();
-             filter.groupIndex = -1;
-
-             fixture.setFilterData(filter);
-         }
      }
 
     /**
@@ -228,8 +244,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      */
     @Override
     public void draw(SpriteBatch batch, int layer){
-        //TODO Fix so that player layer is loaded from file
-        if (layer == 0) {
+        if (layer == SideScrollGameV2.PLAYER_DRAW_LAYER) {
             sprite.setPosition(body.getPosition().x - (sprite.getWidth() / 2), body.getPosition().y - (sprite.getHeight() / 2));
             sprite.setRotation(SideScrollGameV2.radToDeg(body.getAngle()));
             sprite.draw(batch);

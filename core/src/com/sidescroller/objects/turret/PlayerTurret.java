@@ -96,6 +96,7 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
    	 * Returns wich type of gameobject this specific object is.
    	 * @return The type of gameobject
    	 */
+    @Override
    	public TypeOfGameObject getTypeOfGameObject(){
    		return TypeOfGameObject.INTERACTOBJECT;
    	}

@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
@@ -50,7 +51,7 @@ public class OnTouchGranade implements CollisionListener, Draw
 	 * @param layer The layer at wich the granade will be drawn.
 	 * @param radious The radious of the granade.
 	 */
-	public OnTouchGranade(final long id, SideScrollGameV2 sideScrollGameV2, Vector2 position, Texture explosionSpriteTexture, int explosionTextureColumns, int explosionTextureRows, Texture granadeTexture, int layer, float radious) {
+	public OnTouchGranade(final long id, SideScrollGameV2 sideScrollGameV2, Vector2 position, Texture explosionSpriteTexture, int explosionTextureColumns, int explosionTextureRows, Texture granadeTexture, int layer, float radious, Filter filter) {
 		this.id = id;
 		this.sideScrollGameV2 = sideScrollGameV2;
 		this.layer = layer;
@@ -62,7 +63,7 @@ public class OnTouchGranade implements CollisionListener, Draw
 		explosionTime = EXPLOTIONTIME_DEFAULT;
 		explosion = null;
 
-		createBody(position, granadeTexture);
+		createBody(position, granadeTexture, filter);
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class OnTouchGranade implements CollisionListener, Draw
 	 * @param position The position at wich the body will be created.
 	 * @param granadeTexture The texture to represent the body with (creating a GameShape object with it).
 	 */
-	private void createBody(Vector2 position, Texture granadeTexture){
+	private void createBody(Vector2 position, Texture granadeTexture, Filter filter){
 		Shape fixtureShape = new CircleShape();
 		fixtureShape.setRadius(radious);
 
@@ -79,6 +80,8 @@ public class OnTouchGranade implements CollisionListener, Draw
 		fixtureDef.shape = fixtureShape;
 		fixtureDef.density = 1;
 		fixtureDef.friction = 1;
+		fixtureDef.filter.maskBits = filter.maskBits;
+		fixtureDef.filter.categoryBits = filter.categoryBits;
 
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.bullet = true;
@@ -94,7 +97,7 @@ public class OnTouchGranade implements CollisionListener, Draw
 		RubeImage rubeImage = new RubeImage();
 		rubeImage.width = radious * 2;
 		rubeImage.height = radious * 2;
-		rubeImage.renderOrder = 1;
+		rubeImage.renderOrder = SideScrollGameV2.PLAYER_DRAW_LAYER;
 		Array<RubeSprite> rubeSprites = new Array<RubeSprite>(1);
 		rubeSprites.add(new RubeSprite(rubeImage, granadeTexture));
 
