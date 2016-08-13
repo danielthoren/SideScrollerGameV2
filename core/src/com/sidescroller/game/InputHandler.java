@@ -2,6 +2,7 @@ package com.sidescroller.game;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.sidescroller.map.Map;
 
 /**
  * This class is instanciated in the main class and added to the 'libGDX' library. Theese functions are then called
@@ -9,11 +10,10 @@ import com.badlogic.gdx.InputAdapter;
  */
 public class InputHandler extends InputAdapter {
 
-	private SideScrollGameV2 sideScrollGameV2;
+	private Map map;
 
-	public InputHandler(SideScrollGameV2 sideScrollGameV2) {
-		super();
-		this.sideScrollGameV2 = sideScrollGameV2;
+	public InputHandler(Map map) {
+		this.map = map;
 	}
 
 	/** Called when a key is pressed
@@ -21,7 +21,7 @@ public class InputHandler extends InputAdapter {
      * @param keyCode one of the constants in {@link Keys}
      * @return whether the input was processed */
     public boolean keyDown (int keyCode){
-        for (InputListener listener : sideScrollGameV2.getCurrentMap().getInputListenerList()){
+        for (InputListener listener : map.getInputListenerList()){
             listener.keyDown(keyCode);
         }
         return true;
@@ -32,7 +32,7 @@ public class InputHandler extends InputAdapter {
      * @param keyCode one of the constants in {@link Keys}
      * @return whether the input was processed */
     public boolean keyUp (int keyCode){
-        for (InputListener listener : sideScrollGameV2.getCurrentMap().getInputListenerList()){
+        for (InputListener listener : map.getInputListenerList()){
             listener.keyUp(keyCode);
         }
         return true;

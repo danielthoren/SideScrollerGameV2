@@ -23,6 +23,9 @@ import java.util.List;
  */
 public class Map
 {
+    private ContactListenerGame contactListenerGame;
+    private InputHandler inputHandler;
+
     private Box2DDebugRenderer debugRenderer;
     private ActionManager actionManager;
 
@@ -82,6 +85,9 @@ public class Map
         collisionListenersStagedForAddition = new ArrayList<CollisionListener>(2);
 		actionManager = new ActionManager();
         tmpBodies = new Array<Body>(10);
+        contactListenerGame = new ContactListenerGame(this);
+        inputHandler = new InputHandler(this);
+        world.setContactListener(contactListenerGame);
     }
 
     /**
@@ -237,14 +243,6 @@ public class Map
     }
 
     /**
-     * Sets the contactlistener of the world.
-     * @param contactListener The contactlistener.
-     */
-    public void setContactListener(ContactListener contactListener){
-        world.setContactListener(contactListener);
-    }
-
-    /**
      * Creates a body using the world
      * @param bodyDef The bodydef from wich to create the body.
      * @return Returns the created body.
@@ -345,6 +343,8 @@ public class Map
     public ActionManager getActionManager(){return actionManager;}
 
     public Vector2 getGravity(){return world.getGravity();}
+
+    public InputHandler getInputHandler(){return inputHandler;}
 
     /**
      * Sets the drawLayerCount variable to the highest value found in the list, if any exceeds the one already in the map.

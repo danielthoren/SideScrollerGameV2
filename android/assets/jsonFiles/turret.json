@@ -21,23 +21,6 @@
 			[
 				
 				{
-					"circle" : 
-					{
-						"center" : 
-						{
-							"x" : -0.0003092885017395020,
-							"y" : -0.0008461326360702515
-						},
-						"radius" : 0.1549267768859863
-					},
-					"density" : 1,
-					"filter-categoryBits" : 2,
-					"filter-maskBits" : 2,
-					"friction" : 0.2,
-					"name" : "fixture3"
-				},
-				
-				{
 					"density" : 1,
 					"filter-categoryBits" : 2,
 					"filter-maskBits" : 2,
@@ -95,14 +78,31 @@
 							]
 						}
 					}
+				},
+				
+				{
+					"circle" : 
+					{
+						"center" : 
+						{
+							"x" : -0.0003092885017395020,
+							"y" : -0.0008461326360702515
+						},
+						"radius" : 0.1549267768859863
+					},
+					"density" : 1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 2,
+					"friction" : 0.2,
+					"name" : "fixture3"
 				}
 			],
 			"linearVelocity" : 0,
-			"massData-I" : 0.03520274907350540,
+			"massData-I" : 0.03520275279879570,
 			"massData-center" : 
 			{
 				"x" : 0.3029934763908386,
-				"y" : -0.0002769218117464334
+				"y" : -0.0002769217826426029
 			},
 			"massData-mass" : 0.1902494579553604,
 			"name" : "barrel",
@@ -127,8 +127,37 @@
 				
 				{
 					"density" : 1,
+					"filter-maskBits" : 12,
+					"friction" : 0.2,
+					"name" : "fixture4",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : [ 0.5, 0.5, -0.5, -0.5 ],
+							"y" : [ -0.5, 0.5, 0.5, -0.5 ]
+						}
+					},
+					"sensor" : true
+				},
+				
+				{
+					"circle" : 
+					{
+						"center" : 0,
+						"radius" : 0.5
+					},
+					"density" : 1,
 					"filter-categoryBits" : 2,
-					"filter-maskBits" : 2,
+					"filter-maskBits" : 0,
+					"friction" : 0.2,
+					"name" : "fixture0"
+				},
+				
+				{
+					"density" : 1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 0,
 					"friction" : 0.2,
 					"name" : "fixture1",
 					"polygon" : 
@@ -151,36 +180,6 @@
 							]
 						}
 					}
-				},
-				
-				{
-					"circle" : 
-					{
-						"center" : 0,
-						"radius" : 0.5
-					},
-					"density" : 1,
-					"filter-categoryBits" : 2,
-					"filter-maskBits" : 2,
-					"friction" : 0.2,
-					"name" : "fixture0"
-				},
-				
-				{
-					"density" : 1,
-					"filter-categoryBits" : 4,
-					"filter-maskBits" : 4,
-					"friction" : 0.2,
-					"name" : "fixture4",
-					"polygon" : 
-					{
-						"vertices" : 
-						{
-							"x" : [ 0.5, 0.5, -0.5, -0.5 ],
-							"y" : [ -0.5, 0.5, 0.5, -0.5 ]
-						}
-					},
-					"sensor" : true
 				}
 			],
 			"linearVelocity" : 0,
@@ -278,17 +277,17 @@
 			"body" : 0,
 			"center" : 
 			{
-				"x" : 0.3431990146636963,
+				"x" : 0.3433060050010681,
 				"y" : 0
 			},
 			"corners" : 
 			{
 				"x" : 
 				[
-					-0.1568009853363037,
-					-0.1568009853363037,
-					0.8431990146636963,
-					0.8431990146636963
+					-0.1566939949989319,
+					-0.1566939949989319,
+					0.8433060050010681,
+					0.8433060050010681
 				],
 				"y" : 
 				[
@@ -304,13 +303,13 @@
 			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
 			"glVertexPointer" : 
 			[
-				-0.1568009853363037,
+				-0.1566939949989319,
 				0.1562500149011612,
-				-0.1568009853363037,
+				-0.1566939949989319,
 				-0.1562499850988388,
-				0.8431990146636963,
+				0.8433060050010681,
 				-0.1562500149011612,
-				0.8431990146636963,
+				0.8433060050010681,
 				0.1562499850988388
 			],
 			"name" : "image1",

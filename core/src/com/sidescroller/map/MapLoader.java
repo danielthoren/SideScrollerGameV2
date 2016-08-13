@@ -14,6 +14,7 @@ import com.sidescroller.map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.InputListener;
+import com.sidescroller.objects.Door;
 import com.sidescroller.objects.actions.ButtonTrigger;
 import com.sidescroller.objects.actions.BodyAction;
 import com.sidescroller.objects.actions.BodyAction.TypeOfBodyAction;
@@ -102,23 +103,55 @@ public final class MapLoader {
 				else if (type.toLowerCase().equals("turret")){
 					createTurret(map, gameShape, scene);
 				}
+				else if (type.toLowerCase().equals("door")){
+					createDoor(gameShape, scene, map);
+				}
                 else{
                     map.addDrawObject(gameShape);
                 }
             }
 
-            //adding a player at specific position
-            //@TODO Load playerinformation from file
-            Player player = new Player(map.getObjectID(), map, sideScrollGameV2, new Vector2(2, 2), new Texture(Gdx.files.internal("textures/body.png")), 1, 1, 0.01f, 0.3f);
-            map.addInputListener(player);
-            map.addUpdateObject(player);
-            map.addDrawObject(player);
-            map.addCollisionListener(player);
-
             loadedMaps.put(mapPath, map);
         }
         return loadedMaps.get(mapPath);
     }
+
+	private void createDoor(GameShape shape, RubeScene scene, Map map){
+		Object worldToLoadObj;
+		Object idCustomObj;
+
+		worldToLoadObj = scene.getCustom(shape.getBody(), "worldfile");
+		idCustomObj = scene.getCustom(shape.getBody(), "idCustom");
+		try{
+			String worldToLoad = (String) worldToLoadObj;
+			int idCustom = (Integer) idCustomObj;
+
+			Door door = new Door(map.getObjectID(), sideScrollGameV2, idCustom, worldToLoad, shape);
+			map.addDrawObject(shape);
+		}
+		catch (ClassCastException e){
+			System.out.println("ClassCastException in 'createDoor'. custom properties 'worldfile' and/or 'doorid' might be of the wrong type!");
+			putErrorSquare(map, shape.getBody().getPosition(), new Vector2(SIZE_OF_ERROR_SQUARE, SIZE_OF_ERROR_SQUARE));
+		}
+		catch (NullPointerException e){
+			System.out.println("NullPointerException in 'createDoor'. Custom properties 'worldfile' and/or 'doorid' not set up!");
+			putErrorSquare(map, shape.getBody().getPosition(), new Vector2(SIZE_OF_ERROR_SQUARE, SIZE_OF_ERROR_SQUARE));
+		}
+	}
+
+	/**
+	 * Loads a player in to the world. Currently only one specific player.
+	 * @param map The map to load the player to.
+	 */
+	public void loadPlayer(Map map){
+		//adding a player at specific position
+		//@TODO Load playerinformation from file
+		Player player = new Player(map.getObjectID(), map, sideScrollGameV2, new Vector2(2, 2), new Texture(Gdx.files.internal("textures/body.png")), 1, 1, 0.01f, 0.3f);
+		map.addInputListener(player);
+		map.addUpdateObject(player);
+		map.addDrawObject(player);
+		map.addCollisionListener(player);
+	}
 
 	/**
 	 * Creating a 'JointData' container for those joinst that have an id assigned to them. This is used when creating actions
@@ -332,7 +365,7 @@ public final class MapLoader {
      */
     private void createButtonTrigger(GameShape gameShape, RubeScene scene, Map map){
 
-        Object actionIDObj = scene.getCustom(gameShape.getBody(), "id");
+        Object actionIDObj = scene.getCustom(gameShape.getBody(), "idCustom");
         try{
             int actionID = (Integer) actionIDObj;
             ButtonTrigger buttonTrigger = new ButtonTrigger(map.getObjectID(), actionID, gameShape);
@@ -351,7 +384,7 @@ public final class MapLoader {
 
     public void createSensorTrigger(GameShape gameShape, RubeScene scene, Map map){
 
-        Object actionIDObj = scene.getCustom(gameShape.getBody(), "id");
+        Object actionIDObj = scene.getCustom(gameShape.getBody(), "idCustom");
         try{
             int actionID = (Integer) actionIDObj;
             SensorTrigger sensorTrigger = new SensorTrigger(map.getObjectID(), actionID, gameShape);
@@ -379,7 +412,7 @@ public final class MapLoader {
     private void createBodyAction(GameShape gameShape, RubeScene scene, Map map){
 
         Object subTypeObj = scene.getCustom(gameShape.getBody(), "subtype");
-        Object actionIDObj = scene.getCustom(gameShape.getBody(), "id");
+        Object actionIDObj = scene.getCustom(gameShape.getBody(), "idCustom");
         Object drawObj = scene.getCustom(gameShape.getBody(), "draw");
         try {
             String subType = (String) subTypeObj;

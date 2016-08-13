@@ -31,6 +31,13 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 
     private boolean isRunning, isGrounded, isCollisionLeft, isCollisionRight;
 
+    private float bodyWidth;
+    private float bodyHeight;
+    private float density;
+    private float restitution;
+    private float friction;
+    private float sensorThickness;
+
     private int interactKey;
     private int leftKey;
     private int rightKey;
@@ -51,6 +58,11 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public Player(long id, Map map, SideScrollGameV2 sideScrollGameV2, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
         this.id = id;
 		this.sideScrollGameV2 = sideScrollGameV2;
+        this.friction = friction;
+        this.density = density;
+        this.restitution = restitution;
+        this.bodyWidth = bodyWidth;
+        sensorThickness = (float) (0.1 * bodyWidth);
         collidingBodies = new ArrayList<Body>(1);
         direction = Direction.RIGHT;
         maxVelocity = DEFAULT_MAX_VELOCITY;
@@ -62,10 +74,10 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         isCollisionLeft = false;
         isCollisionRight = false;
         sprite = new Sprite(texture);
-        float bodyHeight = bodyWidth * ((float) texture.getHeight()/texture.getWidth());
+        bodyHeight = bodyWidth * ((float) texture.getHeight()/texture.getWidth());
         sprite.setSize(bodyWidth, bodyHeight);
         sprite.setOrigin(0,0);
-        createBody(position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, (float) (0.1 * bodyWidth), map);
+        createBody(position, new Vector2(bodyWidth, bodyHeight), map);
 
         //setting default keybindings
         interactKey = Keys.E;
@@ -82,6 +94,15 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         body.setUserData(this);
     }
 
+	/**
+	 * Reloads the body in to a specified map. This is used when loading a new map so that the player stays the same.
+     * @param map The map to load the player in to.
+     * @param position The position to load the player in to.
+     */
+    public void recreateBodoy(Map map, Vector2 position){
+        createBody(position, new Vector2(bodyWidth, bodyHeight), map);
+    }
+
     /**
       * Creates the players body using the 'imSize' parameter to create the different shapes that the body consists of.
       * The body is built up by two circles and a square that sit on top of each other in the following order:
@@ -95,7 +116,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
       * of the body, how the parts shoudl look, be sized and positioned relative to each other. Thus the function is left as it is.
       * @param world The world in wich to create the player body.
       */
-     private void createBody(Vector2 position, Vector2 size, float density, float friction, float restitution, float sensorThickness, Map map) {
+     private void createBody(Vector2 position, Vector2 size, Map map) {
          FixtureDef upperCircle = new FixtureDef();
          FixtureDef middleBox = new FixtureDef();
          FixtureDef bottomCircle = new FixtureDef();
@@ -462,6 +483,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             return false;
         }
     }
+
+    public Body getBody(){return body;}
 
     public boolean isRunning() {return isRunning;}
 

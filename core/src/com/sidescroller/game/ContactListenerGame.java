@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.sidescroller.map.Map;
 
 /**
  * The contactlistener iterates over all of the objects implementing the 'gamelogic.CollisionListener' interface, informing them
@@ -13,10 +14,10 @@ import com.badlogic.gdx.physics.box2d.Contact;
  */
 public class ContactListenerGame implements ContactListener
 {
-	private SideScrollGameV2 sideScrollGameV2;
+	private Map map;
 
-	public ContactListenerGame(SideScrollGameV2 sideScrollGameV2) {
-		this.sideScrollGameV2 = sideScrollGameV2;
+	public ContactListenerGame(Map map) {
+		this.map = map;
 	}
 
 	/**
@@ -24,7 +25,7 @@ public class ContactListenerGame implements ContactListener
      * @param contact An object containing information about the collision.
      */
     public void beginContact(Contact contact) {
-	Iterable<CollisionListener> listeners = sideScrollGameV2.getCurrentMap().getCollisionListenerList();
+	Iterable<CollisionListener> listeners = map.getCollisionListenerList();
 	for (CollisionListener obj : listeners){
 	    if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
 			obj.beginContact(contact);
@@ -37,7 +38,7 @@ public class ContactListenerGame implements ContactListener
      * @param contact An object containing information about the collision.
      */
 	public void endContact(Contact contact){
-		Iterable<CollisionListener> listeners = sideScrollGameV2.getCurrentMap().getCollisionListenerList();
+		Iterable<CollisionListener> listeners = map.getCollisionListenerList();
 		for (CollisionListener obj : listeners){
 			if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
 				obj.endContact(contact);

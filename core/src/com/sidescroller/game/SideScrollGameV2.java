@@ -58,13 +58,8 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 
 		mapLoader = new MapLoader(this);
 		batch = new SpriteBatch();
-		InputProcessor inputHandler = new InputHandler(this);
-		Gdx.input.setInputProcessor(inputHandler);
-		currentMap = mapLoader.loadMap("jsonFiles/world2.json");
-		updateInterval = currentMap.getUpdateTime();
-		//Setting the worlds contactlistener
-		ContactListener contactListenerGame = new ContactListenerGame(this);
-		currentMap.setContactListener(contactListenerGame);
+		loadMap("jsonFiles/world1.json");
+		mapLoader.loadPlayer(currentMap);
 	}
 
 	@Override
@@ -116,6 +111,12 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 		return new Vector2(startPosition.x + n * stepVelocity.x + 0.5f * (n*n + n) * stepGravity.x, startPosition.y + n * stepVelocity.y + 0.5f * (n*n + n) * stepGravity.y);
 	}
 
+	public void loadMap(String mapFilePath){
+		currentMap = mapLoader.loadMap(mapFilePath);
+		Gdx.input.setInputProcessor(currentMap.getInputHandler());
+		updateInterval = currentMap.getUpdateTime();
+	}
+
 	public void drawTrojectory(Batch batch, Body body, Vector2 startVelocity){
 		Pixmap pixmap = new Pixmap(1, 1, Format.RGB888);
 		Texture texture = new Texture(pixmap);
@@ -139,6 +140,10 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 	}
 
 	public static float degToRad(float deg) {return (float) (deg * (Math.PI/180f));}
+
+	public MapLoader getMapLoader() {return mapLoader;}
+
+	public void setCurrentMap(Map map){currentMap = map;}
 
 	public Map getCurrentMap() {return currentMap;}
 
