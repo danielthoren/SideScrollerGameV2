@@ -47,6 +47,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private boolean isLeftKey;
     private boolean isRightKey;
     private boolean isUpKey;
+    private boolean clearCollidingBodies;
 
     //Default values
     private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(1, 5);
@@ -73,6 +74,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         isGrounded = false;
         isCollisionLeft = false;
         isCollisionRight = false;
+        clearCollidingBodies = false;
         sprite = new Sprite(texture);
         bodyHeight = bodyWidth * ((float) texture.getHeight()/texture.getWidth());
         sprite.setSize(bodyWidth, bodyHeight);
@@ -101,6 +103,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      */
     public void recreateBodoy(Map map, Vector2 position){
         createBody(position, new Vector2(bodyWidth, bodyHeight), map);
+        clearCollidingBodies = true;
     }
 
     /**
@@ -404,7 +407,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             try{
                 GameObject object;
                 object = (GameObject) body.getUserData();
-                if (object.getTypeOfGameObject() == TypeOfGameObject.INTERACTOBJECT){
+                if (object.getTypeOfGameObject() == TypeOfGameObject.INTERACTOBJECT || object.getTypeOfGameObject() == TypeOfGameObject.DOOR){
                     InteractGameObject interactGameObject = (InteractGameObject) object;
                     if (startInteract) {interactGameObject.startInteract(this);}
                     else {interactGameObject.endInteract(this);}
@@ -415,6 +418,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 sideScrollGameV2.getCurrentMap().removeBody(body);
             }
         }
+        if (clearCollidingBodies){collidingBodies.clear();}
     }
 
     /**

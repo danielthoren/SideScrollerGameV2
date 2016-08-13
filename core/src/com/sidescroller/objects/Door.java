@@ -43,10 +43,11 @@ public class Door implements InteractGameObject
 		sideScrollGameV2.getCurrentMap().addCollisionListener(player);
 		sideScrollGameV2.getCurrentMap().addInputListener(player);
 		Vector2 loadPosition = null;
-		for (GameObject gameObject : sideScrollGameV2.getCurrentMap().getCollisionListenerList()){
-			if (gameObject.getTypeOfGameObject() == TypeOfGameObject.DOOR && !gameObject.equals(this)){
+		for (Body body : sideScrollGameV2.getCurrentMap().getBodies()){
+			GameObject gameObject = (GameObject) body.getUserData();
+			if (gameObject.getTypeOfGameObject() == TypeOfGameObject.DOOR && !gameObject.equals(this)) {
 				Door otherDoor = (Door) gameObject;
-				if (otherDoor.getDoorId() == doorId){
+				if (otherDoor.getDoorId() == doorId) {
 					loadPosition = otherDoor.getShape().getBody().getPosition();
 				}
 			}
@@ -84,6 +85,6 @@ public class Door implements InteractGameObject
 	 * @return The type of gameobject
 	 */
 	public TypeOfGameObject getTypeOfGameObject(){
-		return TypeOfGameObject.INTERACTOBJECT;
+		return TypeOfGameObject.DOOR;
 	}
 }

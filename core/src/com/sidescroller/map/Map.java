@@ -328,6 +328,12 @@ public class Map
         }
     }
 
+    public Array<Body> getBodies(){
+        Array<Body> bodies = new Array<Body>(10);
+        world.getBodies(bodies);
+        return bodies;
+    }
+
     public float getUpdateTime() {return updateTime;}
 
     public Iterable<Draw> getDrawObjects() {return drawObjects;}
