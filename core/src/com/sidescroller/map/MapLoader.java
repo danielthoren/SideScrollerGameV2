@@ -41,7 +41,7 @@ public final class MapLoader {
 	private AssetManager assetManager;
 	private SideScrollGameV2 sideScrollGameV2;
 
-	private static final String ERROR_SQUARE = "ErrorSquare.png";
+	private static final String ERROR_SQUARE = "textures/ErrorSquare.png";
 	private static final float SIZE_OF_ERROR_SQUARE = 0.5f;
 
     public MapLoader(SideScrollGameV2 sideScrollGameV2) {
@@ -54,6 +54,8 @@ public final class MapLoader {
     public Map loadMap(String mapPath){
 		//@TODO This is a temporary fix for the door. When trying to reopen a world a nullpointerexception is thrown. Thus all worlds are reloaded all the time.
 		loadedMaps.clear();
+
+		sideScrollGameV2.getAssetManager().load(ERROR_SQUARE, Texture.class);
         //If the map is not yet loaded, then load it
         if (!loadedMaps.containsKey(mapPath)){
             RubeScene scene = loader.loadScene(Gdx.files.internal(mapPath));
