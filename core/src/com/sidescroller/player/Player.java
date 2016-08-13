@@ -104,6 +104,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public void recreateBodoy(Map map, Vector2 position){
         createBody(position, new Vector2(bodyWidth, bodyHeight), map);
         clearCollidingBodies = true;
+        sideScrollGameV2.getCurrentMap().updateLayerDepth(sideScrollGameV2.PLAYER_DRAW_LAYER);
     }
 
     /**

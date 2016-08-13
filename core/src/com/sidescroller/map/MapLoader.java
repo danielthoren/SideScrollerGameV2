@@ -52,6 +52,8 @@ public final class MapLoader {
     }
 
     public Map loadMap(String mapPath){
+		//@TODO This is a temporary fix for the door. When trying to reopen a world a nullpointerexception is thrown. Thus all worlds are reloaded all the time.
+		loadedMaps.clear();
         //If the map is not yet loaded, then load it
         if (!loadedMaps.containsKey(mapPath)){
             RubeScene scene = loader.loadScene(Gdx.files.internal(mapPath));
