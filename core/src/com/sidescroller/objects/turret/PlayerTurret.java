@@ -14,7 +14,9 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
     private int leftKey;
     private int rightKey;
     private int upKey;
+	private int interactKey;
     private boolean isActivated;
+	private Player player;
 
 	/**
      * Creates a turret that players can control.
@@ -39,23 +41,29 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
     public void startInteract(Player player){
         isActivated = !isActivated;
         if (isActivated) {
+			this.player = player;
             player.setIsLeftKey(false);
             player.setIsRightKey(false);
             player.setIsUpKey(false);
+			player.setIsInteractKey(false);
 
             upKey = player.getUpKey();
             leftKey = player.getLeftKey();
             rightKey = player.getRightKey();
+			interactKey = player.getInteractKey();
             player.setRunning(false);
         }
         else{
             player.setIsLeftKey(true);
             player.setIsRightKey(true);
             player.setIsUpKey(true);
+			player.setIsInteractKey(true);
 
+			interactKey = Keys.UNKNOWN;
             upKey = Keys.UNKNOWN;
             leftKey = Keys.UNKNOWN;
             rightKey = Keys.UNKNOWN;
+			this.player = null;
         }
     }
 
@@ -80,6 +88,9 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
         else if (keycode == upKey){
             shoot(10);
         }
+		else if (keycode == interactKey){
+			startInteract(player);
+		}
     }
 
     /** Called when a key was released

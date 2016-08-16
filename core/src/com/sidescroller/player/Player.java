@@ -251,6 +251,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public void update() {
         runHandler();
 
+		System.out.println(collidingBodies.size());
+
         //Ensures that the sensor value is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
         if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !isGrounded){
             if (groundResetTimer == -1){groundResetTimer = System.currentTimeMillis();}
