@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.sidescroller.game.SideScrollGameV2;
+import com.sidescroller.game.Update;
 import com.sidescroller.map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
 import com.sidescroller.map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
@@ -324,6 +325,8 @@ public final class MapLoader {
 			else if (subType.equals("manual")){
 				InputListener playerTurret = new PlayerTurret(map.getObjectID(), sideScrollGameV2, barrel, turretBase, barrelRevoluteJoint);
 				map.addInputListener(playerTurret);
+				//TODO fix this without casting!!!!!
+				map.addUpdateObject((Update) playerTurret);
 			}
 			else{
 				Turret turret = new Turret(map.getObjectID(), sideScrollGameV2, barrel, turretBase, barrelRevoluteJoint);

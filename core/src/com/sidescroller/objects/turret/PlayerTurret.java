@@ -3,19 +3,21 @@ package com.sidescroller.objects.turret;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.sidescroller.game.*;
+import com.sidescroller.game.Update;
 import com.sidescroller.objects.GameShape;
 import com.sidescroller.player.Player;
 
 /**
  * A subclass to turret that enables players to control the turret.
  */
-public class PlayerTurret extends Turret implements InteractGameObject, InputListener
+public class PlayerTurret extends Turret implements InteractGameObject, Update, InputListener
 {
     private int leftKey;
     private int rightKey;
     private int upKey;
 	private int interactKey;
     private boolean isActivated;
+	private boolean hasReset;
 	private Player player;
 
 	/**
@@ -30,7 +32,9 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
         super(id, sideScrollGameV2, barrel, turretBase, barrelJoint);
         turretBase.getBody().setUserData(this);
         barrel.getBody().setUserData(this);
+		player = null;
         isActivated = false;
+		hasReset = true;
     }
 
     /**
@@ -40,7 +44,7 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
      */
     public void startInteract(Player player){
         isActivated = !isActivated;
-        if (isActivated) {
+        if (isActivated && hasReset) {
 			this.player = player;
             player.setIsLeftKey(false);
             player.setIsRightKey(false);
@@ -51,7 +55,7 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
             leftKey = player.getLeftKey();
             rightKey = player.getRightKey();
 			interactKey = player.getInteractKey();
-            player.setRunning(false);
+            player.setIsRunning(false);
         }
         else{
             player.setIsLeftKey(true);
@@ -64,6 +68,7 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
             leftKey = Keys.UNKNOWN;
             rightKey = Keys.UNKNOWN;
 			this.player = null;
+			hasReset = false;
         }
     }
 
@@ -89,19 +94,26 @@ public class PlayerTurret extends Turret implements InteractGameObject, InputLis
             shoot(10);
         }
 		else if (keycode == interactKey){
+			System.out.println("interactkey pressed");
 			startInteract(player);
 		}
     }
 
     /** Called when a key was released
-     *
      * @param keycode one of the constants in {@link Keys}
-     * @return whether the input was processed */
+	 */
     public void keyUp (int keycode){
         if (keycode == leftKey || keycode == rightKey){
             rotateBarrel(Direction.NONE);
         }
     }
+
+	/**
+	 * The function that updates the object every frame
+	 */
+	public void update(){
+		hasReset = true;
+	}
 
     /**
    	 * Returns wich type of gameobject this specific object is.
