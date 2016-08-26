@@ -23,6 +23,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private Direction direction;
     private List<Body> collidingBodies;
 	private SideScrollGameV2 sideScrollGameV2;
+    private Contact groundContact;
 
     private Vector2 acceleration, maxVelocity, deceleration;
     private final long id;
@@ -80,6 +81,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         sprite.setSize(bodyWidth, bodyHeight);
         sprite.setOrigin(0,0);
         createBody(position, new Vector2(bodyWidth, bodyHeight), map);
+        groundContact = null;
 
         //setting default keybindings
         interactKey = Keys.E;
@@ -118,7 +120,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
       *
       * !OBS: The function can be shorted but it would be pointless since all that happens in the function is the creation of the different parts
       * of the body, how the parts shoudl look, be sized and positioned relative to each other. Thus the function is left as it is.
-      * @param world The world in wich to create the player body.
       */
      private void createBody(Vector2 position, Vector2 size, Map map) {
          FixtureDef upperCircle = new FixtureDef();
@@ -251,8 +252,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public void update() {
         runHandler();
 
-		System.out.println(collidingBodies.size());
-
         //Ensures that the sensor value is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
         if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !isGrounded){
             if (groundResetTimer == -1){groundResetTimer = System.currentTimeMillis();}
@@ -263,6 +262,24 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         }
         else{
             groundResetTimer = -1;
+        }
+
+        setGroundContactFriction();
+    }
+
+	/**
+	 * If the player is currently colliding with the ground (something under the player) and is not running then set the friction
+     * to something high to prevent sliding. If running then set the friction to 0 so that running can be done.
+     */
+    private void setGroundContactFriction(){
+        if (groundContact != null) {
+            if (!isRunning && isGrounded) {
+                groundContact.setFriction(100);
+                System.out.println("friction");
+            } else {
+                groundContact.setFriction(0);
+                System.out.println("no friction");
+            }
         }
     }
     /**
@@ -285,28 +302,27 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collision data
      */
     public void beginContact(Contact contact){
-		boolean playerContact = false;
         Body otherBody = body;
-        if (contact.getFixtureA().getBody().getUserData().equals(this)){
+
+        if (contact.getFixtureA().getBody().getUserData().equals(this)) {
             otherBody = contact.getFixtureB().getBody();
             if (contact.getFixtureA().isSensor()) {
+                boolean prevIsGrounded = isGrounded;
                 sensorSwitch(contact.getFixtureA(), true);
-                playerContact = true;
+                if (!prevIsGrounded && isGrounded){
+                    groundContact = contact;
+                }
             }
         }
-        else if (contact.getFixtureB().getBody().getUserData().equals(this)) {
+        else if (contact.getFixtureB().getBody().getUserData().equals(this)){
             otherBody = contact.getFixtureA().getBody();
             if (contact.getFixtureB().isSensor()) {
                 sensorSwitch(contact.getFixtureB(), true);
-                playerContact = true;
             }
         }
+
         if (!collidingBodies.contains(otherBody)) {
             collidingBodies.add(otherBody);
-        }
-
-        if(!isRunning && playerContact) {
-            contact.setFriction(100);
         }
     }
 
@@ -424,11 +440,11 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         if (clearCollidingBodies){collidingBodies.clear();}
     }
 
-    /**
-     * Handles the acceleration and deceleration of the character
+	/**
+	 * Decelerating the player from running to a stop
      */
-    private void runHandler(){
-        //Decelerating the player from running to a stop
+    @Deprecated
+    private void decelerationCheck(){
         if (!isRunning && isGrounded){
             if (body.getLinearVelocity().x > deceleration.x / 4){
                 body.applyForceToCenter(-deceleration.x, 0, true);
@@ -440,6 +456,13 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 body.setLinearVelocity(0f, body.getLinearVelocity().y);
             }
         }
+    }
+
+    /**
+     * Handles the acceleration and decelerationCheck of the character
+     */
+    private void runHandler(){
+        //decelerationCheck();
         if (isRunning && isGrounded){
             //Code for smooth acceleration when on the ground
             if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
