@@ -7,5 +7,5 @@ package com.sidescroller.game;
  */
 public enum TypeOfGameObject
 {
-    SHAPE, PLAYER, INTERACTOBJECT, DOOR, OTHER
+    SHAPE, PLAYER, INTERACTOBJECT, ACTION, DOOR, OTHER
 }

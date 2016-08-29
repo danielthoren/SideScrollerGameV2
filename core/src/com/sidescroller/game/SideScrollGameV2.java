@@ -74,7 +74,6 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 
 		//Updating the updateobjects
 		currentMap.update();
-		currentMap.getActionManager().update();
 
 		batch.begin();
 		//Drawing the drawobjects

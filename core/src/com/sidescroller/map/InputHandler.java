@@ -1,7 +1,8 @@
-package com.sidescroller.game;
+package com.sidescroller.map;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.sidescroller.game.InputListener;
 import com.sidescroller.map.Map;
 
 /**

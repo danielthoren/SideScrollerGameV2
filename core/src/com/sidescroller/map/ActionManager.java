@@ -1,5 +1,6 @@
-package com.sidescroller.game;
+package com.sidescroller.map;
 
+import com.sidescroller.game.GameObject;
 import com.sidescroller.objects.actions.Action;
 import com.sidescroller.objects.actions.Trigger;
 import java.util.ArrayList;

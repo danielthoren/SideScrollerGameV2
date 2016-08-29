@@ -52,7 +52,7 @@ public abstract class Action implements GameObject
      * @return The type of gameobject
      */
     public TypeOfGameObject getTypeOfGameObject(){
-        return TypeOfGameObject.OTHER;
+        return TypeOfGameObject.ACTION;
     }
 
     /**

@@ -45,6 +45,7 @@ public class BodyAction extends Action
 				fixture.setSensor(true);
 			}
 		}
+		gameShape.getBody().setUserData(this);
 	}
 
 
@@ -80,5 +81,7 @@ public class BodyAction extends Action
 	/**
 	 * No actions needs to be performed when removing a BodyAction
 	 */
-	public void destroyAction(){}
+	public void destroyAction(){
+		gameShape.getBody().setUserData(gameShape);
+	}
 }

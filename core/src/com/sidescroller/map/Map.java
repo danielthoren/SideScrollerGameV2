@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.sidescroller.game.*;
 import com.sidescroller.game.Update;
 import com.sidescroller.objects.RubeSprite;
+import com.sidescroller.objects.actions.Action;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -186,6 +187,7 @@ public class Map
 
     public void update(){
         //Updating all of the objects
+        actionManager.update();
         for (Update updateObj : updateObjects){
             updateObj.update();
         }
@@ -198,6 +200,7 @@ public class Map
 
         addStagedObjects();
         removeStagedOBjects();
+        //boundryCheck();
     }
 
     public void draw(SpriteBatch batch){
@@ -219,11 +222,29 @@ public class Map
             if (body.getPosition().y < -1000){
                 try{
                     GameObject gameObject = (GameObject) (body.getUserData());
+                    if (bodiesStagedForRemoval.contains(body)){
+                        bodiesStagedForRemoval.remove(body);
+                    }
+                    if (drawObjectsStagedForRemoval.contains(gameObject.getId())){
+                        drawObjectsStagedForRemoval.remove(gameObject.getId());
+                    }
+                    if (updateObjectsStagedForRemoval.contains(gameObject.getId())){
+                        updateObjectsStagedForRemoval.remove(gameObject.getId());
+                    }
+                    if (inputListenersStagedForRemoval.contains(gameObject.getId())){
+                        inputListenersStagedForRemoval.remove(gameObject.getId());
+                    }
+                    if (collisionListenersStagedForRemoval.contains(gameObject.getId())){
+                        collisionListenersStagedForRemoval.remove(gameObject.getId());
+                    }
                     drawObjectsStagedForRemoval.add(gameObject.getId());
                     updateObjectsStagedForRemoval.add(gameObject.getId());
                     inputListenersStagedForRemoval.add(gameObject.getId());
                     collisionListenersStagedForRemoval.add(gameObject.getId());
                     updateObjectsStagedForRemoval.add(gameObject.getId());
+                    if (gameObject.getTypeOfGameObject() == TypeOfGameObject.ACTION){
+                        actionManager.removeAction(((Action) gameObject));
+                    }
                     world.destroyBody(body);
                 }
                 catch (ClassCastException e){
@@ -276,7 +297,6 @@ public class Map
                 System.out.println("Error cought! Body with 'UserData' that does not implement 'GameObject'!");
                 world.destroyBody(body);
             }
-
         }
     }
 
