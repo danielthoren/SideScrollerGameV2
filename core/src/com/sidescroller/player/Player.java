@@ -385,7 +385,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private void notifyInteractObjects(ArrayList<Body> bodies, boolean startInteract){
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
-        System.out.println(collidingBodies.size());
         for (Body body : bodies){
             GameObject object;
             try{
@@ -494,28 +493,21 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
     private void dropItem(int itemIndex){
-        try{
-            System.out.println("dropping item: " + inventory.getItem(itemIndex));
-            inventory.removeItemFromInventory(itemIndex);
+        // Equips the default item if we can drop the item we are currently holding
+        if (inventory.removeItemFromInventory(itemIndex)){
             currentItem = inventory.getDefaultItem();
         }
-        catch (ItemNotDroppableException e){
-            e.printStackTrace();
-        }
+
     }
 
-    /**
+    /**oi
      * Creates an item to be used for testing
      */
     private void createDummyItem(){
 
         InventoryItem dummyItem = new TestItem(2,"test item");
 
-        try{
-            inventory.addToInventory(dummyItem);
-        } catch (InventoryFullException e){
-            e.printStackTrace();
-        }
+        inventory.addToInventory(dummyItem);
     }
 
 

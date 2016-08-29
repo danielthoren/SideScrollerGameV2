@@ -49,26 +49,23 @@ public class Inventory {
 
     public int getItemID(InventoryItem item){
         //TODO throws NullPointerException when an item is dropped and you then toggle items.
+        int resultId = -1;
         for (int i = 0; i < items.length; i++) {
             if (items[i] != null && items[i].equals(item)){
-                return i;
+                resultId = i;
+                break;
             }
         }
-        //TODO CHANGE
-        return 9999;
+        return resultId;
     }
 
     /**
      * Creates a default item and adds it to the inventory.
      */
 
-    public void createDefaultItem(){
+    public void createDefaultItem() {
         defaultItem = new DefaultItem(1);
-        try {
-            addToInventory(defaultItem);
-        }catch (InventoryFullException e){
-            e.printStackTrace();
-        }
+        addToInventory(defaultItem);
     }
 
     public InventoryItem getDefaultItem() {
@@ -81,26 +78,31 @@ public class Inventory {
      * @param item The item to be added.
      * @throws InventoryFullException should be thrown when the inventory is full
      * so it can be handled properly.
+     * Returns true when the item can be added to the inventory, else false.
      */
-    public void addToInventory(InventoryItem item) throws InventoryFullException {
+    public boolean addToInventory(InventoryItem item){
         for (int i = 0; i < items.length; i++) {
             if (items[i] == null && doesItemFit(item)){
                 items[i] = item;
-                break;
+                return true;
             }
             else if(i == items.length - 1 || !doesItemFit(item)) {
-                throw new InventoryFullException("Inventory is full");
+                System.out.println("inventory full!");
+                return false;
             }
         }
+        return false;
     }
 
-    public void removeItemFromInventory(int itemID) throws ItemNotDroppableException {
+    //Return true of the item is dropped (droppable), else false
+    public boolean removeItemFromInventory(int itemID){
         if (items[itemID].isDroppable()) {
             items[itemID] = null;
+            return true;
         }
-        else{
-            throw new ItemNotDroppableException("This item is not droppable");
-        }
+        System.out.println("Item not droppable!");
+
+        return false;
     }
 
     public boolean doesItemFit(InventoryItem item){
