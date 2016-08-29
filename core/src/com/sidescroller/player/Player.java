@@ -440,11 +440,11 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         if (clearCollidingBodies){collidingBodies.clear();}
     }
 
-	/**
-	 * Decelerating the player from running to a stop
+    /**
+     * Handles the acceleration and decelerationCheck of the character
      */
-    @Deprecated
-    private void decelerationCheck(){
+    private void runHandler(){
+        //Code that decelerates the player when going from running to not running.
         if (!isRunning && isGrounded){
             if (body.getLinearVelocity().x > deceleration.x / 4){
                 body.applyForceToCenter(-deceleration.x, 0, true);
@@ -456,13 +456,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 body.setLinearVelocity(0f, body.getLinearVelocity().y);
             }
         }
-    }
 
-    /**
-     * Handles the acceleration and decelerationCheck of the character
-     */
-    private void runHandler(){
-        //decelerationCheck();
         if (isRunning && isGrounded){
             //Code for smooth acceleration when on the ground
             if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
