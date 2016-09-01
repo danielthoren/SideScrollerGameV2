@@ -52,7 +52,15 @@ public final class MapLoader {
         loader = new RubeSceneLoader();
     }
 
-    public Map loadMap(String mapPath){
+	public Map getMap(String mapPath){
+		return loadedMaps.get(mapPath);
+	}
+
+	public boolean isLoaded(String mapPath){
+		return loadedMaps.containsKey(mapPath);
+	}
+
+    public void loadMap(String mapPath){
 		//@TODO This is a temporary fix for the door. When trying to reopen a world a nullpointerexception is thrown. Thus all worlds are reloaded all the time.
 		loadedMaps.clear();
 
@@ -118,7 +126,6 @@ public final class MapLoader {
 
             loadedMaps.put(mapPath, map);
         }
-        return loadedMaps.get(mapPath);
     }
 
 	private void createDoor(GameShape shape, RubeScene scene, Map map){

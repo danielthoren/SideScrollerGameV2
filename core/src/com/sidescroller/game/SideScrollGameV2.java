@@ -110,10 +110,22 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 		return new Vector2(startPosition.x + n * stepVelocity.x + 0.5f * (n*n + n) * stepGravity.x, startPosition.y + n * stepVelocity.y + 0.5f * (n*n + n) * stepGravity.y);
 	}
 
-	public void loadMap(String mapFilePath){
-		currentMap = mapLoader.loadMap(mapFilePath);
+	/**
+	 * Loads a new map.
+	 * @param mapFilePath The path to the map file.
+	 * @return Returns true if the map was already loaded, else false.
+	 */
+	public boolean loadMap(String mapFilePath){
+		boolean preloaded = true;
+		if (!mapLoader.isLoaded(mapFilePath)){
+			mapLoader.loadMap(mapFilePath);
+			preloaded = false;
+		}
+		currentMap = mapLoader.getMap(mapFilePath);
 		Gdx.input.setInputProcessor(currentMap.getInputHandler());
 		updateInterval = currentMap.getUpdateTime();
+
+		return preloaded;
 	}
 
 	public void drawTrojectory(Batch batch, Body body, Vector2 startVelocity){

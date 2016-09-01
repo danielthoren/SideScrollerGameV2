@@ -4,47 +4,47 @@
 	"autoClearForces" : true,
 	"body" : 
 	[
-		
+
 		{
 			"angle" : 0,
 			"angularVelocity" : 0,
 			"awake" : true,
-			"customProperties" : 
+			"customProperties" :
 			[
-				
+
 				{
 					"int" : 0,
 					"name" : "idCustom"
 				},
-				
+
 				{
 					"name" : "type",
-					"string" : "door"
+					"string" : ""
 				},
-				
+
 				{
 					"name" : "worldfile",
 					"string" : "jsonFiles/world1.json"
 				},
-				
+
 				{
 					"bool" : true,
 					"name" : "draw"
 				}
 			],
-			"fixture" : 
+			"fixture" :
 			[
-				
+
 				{
 					"density" : 1,
 					"filter-maskBits" : 4,
 					"friction" : 0.2,
 					"name" : "fixture22",
-					"polygon" : 
+					"polygon" :
 					{
-						"vertices" : 
+						"vertices" :
 						{
-							"x" : 
+							"x" :
 							[
 								0.2250187397003174,
 								0.2207052707672119,
@@ -59,14 +59,14 @@
 			],
 			"linearVelocity" : 0,
 			"massData-I" : 0.05041337758302689,
-			"massData-center" : 
+			"massData-center" :
 			{
 				"x" : -0.02138611488044262,
 				"y" : -0.004899377003312111
 			},
 			"massData-mass" : 0.4872584939002991,
 			"name" : "body11",
-			"position" : 
+			"position" :
 			{
 				"x" : -2.651829481124878,
 				"y" : -4.377822399139404
