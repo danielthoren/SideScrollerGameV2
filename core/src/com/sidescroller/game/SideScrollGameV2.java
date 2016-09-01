@@ -85,7 +85,7 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 		batch.end();
 
 		if (DEBUGRENDERER){
-			currentMap.debugDraw(camera);
+			//currentMap.debugDraw(camera);
 		}
 	}
 
