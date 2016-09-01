@@ -191,7 +191,6 @@ public class Map
         for (Update updateObj : updateObjects){
             updateObj.update();
         }
-        actionManager.update();
         updateTimer += updateTime;
         if (updateTimer >= 5){
             boundryCheck();
@@ -200,7 +199,6 @@ public class Map
 
         addStagedObjects();
         removeStagedOBjects();
-        //boundryCheck();
     }
 
     public void draw(SpriteBatch batch){

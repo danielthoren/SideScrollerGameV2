@@ -16,6 +16,7 @@ import com.sidescroller.map.RubeLoader.gushikustudios.loader.serializers.utils.R
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.InputListener;
 import com.sidescroller.objects.Door;
+import com.sidescroller.objects.Ladder;
 import com.sidescroller.objects.actions.ButtonTrigger;
 import com.sidescroller.objects.actions.BodyAction;
 import com.sidescroller.objects.actions.BodyAction.TypeOfBodyAction;
@@ -118,6 +119,9 @@ public final class MapLoader {
 				}
 				else if (type.toLowerCase().equals("door")){
 					createDoor(gameShape, scene, map);
+				}
+				else if (type.toLowerCase().equals("ladder")){
+					createLadder(gameShape, map);
 				}
                 else{
                     map.addDrawObject(gameShape);
@@ -468,6 +472,17 @@ public final class MapLoader {
             map.addDrawObject(gameShape);
         }
     }
+
+	/**
+	 * creates a ladder.
+	 * @param gameShape
+	 * @param map
+	 */
+	private void createLadder(GameShape gameShape, Map map){
+		Ladder ladder = new Ladder(map.getObjectID(), sideScrollGameV2, gameShape);
+		map.addUpdateObject(ladder);
+		map.addCollisionListener(ladder);
+	}
 }
 
 

@@ -30,8 +30,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 
     private long groundResetTimer;
 
-    private boolean isRunning, isGrounded, isCollisionLeft, isCollisionRight;
-
     private float bodyWidth;
     private float bodyHeight;
     private float density;
@@ -49,6 +47,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private boolean isRightKey;
     private boolean isUpKey;
     private boolean clearCollidingBodies;
+    private boolean disableInteractKey, disableLeftKey, disableRightKey, disableUpKey;
+    private boolean isRunning, isGrounded, isCollisionLeft, isCollisionRight;
 
     //Default values
     private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(1, 5);
@@ -89,10 +89,14 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         rightKey = Keys.RIGHT;
         upKey = Keys.UP;
 
-        isInteractKey = true;
-        isLeftKey = true;
-        isRightKey = true;
-        isUpKey = true;
+        isInteractKey = false;
+        isLeftKey = false;
+        isRightKey = false;
+        isUpKey = false;
+        disableInteractKey = false;
+        disableLeftKey = false;
+        disableRightKey = false;
+        disableUpKey = false;
 
         map.updateLayerDepth(SideScrollGameV2.PLAYER_DRAW_LAYER);
         body.setUserData(this);
@@ -375,23 +379,39 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * @param keycode one of the constants in {@link Keys}
      */
     public void keyDown(int keycode){
-        if (isLeftKey && keycode == leftKey){
-            isRunning = true;
-            direction = Direction.LEFT;
+        if (keycode == leftKey){
+            isLeftKey = true;
+            //If key is not disabled then do stuff
+            if (!disableLeftKey) {
+                isRunning = true;
+                direction = Direction.LEFT;
+            }
         }
-        else if (isRightKey && keycode == rightKey){
-            isRunning = true;
-            direction = Direction.RIGHT;
+        else if (keycode == rightKey){
+            isRightKey = true;
+            //If key is not disabled then do stuff
+            if (!disableRightKey) {
+                isRunning = true;
+                direction = Direction.RIGHT;
+            }
         }
-        else if (isUpKey && keycode == upKey){
-            if(isGrounded) {
-                jump();
+        else if (keycode == upKey){
+            isUpKey = true;
+            //If key is not disabled then do stuff
+            if (!disableUpKey ) {
+                if (isGrounded) {
+                    jump();
+                }
             }
         }
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
-        else if (isInteractKey && keycode == interactKey){
-            notifyInteractObjects(true);
+        else if (keycode == interactKey){
+            isInteractKey = true;
+            //If key is not disabled then do stuff
+            if (!disableInteractKey) {
+                notifyInteractObjects(true);
+            }
         }
 
     }
@@ -401,13 +421,31 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * @param keycode one of the constants in {@link Keys}
      */
     public void keyUp (int keycode){
-        if ((isLeftKey && keycode == leftKey) || (isRightKey && keycode == rightKey)){
-            isRunning = false;
+        if (keycode == leftKey){
+            isLeftKey = false;
+            //If key is not disabled then do stuff
+            if (!disableLeftKey) {
+                isRunning = false;
+            }
+        }
+        else if (keycode == rightKey){
+            isRightKey = false;
+            //If key is not disabled then do stuff
+            if (!disableRightKey) {
+                isRunning = false;
+            }
+        }
+        else if (keycode == upKey){
+            isUpKey = false;
         }
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
-        else if (isInteractKey && keycode == interactKey){
-            notifyInteractObjects(false);
+        else if (keycode == interactKey){
+            isInteractKey = false;
+            //If key is not disabled then do stuff
+            if (!disableInteractKey) {
+                notifyInteractObjects(false);
+            }
         }
     }
 
@@ -530,11 +568,21 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 
     public void setUpKey(final int upKey) {this.upKey = upKey;}
 
-    public void setIsUpKey(final boolean upKey) {this.isUpKey = upKey;}
+    public void setDisableUpKey(final boolean upKey) {this.disableUpKey = upKey;}
 
-    public void setIsRightKey(final boolean rightKey) {this.isRightKey = rightKey;}
+    public void setDisableRightKey(final boolean rightKey) {this.disableRightKey = rightKey;}
 
-    public void setIsLeftKey(final boolean leftKey) {this.isLeftKey = leftKey;}
+    public void setDisableLeftKey(final boolean leftKey) {this.disableLeftKey = leftKey;}
 
-    public void setIsInteractKey(final boolean interactKey) {this.isInteractKey = interactKey;}
+    public void setDisableInteractKey(final boolean interactKey) {this.disableInteractKey = interactKey;}
+
+    public boolean isInteractKey() {return isInteractKey;}
+
+    public boolean isLeftKey() {return isLeftKey;}
+
+    public boolean isRightKey() {return isRightKey;}
+
+    public boolean isUpKey() {return isUpKey;}
+
+    public Vector2 getMaxVelocity () {return maxVelocity;}
 }

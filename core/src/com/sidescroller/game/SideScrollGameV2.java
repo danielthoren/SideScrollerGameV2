@@ -60,7 +60,7 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 
 		mapLoader = new MapLoader(this);
 		batch = new SpriteBatch();
-		loadMap("jsonFiles/world1.json");
+		loadMap("jsonFiles/world2.json");
 		playerCameraLock = mapLoader.loadPlayer(currentMap);
 	}
 

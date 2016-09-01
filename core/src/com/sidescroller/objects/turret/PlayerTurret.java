@@ -46,10 +46,10 @@ public class PlayerTurret extends Turret implements InteractGameObject, Update, 
         isActivated = !isActivated;
         if (isActivated && hasReset) {
 			this.player = player;
-            player.setIsLeftKey(false);
-            player.setIsRightKey(false);
-            player.setIsUpKey(false);
-			player.setIsInteractKey(false);
+            player.setDisableLeftKey(true);
+            player.setDisableRightKey(true);
+            player.setDisableUpKey(true);
+			player.setDisableInteractKey(true);
 
             upKey = player.getUpKey();
             leftKey = player.getLeftKey();
@@ -58,10 +58,10 @@ public class PlayerTurret extends Turret implements InteractGameObject, Update, 
             player.setIsRunning(false);
         }
         else{
-            player.setIsLeftKey(true);
-            player.setIsRightKey(true);
-            player.setIsUpKey(true);
-			player.setIsInteractKey(true);
+            player.setDisableLeftKey(false);
+            player.setDisableRightKey(false);
+            player.setDisableUpKey(false);
+			player.setDisableInteractKey(false);
 
 			interactKey = Keys.UNKNOWN;
             upKey = Keys.UNKNOWN;
