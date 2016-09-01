@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sidescroller.map.Map;
 import com.sidescroller.map.MapLoader;
+import com.sidescroller.player.Player;
 import org.omg.CORBA.PRIVATE_MEMBER;
 
 import javax.swing.plaf.PanelUI;
@@ -34,6 +35,7 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 	private Vector2 cameraPosition;
 	private AssetManager assetManager;
 	private MapLoader mapLoader;
+	private Player playerCameraLock;
 
 	private static float updateInterval;
 	public static final Vector2 WINDOW_VIEW = new Vector2(16, 9);  //The constant camera size (the window in to the world)
@@ -59,7 +61,7 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 		mapLoader = new MapLoader(this);
 		batch = new SpriteBatch();
 		loadMap("jsonFiles/world1.json");
-		mapLoader.loadPlayer(currentMap);
+		playerCameraLock = mapLoader.loadPlayer(currentMap);
 	}
 
 	@Override
@@ -67,6 +69,7 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 		currentMap.stepWorld(updateInterval);
 
 		camera.update();
+		camera.position.set(playerCameraLock.getBody().getPosition().x, playerCameraLock.getBody().getPosition().y, 0);
 		Gdx.gl.glClearColor(0,0,0.2f,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

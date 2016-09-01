@@ -155,7 +155,7 @@ public final class MapLoader {
 	 * Loads a player in to the world. Currently only one specific player.
 	 * @param map The map to load the player to.
 	 */
-	public void loadPlayer(Map map){
+	public Player loadPlayer(Map map){
 		//adding a player at specific position
 		//@TODO Load playerinformation from file
 		Player player = new Player(map.getObjectID(), map, sideScrollGameV2, new Vector2(2, 2), new Texture(Gdx.files.internal("textures/body.png")), 1, 1, 0.01f, 0.3f);
@@ -163,6 +163,7 @@ public final class MapLoader {
 		map.addUpdateObject(player);
 		map.addDrawObject(player);
 		map.addCollisionListener(player);
+		return player;
 	}
 
 	/**
