@@ -1,8 +1,6 @@
 package com.sidescroller.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Every objects that needs updating must implement this interface.
@@ -14,5 +12,5 @@ public interface Draw extends GameObject
      * @param batch The SpriteBatch with wich to draw
      * @param layer The draw layer that is supposed to be drawn
      */
-    public void draw(SpriteBatch batch, int layer);
+    void draw(SpriteBatch batch, int layer);
 }
