@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 
+@SuppressWarnings("ALL")
 public class RubeSceneAsyncLoader extends AsynchronousAssetLoader<RubeScene, RubeSceneAsyncLoader.RubeSceneParameters>
 {
    private final RubeSceneLoader mLoader;

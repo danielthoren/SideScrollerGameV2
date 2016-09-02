@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.Json.ReadOnlySerializer;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 
+@SuppressWarnings("ALL")
 public class JointSerializer extends ReadOnlySerializer<Joint>
 {
 	World			world;

@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Json.ReadOnlySerializer;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 
+@SuppressWarnings("ALL")
 public class BodySerializer extends ReadOnlySerializer<Body>
 {
 	private 	  World world;

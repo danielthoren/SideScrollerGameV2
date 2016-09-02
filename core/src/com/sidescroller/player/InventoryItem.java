@@ -1,10 +1,8 @@
 package com.sidescroller.player;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.GameObject;
-import com.sidescroller.game.SideScrollerGameV2;
 import com.sidescroller.game.TypeOfGameObject;
 
 /**
@@ -57,7 +55,7 @@ public class InventoryItem implements Draw, GameObject{
 
 
     @Override
-    public long getID() {
+    public long getId() {
         return 0;
     }
 

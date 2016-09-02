@@ -1,9 +1,10 @@
-package com.sidescroller.game;
+package com.sidescroller.Map;
 
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.sidescroller.game.CollisionListener;
 
 /**
  * The contactlistener iterates over all of the objects implementing the 'gamelogic.CollisionListener' interface, informing them
@@ -13,12 +14,18 @@ import com.badlogic.gdx.physics.box2d.Contact;
  */
 public class ContactListenerGame implements ContactListener
 {
-    /**
+	private Map map;
+
+	public ContactListenerGame(Map map) {
+		this.map = map;
+	}
+
+	/**
      * Called when two fixtures begin to touch.
      * @param contact An object containing information about the collision.
      */
     public void beginContact(Contact contact) {
-	Iterable<CollisionListener> listeners = SideScrollerGameV2.getCurrentMap().getCollisionListenerList();
+	Iterable<CollisionListener> listeners = map.getCollisionListenerList();
 	for (CollisionListener obj : listeners){
 	    if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
 			obj.beginContact(contact);
@@ -30,14 +37,14 @@ public class ContactListenerGame implements ContactListener
      * Called when two fixtures cease to touch.
      * @param contact An object containing information about the collision.
      */
-    public void endContact(Contact contact){
-	Iterable<CollisionListener> listeners = SideScrollerGameV2.getCurrentMap().getCollisionListenerList();
-	for (CollisionListener obj : listeners){
-	    if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
-		obj.endContact(contact);
-	    }
+	public void endContact(Contact contact){
+		Iterable<CollisionListener> listeners = map.getCollisionListenerList();
+		for (CollisionListener obj : listeners){
+			if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
+				obj.endContact(contact);
+			}
+		}
 	}
-    }
 
     /**
     	 * This is called after a contact is updated. This allows you to inspect a

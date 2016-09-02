@@ -13,7 +13,8 @@ import com.badlogic.gdx.math.Vector2;
  * @author clement.vayer
  *
  */
-public class RubeVertexArray 
+@SuppressWarnings("ALL")
+public class RubeVertexArray
 {
 	public float x[];
 	public float y[];

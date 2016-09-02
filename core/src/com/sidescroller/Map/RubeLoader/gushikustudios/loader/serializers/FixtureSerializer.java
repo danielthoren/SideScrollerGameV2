@@ -15,6 +15,7 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeVertexArray;
 
+@SuppressWarnings("ALL")
 public class FixtureSerializer extends ReadOnlySerializer<Fixture>
 {
 	private Body body;

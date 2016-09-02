@@ -13,6 +13,7 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.RubeWor
  * @author clement.vayer
  * 
  */
+@SuppressWarnings("ALL")
 public class RubeSceneLoader
 {
    private final Json json;

@@ -11,6 +11,7 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeVertexArray;
 
+@SuppressWarnings("ALL")
 public class ImageSerializer extends ReadOnlySerializer<RubeImage>
 {
    private final Vector2 mTmp = new Vector2();

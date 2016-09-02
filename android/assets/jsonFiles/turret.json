@@ -1,0 +1,354 @@
+
+{
+	"allowSleep" : true,
+	"autoClearForces" : true,
+	"body" : 
+	[
+		
+		{
+			"angle" : 1.570796370506287,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"customProperties" : 
+			[
+				
+				{
+					"name" : "part",
+					"string" : "barrel"
+				}
+			],
+			"fixture" : 
+			[
+				
+				{
+					"density" : 1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 2,
+					"friction" : 0.2,
+					"name" : "fixture2",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.8432656526565552,
+								0.7688797712326050,
+								0.7665432095527649,
+								0.7658046483993530,
+								0.7672272920608521,
+								0.8428907990455627
+							],
+							"y" : 
+							[
+								0.1099131256341934,
+								0.1122523397207260,
+								0.07625583559274674,
+								-0.07821285724639893,
+								-0.1095602512359619,
+								-0.1090806201100349
+							]
+						}
+					}
+				},
+				
+				{
+					"density" : 1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 2,
+					"friction" : 0.2,
+					"name" : "fixture2",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.7665432095527649,
+								0.1333561837673187,
+								0.1359644383192062,
+								0.7658046483993530
+							],
+							"y" : 
+							[
+								0.07625583559274674,
+								0.07872413843870163,
+								-0.07704028487205505,
+								-0.07821285724639893
+							]
+						}
+					}
+				},
+				
+				{
+					"circle" : 
+					{
+						"center" : 
+						{
+							"x" : -0.0003092885017395020,
+							"y" : -0.0008461326360702515
+						},
+						"radius" : 0.1549267768859863
+					},
+					"density" : 1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 2,
+					"friction" : 0.2,
+					"name" : "fixture3"
+				}
+			],
+			"linearVelocity" : 0,
+			"massData-I" : 0.03520275279879570,
+			"massData-center" : 
+			{
+				"x" : 0.3029934763908386,
+				"y" : -0.0002769217826426029
+			},
+			"massData-mass" : 0.1902494579553604,
+			"name" : "barrel",
+			"position" : 0,
+			"type" : 2
+		},
+		
+		{
+			"angle" : 0,
+			"angularVelocity" : 0,
+			"awake" : true,
+			"customProperties" : 
+			[
+				
+				{
+					"name" : "part",
+					"string" : "turretbase"
+				}
+			],
+			"fixture" : 
+			[
+				
+				{
+					"density" : 1,
+					"filter-maskBits" : 12,
+					"friction" : 0.2,
+					"name" : "fixture4",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : [ 0.5, 0.5, -0.5, -0.5 ],
+							"y" : [ -0.5, 0.5, 0.5, -0.5 ]
+						}
+					},
+					"sensor" : true
+				},
+				
+				{
+					"circle" : 
+					{
+						"center" : 0,
+						"radius" : 0.5
+					},
+					"density" : 1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 0,
+					"friction" : 0.2,
+					"name" : "fixture0"
+				},
+				
+				{
+					"density" : 1,
+					"filter-categoryBits" : 2,
+					"filter-maskBits" : 0,
+					"friction" : 0.2,
+					"name" : "fixture1",
+					"polygon" : 
+					{
+						"vertices" : 
+						{
+							"x" : 
+							[
+								0.4994986653327942,
+								-0.4974709749221802,
+								-0.4987819194793701,
+								0.4982857704162598
+							],
+							"y" : 
+							[
+								-0.0004930123686790466,
+								0.0003479868173599243,
+								-0.5014102458953857,
+								-0.5005283951759338
+							]
+						}
+					}
+				}
+			],
+			"linearVelocity" : 0,
+			"name" : "turretBase",
+			"position" : 0,
+			"type" : 0
+		}
+	],
+	"collisionbitplanes" : 
+	{
+		"names" : 
+		[
+			"bitplane1",
+			"bitplane2",
+			"bitplane3",
+			"bitplane4",
+			"bitplane5",
+			"bitplane6",
+			"bitplane7",
+			"bitplane8",
+			"bitplane9",
+			"bitplane10",
+			"bitplane11",
+			"bitplane12",
+			"bitplane13",
+			"bitplane14",
+			"bitplane15",
+			"bitplane16",
+			"bitplane17",
+			"bitplane18",
+			"bitplane19",
+			"bitplane20",
+			"bitplane21",
+			"bitplane22",
+			"bitplane23",
+			"bitplane24",
+			"bitplane25",
+			"bitplane26",
+			"bitplane27",
+			"bitplane28",
+			"bitplane29",
+			"bitplane30",
+			"bitplane31",
+			"bitplane32"
+		]
+	},
+	"continuousPhysics" : true,
+	"gravity" : 
+	{
+		"x" : 0,
+		"y" : -10
+	},
+	"image" : 
+	[
+		
+		{
+			"aspectScale" : 1,
+			"body" : 1,
+			"center" : 0,
+			"corners" : 
+			{
+				"x" : 
+				[
+					-0.4987531304359436,
+					0.4987531304359436,
+					0.4987531304359436,
+					-0.4987531304359436
+				],
+				"y" : [ -0.5, -0.5, 0.5, 0.5 ]
+			},
+			"file" : "textures/turretBase.png",
+			"filter" : 1,
+			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
+			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
+			"glVertexPointer" : 
+			[
+				-0.4987531304359436,
+				-0.5,
+				0.4987531304359436,
+				-0.5,
+				0.4987531304359436,
+				0.5,
+				-0.4987531304359436,
+				0.5
+			],
+			"name" : "image0",
+			"opacity" : 1,
+			"renderOrder" : 1,
+			"scale" : 1
+		},
+		
+		{
+			"angle" : -1.570796370506287,
+			"aspectScale" : 1,
+			"body" : 0,
+			"center" : 
+			{
+				"x" : 0,
+				"y" : 0.3433060050010681
+			},
+			"corners" : 
+			{
+				"x" : 
+				[
+					-0.1566939949989319,
+					-0.1566939949989319,
+					0.8433060050010681,
+					0.8433060050010681
+				],
+				"y" : 
+				[
+					0.1562500149011612,
+					-0.1562499850988388,
+					-0.1562500149011612,
+					0.1562499850988388
+				]
+			},
+			"file" : "textures/barrel.png",
+			"filter" : 1,
+			"glDrawElements" : [ 0, 1, 2, 2, 3, 0 ],
+			"glTexCoordPointer" : [ 0.0, 0.0, 1, 0.0, 1, 1, 0.0, 1 ],
+			"glVertexPointer" : 
+			[
+				-0.1566939949989319,
+				0.1562500149011612,
+				-0.1566939949989319,
+				-0.1562499850988388,
+				0.8433060050010681,
+				-0.1562500149011612,
+				0.8433060050010681,
+				0.1562499850988388
+			],
+			"name" : "image1",
+			"opacity" : 0.5,
+			"renderOrder" : 2,
+			"scale" : 1
+		}
+	],
+	"joint" : 
+	[
+		
+		{
+			"anchorA" : 0,
+			"anchorB" : 0,
+			"bodyA" : 0,
+			"bodyB" : 1,
+			"customProperties" : 
+			[
+				
+				{
+					"name" : "name",
+					"string" : "barreljoint"
+				}
+			],
+			"enableLimit" : true,
+			"enableMotor" : true,
+			"jointSpeed" : 0,
+			"lowerLimit" : -1.570796370506287,
+			"maxMotorTorque" : 30.0,
+			"motorSpeed" : 0.5235987901687622,
+			"name" : "joint0",
+			"refAngle" : -1.570796370506287,
+			"type" : "revolute",
+			"upperLimit" : 1.570796370506287
+		}
+	],
+	"positionIterations" : 3,
+	"stepsPerSecond" : 60.0,
+	"subStepping" : false,
+	"velocityIterations" : 8,
+	"warmStarting" : true
+}

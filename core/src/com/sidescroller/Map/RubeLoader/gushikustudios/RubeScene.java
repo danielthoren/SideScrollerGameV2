@@ -19,7 +19,8 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.R
  * @author clement.vayer
  *
  */
-public class RubeScene 
+@SuppressWarnings("ALL")
+public class RubeScene
 {
    
 	/** Box2D {@link World} */

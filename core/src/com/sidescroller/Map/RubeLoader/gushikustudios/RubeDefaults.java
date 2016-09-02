@@ -20,7 +20,8 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.R
  * Default values can be changed if done before the loading of a {@link RubeScene}.
  * @author clement.vayer
  */
-public class RubeDefaults 
+@SuppressWarnings("ALL")
+public class RubeDefaults
 {
 	public static class World
 	{

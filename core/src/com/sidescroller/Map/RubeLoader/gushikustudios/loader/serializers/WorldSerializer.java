@@ -12,6 +12,7 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.RubeDefaults;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
 import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 
+@SuppressWarnings("ALL")
 public class WorldSerializer extends ReadOnlySerializer<World>
 {
 	private final BodySerializer 	bodySerializer;
