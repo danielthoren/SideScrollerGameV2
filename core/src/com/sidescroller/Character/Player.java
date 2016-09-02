@@ -1,4 +1,4 @@
-package com.sidescroller.player;
+package com.sidescroller.Character;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.sidescroller.Character.Inventory.Inventory;
+import com.sidescroller.Character.Inventory.InventoryItem;
+import com.sidescroller.Character.Inventory.TestItem;
 import com.sidescroller.game.*;
 import com.sidescroller.Map.Map;
 
@@ -296,10 +299,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         if (groundContact != null) {
             if (!isRunning && isGrounded) {
                 groundContact.setFriction(100);
-                System.out.println("friction");
             } else {
                 groundContact.setFriction(0);
-                System.out.println("no friction");
             }
         }
     }
@@ -556,7 +557,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             //i.e. if the body was going down the forces would have cancelled each other out.
             body.setLinearVelocity(body.getLinearVelocity().x,0);
 
-            float accY =  (float) (9.82 * body.getMass());
+            float accY =  (float) (acceleration.y);
             Vector2 impulse = new Vector2(0, accY);
             body.applyLinearImpulse(impulse, body.getLocalCenter(), true);
             numberOfJumpsLeft -= 1;
@@ -593,7 +594,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      */
     private void createDummyItem(){
 
-        InventoryItem dummyItem = new TestItem(2,"test item");
+        InventoryItem dummyItem = new TestItem(2, "test item");
 
         inventory.addToInventory(dummyItem);
     }

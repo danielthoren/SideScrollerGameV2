@@ -1,4 +1,4 @@
-package com.sidescroller.player;
+package com.sidescroller.Character.Inventory;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.Arrays;
-import java.util.Hashtable;
 
 /**
  * Inventory class

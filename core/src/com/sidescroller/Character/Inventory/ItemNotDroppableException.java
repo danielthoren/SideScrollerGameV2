@@ -1,4 +1,4 @@
-package com.sidescroller.player;
+package com.sidescroller.Character.Inventory;
 
 /**
  * Throw this when the item in question cannot be dropped.

@@ -1,8 +1,4 @@
-package com.sidescroller.player;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+package com.sidescroller.Character.Inventory;
 
 /**
  * Default item used for testing

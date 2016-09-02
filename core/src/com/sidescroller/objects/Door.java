@@ -6,7 +6,7 @@ import com.sidescroller.game.GameObject;
 import com.sidescroller.game.InteractGameObject;
 import com.sidescroller.game.SideScrollGameV2;
 import com.sidescroller.game.TypeOfGameObject;
-import com.sidescroller.player.Player;
+import com.sidescroller.Character.Player;
 
 public class Door implements InteractGameObject
 {

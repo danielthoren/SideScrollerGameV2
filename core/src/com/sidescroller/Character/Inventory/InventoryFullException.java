@@ -1,4 +1,4 @@
-package com.sidescroller.player;
+package com.sidescroller.Character.Inventory;
 
 /**
  * Exception to be thrown when the inventory is full

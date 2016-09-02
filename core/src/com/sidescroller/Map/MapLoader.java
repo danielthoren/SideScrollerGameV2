@@ -25,7 +25,7 @@ import com.sidescroller.objects.JointData;
 import com.sidescroller.objects.turret.PlayerTurret;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.turret.Turret;
-import com.sidescroller.player.Player;
+import com.sidescroller.Character.Player;
 
 import java.util.HashMap;
 

@@ -5,7 +5,7 @@ import com.sidescroller.game.InteractGameObject;
 import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.objects.GameShape;
 import com.sidescroller.objects.RubeSprite;
-import com.sidescroller.player.Player;
+import com.sidescroller.Character.Player;
 
 /**
  * Creates a trigger that triggers when a player collides with it and presses the 'Interact' key (default 'E')
