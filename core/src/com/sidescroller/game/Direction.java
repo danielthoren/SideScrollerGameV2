@@ -23,5 +23,7 @@ public enum Direction {
     /**
      * Describes the direction right (right on the screen)
      */
-    RIGHT
+    RIGHT,
+
+    NONE
 }

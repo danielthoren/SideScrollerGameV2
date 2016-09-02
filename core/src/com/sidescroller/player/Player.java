@@ -8,11 +8,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.sidescroller.game.*;
 
-import java.util.Arrays;
-import java.util.Properties;
-
 import java.util.ArrayList;
 
+/**
+ * Created by daniel on 2016-06-06.
+ */
 public class Player implements Draw, Update, InputListener, CollisionListener {
 
     private Body body;
@@ -91,8 +91,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
       * player body.
       *
       * !OBS: The function can be shorted but it would be pointless since all that happens in the function is the creation of the different parts
-      * of the body, how the parts should look, be sized and positioned relative to each other. Thus the function is left as it is.
-      * @param world The world in which to create the player body.
+      * of the body, how the parts shoudl look, be sized and positioned relative to each other. Thus the function is left as it is.
+      * @param world The world in wich to create the player body.
       */
      private void createBody(World world, Vector2 position, Vector2 size, float density, float friction, float restitution, float sensorThickness){
          FixtureDef upperCircle = new FixtureDef();
@@ -109,41 +109,46 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          CircleShape upperCircleShape = new CircleShape();
          CircleShape bottomCircleShape = new CircleShape();
 
-         //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurements
+         //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
          //out on both sides of the centerpoint (bodyposition). The height of each element is first divided by two
          //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
-         float radius;
+         float radious;
          boolean useMiddleBox;
          Vector2 middleBoxSize;
          Vector2 upperCirclePos;
          Vector2 bottomCirclePos;
          if (size.y >= size.x) {
-             radius = size.x/2;
+             radious = size.x / 2;
              useMiddleBox = (size.y / size.x > 2);
-             //imSize.x/50 is a scalable small number that is subtracted from the middle box to avoid an edge between the circle and the box.
-             middleBoxSize = new Vector2(size.x - size.x / 50 , size.y - 2*radius);
-             bottomCirclePos = (new Vector2(0, (size.y - radius * 4) / 2 > 0 ? -((size.y - radius * 4) / 2) - radius : -((size.y - 2*radius)/2)));
-             upperCirclePos = (new Vector2(0, (size.y - radius * 4) / 2 > 0 ? (size.y - radius * 4) / 2 + radius : (size.y - 2*radius)/2));
-         }
-         else{
-             radius = size.y/2;
+             //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
+             middleBoxSize = new Vector2(size.x - size.x / 50, size.y - 2 * radious);
+             bottomCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ?
+                                               -((size.y - radious * 4) / 2) - radious :
+                                               -((size.y - 2 * radious) / 2)));
+             upperCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ?
+                                              (size.y - radious * 4) / 2 + radious :
+                                              (size.y - 2 * radious) / 2));
+         } else {
+             radious = size.y / 2;
              useMiddleBox = (size.x / size.y > 2);
-             //imSize.x/50 is a scalable small number that is subtracted from the middle box to avoid an edge between the circle and the box.
-             middleBoxSize = new Vector2(size.y - size.y / 50, size.x - 2*radius);
-             bottomCirclePos = (new Vector2((size.x - radius * 4) / 2 > 0 ? -((size.x - radius * 4) / 2) - radius : -((size.x - 2*radius)/2), 0));
-             upperCirclePos = (new Vector2((size.x - radius * 4) / 2 > 0 ? (size.x - radius * 4) / 2 + radius : ((size.x - 2*radius)/2), 0));
+             //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
+             middleBoxSize = new Vector2(size.y - size.y / 50, size.x - 2 * radious);
+             bottomCirclePos = (new Vector2(
+                     (size.x - radious * 4) / 2 > 0 ? -((size.x - radious * 4) / 2) - radious : -((size.x - 2 * radious) / 2), 0));
+             upperCirclePos = (new Vector2(
+                     (size.x - radious * 4) / 2 > 0 ? (size.x - radious * 4) / 2 + radious : ((size.x - 2 * radious) / 2), 0));
          }
-         Vector2 bottomSensorPos = new Vector2(0, bottomCirclePos.y - radius);
+         Vector2 bottomSensorPos = new Vector2(0, bottomCirclePos.y - radious);
          Vector2 bottomSensorSize = new Vector2(size.x - size.x / 4, sensorThickness * 2);
          Vector2 leftSensorPos = new Vector2(-size.x / 2 - sensorThickness, 0);
-         Vector2 leftSensorSize = new Vector2(sensorThickness, size.y - size.y/5);
-         Vector2 rightSensorPos = new Vector2(size.x/2 + sensorThickness, 0);
-         Vector2 rightSensorSize = new Vector2(sensorThickness, size.y - size.y/5);
+         Vector2 leftSensorSize = new Vector2(sensorThickness, size.y - size.y / 5);
+         Vector2 rightSensorPos = new Vector2(size.x / 2 + sensorThickness, 0);
+         Vector2 rightSensorSize = new Vector2(sensorThickness, size.y - size.y / 5);
 
          //Initializing the shapes
-         upperCircleShape.setRadius(radius);
-         bottomCircleShape.setRadius(radius);
-         middleBoxShape.setAsBox(middleBoxSize.x/2, middleBoxSize.y / 2);
+         upperCircleShape.setRadius(radious);
+         bottomCircleShape.setRadius(radious);
+         middleBoxShape.setAsBox(middleBoxSize.x / 2, middleBoxSize.y / 2);
          bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2, bottomSensorPos, 0);
          leftSensorShape.setAsBox(leftSensorSize.x / 2, leftSensorSize.y / 2, leftSensorPos, 0);
          rightSensorShape.setAsBox(rightSensorSize.x / 2, rightSensorSize.y / 2, rightSensorPos, 0);
@@ -152,41 +157,57 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          upperCircleShape.setPosition(upperCirclePos);
          bottomCircleShape.setPosition(bottomCirclePos);
 
+         Filter filter = new Filter();
+         filter.categoryBits = SideScrollGameV2.PLAYER_CATEGORY;
+         filter.maskBits = SideScrollGameV2.ENVIROMENT_CATEGORY;
+
          //Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
          upperCircle.shape = upperCircleShape;
          upperCircle.density = density;
          upperCircle.friction = 0;
          upperCircle.restitution = restitution;
          upperCircle.isSensor = false;
+         upperCircle.filter.maskBits = filter.maskBits;
+         upperCircle.filter.categoryBits = filter.categoryBits;
          middleBox.shape = middleBoxShape;
          middleBox.density = density;
          middleBox.friction = 0;
          middleBox.restitution = restitution;
          middleBox.isSensor = false;
+         middleBox.filter.categoryBits = filter.categoryBits;
+         middleBox.filter.maskBits = filter.maskBits;
          bottomCircle.shape = bottomCircleShape;
          bottomCircle.density = density;
          bottomCircle.friction = friction;
          bottomCircle.restitution = restitution;
          bottomCircle.isSensor = false;
+         bottomCircle.filter.maskBits = filter.maskBits;
+         bottomCircle.filter.categoryBits = filter.categoryBits;
          bottomSensor.shape = bottomSensorShape;
          bottomSensor.isSensor = true;
          bottomSensor.density = 0;
          bottomSensor.friction = 0;
+         bottomSensor.filter.categoryBits = filter.categoryBits;
+         bottomSensor.filter.maskBits = filter.maskBits;
          leftSensor.shape = leftSensorShape;
          leftSensor.isSensor = true;
          leftSensor.density = 0;
          leftSensor.friction = 0;
+         leftSensor.filter.maskBits = filter.maskBits;
+         leftSensor.filter.categoryBits = filter.categoryBits;
          rightSensor.shape = rightSensorShape;
          rightSensor.isSensor = true;
          rightSensor.density = 0;
          rightSensor.friction = 0;
+         rightSensor.filter.categoryBits = filter.categoryBits;
+         rightSensor.filter.maskBits = filter.maskBits;
 
          //Creating the body using the fixtureDef and the BodyDef created beneath
          BodyDef bodyDef = new BodyDef();
          bodyDef.position.set(position);
-         bodyDef.type = BodyDef.BodyType.DynamicBody;
-         body = world.createBody(bodyDef);
-         if (useMiddleBox){body.createFixture(middleBox);}
+         bodyDef.type = BodyType.DynamicBody;
+         body = map.createBody(bodyDef);
+         if (useMiddleBox) {body.createFixture(middleBox);}
          body.createFixture(upperCircle);
          body.createFixture(bottomCircle);
          body.createFixture(bottomSensor).setUserData(Direction.DOWN);
@@ -218,58 +239,73 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         else{
             groundResetTimer = -1;
         }
+
+        setGroundContactFriction();
+    }
+
+	/**
+	 * If the player is currently colliding with the ground (something under the player) and is not running then set the friction
+     * to something high to prevent sliding. If running then set the friction to 0 so that running can be done.
+     */
+    private void setGroundContactFriction(){
+        if (groundContact != null) {
+            if (!isRunning && isGrounded) {
+                groundContact.setFriction(100);
+                System.out.println("friction");
+            } else {
+                groundContact.setFriction(0);
+                System.out.println("no friction");
+            }
+        }
     }
     /**
      * The function that draws the object every frame
-     * @param batch The SpriteBatch with which to draw
+     * @param batch The SpriteBatch with wich to draw
      */
     @Override
     public void draw(SpriteBatch batch, int layer){
         //TODO Fix so that player layer is loaded from file
-        if (true) {
+        if (layer == 1) {
             sprite.setPosition(body.getPosition().x - (sprite.getWidth() / 2), body.getPosition().y - (sprite.getHeight() / 2));
             sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
             sprite.draw(batch);
-
-			inventory.draw(batch, body.getPosition());
         }
     }
 
     /**
      * Handles the collision checks of the player. If a sensor collides with something then set the specific sensor
-     * collision status to either true or false. This is used to determine if the player can jump or not (the bottom sensor
+     * collision statis to either true or false. This is used to determine if the player can jump or not (the bottom sensor
      * must collide with something) among other things.
-     * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
+     * @param contact A object containing the two bodies and fixtures that made contact. It also contains collision data
      */
     public void beginContact(Contact contact){
-		boolean playerContact = false;
         Body otherBody = body;
+
         if (contact.getFixtureA().getBody().getUserData().equals(this)) {
             otherBody = contact.getFixtureB().getBody();
             if (contact.getFixtureA().isSensor()) {
+                boolean prevIsGrounded = isGrounded;
                 sensorSwitch(contact.getFixtureA(), true);
-                playerContact = true;
+                if (!prevIsGrounded && isGrounded){
+                    groundContact = contact;
+                }
             }
         }
-        else if (contact.getFixtureB().getBody().getUserData().equals(this)) {
+        else if (contact.getFixtureB().getBody().getUserData().equals(this)){
             otherBody = contact.getFixtureA().getBody();
             if (contact.getFixtureB().isSensor()) {
                 sensorSwitch(contact.getFixtureB(), true);
-                playerContact = true;
             }
         }
+
         if (!collidingBodies.contains(otherBody)) {
             collidingBodies.add(otherBody);
-        }
-
-        if(!isRunning && playerContact) {
-            contact.setFriction(100);
         }
     }
 
     /**
-     * Handles the collision checks of the player. If a sensor collides with something then set the specific sensor
-     * collision status to either true or false. This is used to determine if the player can jump or not (the bottom sensor
+     * Handles the collisionchecks of the player. If a sensor collides with something then set the specific sensor
+     * collision statis to either true or false. This is used to determine if the player can jump or not (the bottomsensor
      * must collide with something) among other things.
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
@@ -293,7 +329,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
     /**
-     * Checks which sensor has collided and then sets the appropriate flag to the specified value.
+     * Checks wich sensor has collided and then sets the appropriate flag to the specified value.
      * This is used to determine if the player is on the ground of not (among other things).
      * @param fixture The sensor Fixture that has collided.
      * @param setValue The value to set the flag to (false if collision has ended and true if collision has begun)
@@ -321,7 +357,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 
     /** Called when a key was pressed
      *
-     * @param keycode one of the constants in */
+     * @param keycode one of the constants in {@link Keys}
+     * @return whether the input was processed */
     public void keyDown(int keycode){
         if (keycode == Input.Keys.LEFT){
             isRunning = true;
@@ -353,23 +390,24 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
-        else if (keycode == Input.Keys.E){
-            notifyInteractObjects(collidingBodies, true);
+        else if (isInteractKey && keycode == interactKey){
+            notifyInteractObjects(true);
         }
 
     }
 
     /** Called when a key was released
      *
-     * @param keycode one of the constants in  */
+     * @param keycode one of the constants in {@link Keys}
+     * @return whether the input was processed */
     public void keyUp (int keycode){
-        if (keycode == Input.Keys.LEFT || keycode == Input.Keys.RIGHT){
+        if ((isLeftKey && keycode == leftKey) || (isRightKey && keycode == rightKey)){
             isRunning = false;
         }
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
-        else if (keycode == Input.Keys.E){
-            notifyInteractObjects(collidingBodies, false);
+        else if (isInteractKey && keycode == interactKey){
+            notifyInteractObjects(false);
         }
     }
 
@@ -382,57 +420,60 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * @param bodies The bodies the player is currently colliding with.
      * @param startInteract True if the interaction is now starting, otherwise false.
      */
-    private void notifyInteractObjects(ArrayList<Body> bodies, boolean startInteract){
+    private void notifyInteractObjects(boolean startInteract){
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
-        for (Body body : bodies){
-            GameObject object;
+        for (Body body : collidingBodies){
             try{
+                GameObject object;
                 object = (GameObject) body.getUserData();
-                if (object.getTypeOfGameObject() == TypeOfGameObject.INTERACTOBJECT){
+                if (object.getTypeOfGameObject() == TypeOfGameObject.INTERACTOBJECT || object.getTypeOfGameObject() == TypeOfGameObject.DOOR){
                     InteractGameObject interactGameObject = (InteractGameObject) object;
                     if (startInteract) {interactGameObject.startInteract(this);}
                     else {interactGameObject.endInteract(this);}
                 }
             }
             catch (ClassCastException e){
-                SideScrollerGameV2.getCurrentMap().removeBody(body);
+                System.out.println("Error corrected. Body with wrong type in 'UserData' (either not 'GameObject' or not InteractObject')");
+                sideScrollGameV2.getCurrentMap().removeBody(body);
             }
         }
+        if (clearCollidingBodies){collidingBodies.clear();}
     }
 
     /**
      * Handles the acceleration and deceleration of the character
      */
     private void runHandler(){
-        //Decelerating the player from running to a stop
+        //Code that decelerates the player when going from running to not running.
         if (!isRunning && isGrounded){
             if (body.getLinearVelocity().x > deceleration.x / 4){
-                body.applyForceToCenter(-deceleration.x, 0f, true);
+                body.applyForceToCenter(-deceleration.x, 0, true);
             }
             else if (body.getLinearVelocity().x < -deceleration.x / 4){
-                body.applyForceToCenter(deceleration.x, 0f, true);
+                body.applyForceToCenter(deceleration.x, 0, true);
             }
             else{
                 body.setLinearVelocity(0f, body.getLinearVelocity().y);
             }
         }
+
         if (isRunning && isGrounded){
             //Code for smooth acceleration when on the ground
             if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
-                body.applyForceToCenter(acceleration.x, 0f, true);
+                body.applyForceToCenter(acceleration.x, 0, true);
             }
             else if (direction == Direction.LEFT && body.getLinearVelocity().x > -maxVelocity.x){
-                body.applyForceToCenter(-acceleration.x, 0f, true);
+                body.applyForceToCenter(-acceleration.x, 0, true);
             }
         }
         else if (isRunning && !isGrounded){
             //Code for smooth acceleration when in the air
             if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
-                body.applyForceToCenter(acceleration.x / 10, 0f, true);
+                body.applyForceToCenter(acceleration.x / 10, 0, true);
             }
             else if (direction == Direction.LEFT && body.getLinearVelocity().x > -maxVelocity.x){
-                body.applyForceToCenter(-acceleration.x / 10, 0f, true);
+                body.applyForceToCenter(-acceleration.x / 10, 0, true);
             }
         }
     }
@@ -511,9 +552,9 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
 
-    public long getID(){return iD;}
+    public long getId(){return id;}
 
-    public TypeOfGameObject getTypeOfGameObject(){return typeOfGameObject;}
+    public TypeOfGameObject getTypeOfGameObject(){return TypeOfGameObject.PLAYER;}
 
     /**
      * Overridden version of Equals that ensures that both object pointers are the exact same instantiation of
@@ -525,10 +566,40 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public boolean equals(Object obj) {
         try{
             GameObject gameObject = (GameObject) obj;
-            return gameObject.getID() == this.getID();
+            return gameObject.getId() == id;
         }
         catch (Exception e){
             return false;
         }
     }
+
+    public Body getBody(){return body;}
+
+    public boolean isRunning() {return isRunning;}
+
+    public void setIsRunning(final boolean running) {isRunning = running;}
+
+    public int getInteractKey() {return interactKey;}
+
+    public void setInteractKey(final int interactKey) {this.interactKey = interactKey;}
+
+    public int getLeftKey() {return leftKey;}
+
+    public void setLeftKey(final int leftKey) {this.leftKey = leftKey;}
+
+    public int getRightKey() {return rightKey;}
+
+    public void setRightKey(final int rightKey) {this.rightKey = rightKey;}
+
+    public int getUpKey() {return upKey;}
+
+    public void setUpKey(final int upKey) {this.upKey = upKey;}
+
+    public void setIsUpKey(final boolean upKey) {this.isUpKey = upKey;}
+
+    public void setIsRightKey(final boolean rightKey) {this.isRightKey = rightKey;}
+
+    public void setIsLeftKey(final boolean leftKey) {this.isLeftKey = leftKey;}
+
+    public void setIsInteractKey(final boolean interactKey) {this.isInteractKey = interactKey;}
 }

@@ -12,12 +12,12 @@ public interface InteractGameObject extends GameObject
      * with other objects.
      * @param player The player that interacts with the object.
      */
-    public void startInteract(Player player);
+    void startInteract(Player player);
 
     /**
      * Function called when a interaction ends. A interaction ends when the player releases the key mapped to interact with
      * other objects.
-     * @param player
+     * @param player the player that interacts with the object.
      */
-    public void endInteract(Player player);
+    void endInteract(Player player);
 }
