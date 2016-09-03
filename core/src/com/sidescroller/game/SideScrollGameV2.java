@@ -33,9 +33,9 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 	private Player playerCameraLock;
 
 	private static float updateInterval;
-	public static final Vector2 WINDOW_VIEW = new Vector2(16, 9);  //The constant camera size (the window in to the world)
+	public static final Vector2 WINDOW_VIEW = new Vector2(10, 5);  //The constant camera size (the window in to the world)
 
-	private static final boolean DEBUGRENDERER = true;
+	private static final boolean DEBUGRENDERER = false;
 	public static final short ENVIROMENT_CATEGORY = 0x0001;
 	public static final short BACKGROUND_ENVIROMENT_CATEGORY = 0x0002;
 	public static final short PLAYER_CATEGORY = 0x0004;
@@ -49,7 +49,7 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 	public void create () {
 		cameraPosition = new Vector2(0,0);
 		camera = new OrthographicCamera(WINDOW_VIEW.x, WINDOW_VIEW.y);
-		viewport = new FillViewport(16, 9, camera);
+		viewport = new FillViewport(WINDOW_VIEW.x, WINDOW_VIEW.y, camera);
 		viewport.apply();
 		assetManager = new AssetManager();
 

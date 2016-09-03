@@ -117,7 +117,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         map.updateLayerDepth(SideScrollGameV2.PLAYER_DRAW_LAYER);
         body.setUserData(this);
 
-        inventory = new Inventory(10, 100);
+        inventory = new Inventory(sideScrollGameV2, 10, 100);
         numberOfJumpsLeft = DEFAULT_NUMBER_OF_JUMPS;
         currentItem = inventory.getDefaultItem();
         maxHealth = 100;
