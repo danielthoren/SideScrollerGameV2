@@ -1,6 +1,6 @@
 package com.sidescroller.game;
 
-import com.sidescroller.player.Player;
+import com.sidescroller.Character.Player;
 
 /**
  * Interface that should be implemented by any object that should be able to interact with a player.

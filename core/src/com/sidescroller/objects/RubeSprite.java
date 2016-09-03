@@ -2,7 +2,7 @@ package com.sidescroller.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.sidescroller.map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
+import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 
 /**
  * A container for image information that is used when creating game objects.

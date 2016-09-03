@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.sidescroller.game.*;
 import com.sidescroller.game.Update;
 import com.sidescroller.objects.GameShape;
-import com.sidescroller.player.Player;
+import com.sidescroller.Character.Player;
 
 /**
  * A subclass to turret that enables players to control the turret.

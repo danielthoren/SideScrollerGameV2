@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
-import com.sidescroller.map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
+import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.GameObject;
 import com.sidescroller.game.SideScrollGameV2;
