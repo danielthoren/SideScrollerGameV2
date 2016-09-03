@@ -1,7 +1,6 @@
 package com.sidescroller.objects;
 
-import com.sidescroller.game.GameObject;
-import com.sidescroller.player.Player;
+import com.sidescroller.Character.Player;
 
 import java.util.HashMap;
 

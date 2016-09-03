@@ -25,7 +25,7 @@ public class Inventory {
     public Inventory(SideScrollGameV2 sideScrollGameV2, int size, int maxWeight) {
         this.size = size;
         this.maxWeight = maxWeight;
-		//Creates a sprite to draw and adds this object to the drawobjects of the map
+		//Creates a sprite to draw and adds this object to the drawobjects of the Map
 		AssetManager assetManager = sideScrollGameV2.getAssetManager();
 		if (!assetManager.isLoaded("textures/inventory.jpg")){
 			assetManager.load("textures/inventory.jpg", Texture.class);

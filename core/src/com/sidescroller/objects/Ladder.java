@@ -6,7 +6,7 @@ import com.sidescroller.game.GameObject;
 import com.sidescroller.game.SideScrollGameV2;
 import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.game.Update;
-import com.sidescroller.player.Player;
+import com.sidescroller.Character.Player;
 
 import java.util.ArrayList;
 import java.util.List;

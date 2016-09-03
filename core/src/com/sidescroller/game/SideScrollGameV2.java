@@ -35,7 +35,7 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 	private static float updateInterval;
 	public static final Vector2 WINDOW_VIEW = new Vector2(10, 5);  //The constant camera size (the window in to the world)
 
-	private static final boolean DEBUGRENDERER = false;
+	private static final boolean DEBUGRENDERER = true;
 	public static final short ENVIROMENT_CATEGORY = 0x0001;
 	public static final short BACKGROUND_ENVIROMENT_CATEGORY = 0x0002;
 	public static final short PLAYER_CATEGORY = 0x0004;
@@ -109,9 +109,9 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 	}
 
 	/**
-	 * Loads a new map.
-	 * @param mapFilePath The path to the map file.
-	 * @return Returns true if the map was already loaded, else false.
+	 * Loads a new Map.
+	 * @param mapFilePath The path to the Map file.
+	 * @return Returns true if the Map was already loaded, else false.
 	 */
 	public boolean loadMap(String mapFilePath){
 		boolean preloaded = true;

@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Holds the different values of the map. Having more than one instance of the map may be importaint in the future when
+ * Holds the different values of the Map. Having more than one instance of the Map may be importaint in the future when
  * multiple maps may be needed for one session (doors and such).
  */
 public class Map
@@ -371,7 +371,7 @@ public class Map
     public InputHandler getInputHandler(){return inputHandler;}
 
     /**
-     * Sets the drawLayerCount variable to the highest value found in the list, if any exceeds the one already in the map.
+     * Sets the drawLayerCount variable to the highest value found in the list, if any exceeds the one already in the Map.
      * @param rubeSprites A list of RubeSprite objects
      */
     public void updateLayerDepth(Iterable<RubeSprite> rubeSprites){

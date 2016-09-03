@@ -4,7 +4,7 @@ import com.sidescroller.game.GameObject;
 import com.sidescroller.game.TypeOfGameObject;
 
 /**
- * Abstract class that needs to be implemented by any object that wants to be added to the map as a action.
+ * Abstract class that needs to be implemented by any object that wants to be added to the Map as a action.
  */
 public abstract class Action implements GameObject
 {

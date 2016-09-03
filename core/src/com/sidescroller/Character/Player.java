@@ -129,8 +129,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
 	/**
-	 * Reloads the body in to a specified map. This is used when loading a new map so that the player stays the same.
-     * @param map The map to load the player in to.
+	 * Reloads the body in to a specified Map. This is used when loading a new Map so that the player stays the same.
+     * @param map The Map to load the player in to.
      * @param position The position to load the player in to.
      */
     public void recreateBodoy(Map map, Vector2 position){
@@ -409,7 +409,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * @param keycode one of the constants in {@link Keys}
      */
     public void keyDown(int keycode){
-<<<<<<< HEAD:core/src/com/sidescroller/player/Player.java
         if (keycode == leftKey){
             isLeftKey = true;
             //If key is not disabled then do stuff
@@ -417,13 +416,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 isRunning = true;
                 direction = Direction.LEFT;
             }
-=======
-
-        //@TODO fix variables for all of the keys.
-        if (isLeftKey && keycode == leftKey){
-            isRunning = true;
-            direction = Direction.LEFT;
->>>>>>> mainDevelop:core/src/com/sidescroller/Character/Player.java
         }
         else if (keycode == rightKey){
             isRightKey = true;
@@ -433,38 +425,33 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 direction = Direction.RIGHT;
             }
         }
-<<<<<<< HEAD:core/src/com/sidescroller/player/Player.java
-        else if (keycode == upKey){
-            isUpKey = true;
-            //If key is not disabled then do stuff
-            if (!disableUpKey ) {
-                if (isGrounded) {
-                    jump();
-                }
-=======
-        else if (keycode == Input.Keys.P){
-            System.out.println(currentItem);
-        }
-        else if(keycode == Input.Keys.I) {
-            System.out.println(Arrays.toString(inventory.getItems()));
-            System.out.println(inventory.getSpaceUsed());
-        }
-        else if (isUpKey && keycode == upKey){
-            if(isGrounded) {
-                jump();
->>>>>>> mainDevelop:core/src/com/sidescroller/Character/Player.java
-            }
+        else if (keycode == upKey) {
+			isUpKey = true;
+			//If key is not disabled then do stuff
+			if (!disableUpKey) {
+				if (isGrounded) {
+					jump();
+				}
+			}
+		}
 
-        }
-        else if(keycode == Input.Keys.O){
-            createDummyItem();
-        }
-        else if(keycode == Input.Keys.Q){
-            dropItem(inventory.getItemID(currentItem));
-        }
-        else if(keycode == Input.Keys.T){
-            toggleItem();
-        }
+		else if (keycode == Input.Keys.P){
+			System.out.println(currentItem);
+		}
+		else if(keycode == Input.Keys.I) {
+			System.out.println(Arrays.toString(inventory.getItems()));
+			System.out.println(inventory.getSpaceUsed());
+		}
+		//@TODO fix variables for all keys
+		else if(keycode == Input.Keys.O){
+			createDummyItem();
+		}
+		else if(keycode == Input.Keys.Q){
+			dropItem(inventory.getItemID(currentItem));
+		}
+		else if(keycode == Input.Keys.T){
+			toggleItem();
+		}
 
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
