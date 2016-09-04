@@ -1,17 +1,14 @@
 package com.sidescroller.objects;
 
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.sidescroller.game.CollisionListener;
-import com.sidescroller.game.GameObject;
-import com.sidescroller.game.SideScrollGameV2;
-import com.sidescroller.game.TypeOfGameObject;
-import com.sidescroller.game.Update;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.sidescroller.game.*;
 import com.sidescroller.Character.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ladder implements CollisionListener, Update
+public class Ladder implements InteractGameObject, Update, CollisionListener
 {
 
 	private List<Player> collidingCharacters;
@@ -34,66 +31,88 @@ public class Ladder implements CollisionListener, Update
 			if (player.isUpKey()){
 				player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x, player.getMaxVelocity().y/2);
 			}
+			else if (player.isDownKey()){
+				player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x, -player.getMaxVelocity().y/2);
+			}
 			else{
 				player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x, 0);
 			}
 		}
 	}
 
-	public void beginContact(Contact contact){
-		characterCheck(contact, true);
+	/**
+	 * Function called when a interaction starts. A interaction is started when the player presses the key mapped to interact
+	 * with other objects.
+	 * In this class this function adds/removes the player from the 'collidingCharacters' list.
+	 * @param player The player that interacts with the object.
+	 */
+	public void startInteract(Player player){
+		//Toggles between adding/removing the player
+		if (collidingCharacters.contains(player)){
+			removeOrAddPlayer(player, true);
+			player.getBody().setLinearVelocity(0, 0);
+		}
+		else{
+			removeOrAddPlayer(player, false);
+		}
 	}
 
+	/**
+	 * Checks so that the player is disconnected from the ladder when no longer in contact with it.
+	 * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
+	 *                such as point of contact and so on.
+	 */
+	public void beginContact(Contact contact){}
+
+	/**
+	 * Checks so that the player is disconnected from the ladder when no longer in contact with it.
+	 * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
+	 *                such as point of contact and so on.
+	 */
 	public void endContact(Contact contact){
-		characterCheck(contact, false);
-	}
+		Fixture fixtureA = contact.getFixtureA();
+		Fixture fixtureB = contact.getFixtureB();
 
-	/**
-	 * Checking if colliding with character, if so then sending information to 'handleCharacter' wich adds
-	 * or removes the character based on the boolean 'add'.
-	 * @param contact The contact.
-	 * @param add true if adding else false.
-	 */
-	private void characterCheck(Contact contact, boolean add){
-		try{
-			GameObject gameObjectA = (GameObject) contact.getFixtureA().getBody().getUserData();
-			GameObject gameObjectB = (GameObject) contact.getFixtureB().getBody().getUserData();
+		GameObject gameObjectA = (GameObject) fixtureA.getBody().getUserData();
+		GameObject gameObjectB = (GameObject) fixtureB.getBody().getUserData();
 
-			if (gameObjectA.getTypeOfGameObject() == TypeOfGameObject.PLAYER){
-				Player player = (Player) gameObjectA;
-				//Adding/removing player from the lists and giving player back gracity and control over the up button.
-				handleCharacter(player, add);
-			}
-			else if (gameObjectB.getTypeOfGameObject() == TypeOfGameObject.PLAYER){
-				Player player = (Player) gameObjectB;
-				//Adding/removing player from the lists and giving player back gracity and control over the up button.
-				handleCharacter(player, add);
-			}
+		if (gameObjectA.getTypeOfGameObject() == TypeOfGameObject.PLAYER){
+			Player player = (Player) gameObjectA;
+			removeOrAddPlayer(player, true);
 		}
-		catch (ClassCastException e){
-			System.out.println("Error! Body does not hav a 'GameObject' as its userdata! (in ladder)");
+		if (gameObjectB.getTypeOfGameObject() == TypeOfGameObject.PLAYER){
+			Player player = (Player) gameObjectB;
+			removeOrAddPlayer(player, true);
 		}
 	}
 
 	/**
-	 * Adding/removing player from the lists and giving player back gracity and control over the up button.
+	 * Either removes or adds the player depending on the input.
 	 * @param player The player to add/remove.
-	 * @param add true if adding else false.
+	 * @param remove True if removing else false.
 	 */
-	private void handleCharacter(Player player, boolean add){
-		if (add) {
+	private void removeOrAddPlayer(Player player, boolean remove){
+		if (remove && collidingCharacters.contains(player)){
+			player.setDisableDownKey(false);
+			player.setDisableUpKey(false);
+			collidingCharacters.remove(player);
+		}
+		else if (!remove){
+			player.setDisableDownKey(true);
+			player.setDisableUpKey(true);
 			collidingCharacters.add(player);
-
-			player.getBody().setGravityScale(0);
 		}
-		else {
-			if (collidingCharacters.contains(player)) {
-				collidingCharacters.remove(player);
-				player.getBody().setGravityScale(1);
-			}
-		}
-		player.setDisableUpKey(add);
 	}
+
+
+
+	/**
+	 * Function called when a interaction ends. A interaction ends when the player releases the key mapped to interact with
+	 * other objects.
+	 * In This class this function does nothing.
+	 * @param player the player that interacts with the object.
+	 */
+	public void endInteract(Player player){}
 
 	/**
 	 * returns the individual id for the specific object.
@@ -105,5 +124,5 @@ public class Ladder implements CollisionListener, Update
 	 * Returns wich type of gameobject this specific object is.
 	 * @return The type of gameobject
 	 */
-	public TypeOfGameObject getTypeOfGameObject(){return TypeOfGameObject.OTHER;}
+	public TypeOfGameObject getTypeOfGameObject(){return TypeOfGameObject.INTERACTOBJECT;}
 }

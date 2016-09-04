@@ -41,17 +41,11 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private float friction;
     private float sensorThickness;
 
-    private int interactKey;
-    private int leftKey;
-    private int rightKey;
-    private int upKey;
+    private int interactKey, upKey, rightKey, leftKey, downKey;
 
-    private boolean isInteractKey;
-    private boolean isLeftKey;
-    private boolean isRightKey;
-    private boolean isUpKey;
-    private boolean clearCollidingBodies;
-    private boolean disableInteractKey, disableLeftKey, disableRightKey, disableUpKey;
+	private boolean clearCollidingBodies;
+    private boolean isInteractKey, isUpKey, isRightKey, isLeftKey, isDownKey;
+    private boolean disableInteractKey, disableLeftKey, disableRightKey, disableUpKey, disableDownKey;
     private boolean isRunning, isGrounded, isCollisionLeft, isCollisionRight;
 
     //Default values
@@ -108,6 +102,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         leftKey = Keys.LEFT;
         rightKey = Keys.RIGHT;
         upKey = Keys.UP;
+		downKey = Keys.DOWN;
 
         isInteractKey = false;
         isLeftKey = false;
@@ -279,21 +274,34 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         isPlayerAlive = currentHealth != 0;
 
         runHandler();
+		//Ensures that the sensor value is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
+		checkGroundSensor();
 
-        //Ensures that the sensor value is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
-        if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !isGrounded){
-            if (groundResetTimer == -1){groundResetTimer = System.currentTimeMillis();}
-            else if (System.currentTimeMillis() - groundResetTimer >= GROUNDED_RESET_THRESHOLD){
-                groundResetTimer = -1;
-                isGrounded = true;
-            }
-        }
-        else{
-            groundResetTimer = -1;
-        }
+		if(isGrounded){
+			numberOfJumpsLeft = DEFAULT_NUMBER_OF_JUMPS;
+		}
 
         setGroundContactFriction();
     }
+
+	/**
+	 * Checks so that the groundSensor value is not wrong. This is done by comparing the velocity. If the velocity
+	 * is withing a threshold for to long. If so then the sensor is reset. USed so that the sensor does not stick to
+	 * one value.
+	 */
+	private void checkGroundSensor(){
+		//Ensures that the sensor value is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
+		if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !isGrounded){
+			if (groundResetTimer == -1){groundResetTimer = System.currentTimeMillis();}
+			else if (System.currentTimeMillis() - groundResetTimer >= GROUNDED_RESET_THRESHOLD){
+				groundResetTimer = -1;
+				isGrounded = true;
+			}
+		}
+		else{
+			groundResetTimer = -1;
+		}
+	}
 
 	/**
 	 * If the player is currently colliding with the ground (something under the player) and is not running then set the friction
@@ -389,11 +397,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         switch ((Direction) fixture.getUserData()){
             case DOWN:
                 isGrounded = setValue;
-                //Resets the jump counter
-                //TODO Change?
-                if(setValue){
-                    numberOfJumpsLeft = DEFAULT_NUMBER_OF_JUMPS;
-                }
                 break;
             case LEFT:
                 isCollisionLeft = setValue;
@@ -433,6 +436,9 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 					jump();
 				}
 			}
+		}
+		else if (keycode == downKey){
+			isDownKey = true;
 		}
 
 		else if (keycode == Input.Keys.P){
@@ -487,6 +493,9 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         else if (keycode == upKey){
             isUpKey = false;
         }
+		else if (keycode == downKey){
+			isDownKey = false;
+		}
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
         else if (keycode == interactKey){
@@ -696,5 +705,9 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
 
     public boolean isUpKey() {return isUpKey;}
 
-    public Vector2 getMaxVelocity () {return maxVelocity;}
+	public boolean isDownKey() {return isDownKey;}
+
+	public void setDisableDownKey(boolean disableDownKey){this.disableDownKey = disableDownKey;}
+
+	public Vector2 getMaxVelocity () {return maxVelocity;}
 }
