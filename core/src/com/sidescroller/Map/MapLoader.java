@@ -162,7 +162,7 @@ public final class MapLoader {
 	public Player loadPlayer(Map map){
 		//adding a player at specific position
 		//@TODO Load playerinformation from file
-		Player player = new Player(map.getObjectID(), map, sideScrollGameV2, new Vector2(2, 2), new Texture(Gdx.files.internal("textures/body.png")), 1, 1, 0.01f, 0.3f);
+		Player player = new Player(map.getObjectID(), sideScrollGameV2, 0.3f, 1, 0.01f, 1, new Vector2(2,2), new Texture(Gdx.files.internal("textures/body.png")));
 		map.addInputListener(player);
 		map.addUpdateObject(player);
 		map.addDrawObject(player);
@@ -335,9 +335,7 @@ public final class MapLoader {
 				Turret turret = new Turret(map.getObjectID(), sideScrollGameV2, barrel, turretBase, barrelRevoluteJoint);
 			}
 			else if (subType.equals("manual")){
-				InputListener playerTurret = new PlayerTurret(map.getObjectID(), sideScrollGameV2, barrel, turretBase, barrelRevoluteJoint);
-				map.addInputListener(playerTurret);
-				//TODO fix this without casting!!!!!
+				Update playerTurret = new PlayerTurret(map.getObjectID(), sideScrollGameV2, barrel, turretBase, barrelRevoluteJoint);
 				map.addUpdateObject((Update) playerTurret);
 			}
 			else{

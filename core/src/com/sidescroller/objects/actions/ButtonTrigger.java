@@ -1,6 +1,7 @@
 package com.sidescroller.objects.actions;
 
 import com.badlogic.gdx.utils.Array;
+import com.sidescroller.game.GameObject;
 import com.sidescroller.game.InteractGameObject;
 import com.sidescroller.game.TypeOfGameObject;
 import com.sidescroller.objects.GameShape;
@@ -49,9 +50,10 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 	/**
 	 * Function called when a interaction starts. A interaction is started when the player presses the key mapped to interact
 	 * with other objects.
-	 * @param player The player that interacts with the object.
+	 * @param object: Can only be a GameCharacter or a subclass of it. Use the 'GameObject.getTypeOfGameObject' to check
+	 *              for specific types then cast to said type (safe casting).
 	 */
-	public void startInteract(Player player){
+	public void startInteract(GameObject object){
 		hasTriggered = !hasTriggered;
 		if (gameShape != null) {
 			if (gameShape.getRubeSprites() != null) {
@@ -66,9 +68,10 @@ public class ButtonTrigger extends Trigger implements InteractGameObject
 	/**
 	 * Function called when a interaction ends. A interaction ends when the player releases the key mapped to interact with
 	 * other objects.
-	 * @param player
+	 * @param object: Can only be a GameCharacter or a subclass of it. Use the 'GameObject.getTypeOfGameObject' to check
+	 *              for specific types then cast to said type (safe casting).
 	 */
-	public void endInteract(Player player){}
+	public void endInteract(GameObject object){}
 
 	/**
 	 * Does nothing since the lever/button should still be pressable.

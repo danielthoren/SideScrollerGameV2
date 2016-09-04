@@ -1,7 +1,9 @@
 package com.sidescroller.objects;
 
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.sidescroller.Character.GameCharacter;
 import com.sidescroller.game.*;
 import com.sidescroller.Character.Player;
 
@@ -11,7 +13,7 @@ import java.util.List;
 public class Ladder implements InteractGameObject, Update, CollisionListener
 {
 
-	private List<Player> collidingCharacters;
+	private List<GameCharacter> collidingCharacters;
 	private SideScrollGameV2 sideScrollGameV2;
 	private GameShape gameShape;
 
@@ -23,19 +25,19 @@ public class Ladder implements InteractGameObject, Update, CollisionListener
 		this.gameShape = gameShape;
 		gameShape.getBody().setUserData(this);
 
-		collidingCharacters = new ArrayList<Player>(1);
+		collidingCharacters = new ArrayList<GameCharacter>(1);
 	}
 
 	public void update(){
-		for (Player player : collidingCharacters){
-			if (player.isUpKey()){
-				player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x, player.getMaxVelocity().y/2);
+		for (GameCharacter character : collidingCharacters){
+			if (character.isUpKey()){
+				character.getBody().setLinearVelocity(character.getBody().getLinearVelocity().x, character.getMaxVelocity().y/2);
 			}
-			else if (player.isDownKey()){
-				player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x, -player.getMaxVelocity().y/2);
+			else if (character.isDownKey()){
+				character.getBody().setLinearVelocity(character.getBody().getLinearVelocity().x, -character.getMaxVelocity().y/2);
 			}
 			else{
-				player.getBody().setLinearVelocity(player.getBody().getLinearVelocity().x, 0);
+				character.getBody().setLinearVelocity(character.getBody().getLinearVelocity().x, 0);
 			}
 		}
 	}
@@ -44,16 +46,18 @@ public class Ladder implements InteractGameObject, Update, CollisionListener
 	 * Function called when a interaction starts. A interaction is started when the player presses the key mapped to interact
 	 * with other objects.
 	 * In this class this function adds/removes the player from the 'collidingCharacters' list.
-	 * @param player The player that interacts with the object.
+	 * @param object: Can only be a GameCharacter or a subclass of it. Use the 'GameObject.getTypeOfGameObject' to check
+	 *              for specific types then cast to said type (safe casting).* @param character The character that interacts with the object.
 	 */
-	public void startInteract(Player player){
-		//Toggles between adding/removing the player
-		if (collidingCharacters.contains(player)){
-			removeOrAddPlayer(player, true);
-			player.getBody().setLinearVelocity(0, 0);
+	public void startInteract(GameObject object){
+		GameCharacter character = (GameCharacter) object;
+		//Toggles between adding/removing the character
+		if (collidingCharacters.contains(character)){
+			removeOrAddPlayer(character, true);
+			character.getBody().setLinearVelocity(0, 0);
 		}
 		else{
-			removeOrAddPlayer(player, false);
+			removeOrAddPlayer(character, false);
 		}
 	}
 
@@ -88,19 +92,19 @@ public class Ladder implements InteractGameObject, Update, CollisionListener
 
 	/**
 	 * Either removes or adds the player depending on the input.
-	 * @param player The player to add/remove.
+	 * @param character The character to add/remove.
 	 * @param remove True if removing else false.
 	 */
-	private void removeOrAddPlayer(Player player, boolean remove){
-		if (remove && collidingCharacters.contains(player)){
-			player.setDisableDownKey(false);
-			player.setDisableUpKey(false);
-			collidingCharacters.remove(player);
+	private void removeOrAddPlayer(GameCharacter character, boolean remove){
+		if (remove && collidingCharacters.contains(character)){
+			character.setDisableDownKey(false);
+			character.setDisableUpKey(false);
+			collidingCharacters.remove(character);
 		}
 		else if (!remove){
-			player.setDisableDownKey(true);
-			player.setDisableUpKey(true);
-			collidingCharacters.add(player);
+			character.setDisableDownKey(true);
+			character.setDisableUpKey(true);
+			collidingCharacters.add(character);
 		}
 	}
 
@@ -110,9 +114,10 @@ public class Ladder implements InteractGameObject, Update, CollisionListener
 	 * Function called when a interaction ends. A interaction ends when the player releases the key mapped to interact with
 	 * other objects.
 	 * In This class this function does nothing.
-	 * @param player the player that interacts with the object.
+	 * @param object: Can only be a GameCharacter or a subclass of it. Use the 'GameObject.getTypeOfGameObject' to check
+	 *              for specific types then cast to said type (safe casting).* @param character The character that interacts with the object.
 	 */
-	public void endInteract(Player player){}
+	public void endInteract(GameObject object){}
 
 	/**
 	 * returns the individual id for the specific object.
