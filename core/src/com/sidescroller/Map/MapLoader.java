@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.sidescroller.Character.Enemy;
 import com.sidescroller.game.SideScrollGameV2;
 import com.sidescroller.game.Update;
 import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
@@ -161,12 +162,20 @@ public final class MapLoader {
 	 */
 	public Player loadPlayer(Map map){
 		//adding a player at specific position
-		//@TODO Load playerinformation from file
-		Player player = new Player(map.getObjectID(), sideScrollGameV2, 0.3f, 1, 0.01f, 1, new Vector2(2,2), new Texture(Gdx.files.internal("textures/body.png")));
+		//@TODO Load playerinformation from file'
+		assetManager.load("textures/body.png", Texture.class);
+		assetManager.finishLoading();
+		Player player = new Player(map.getObjectID(), sideScrollGameV2, 1, 0.01f, 1, new Vector2(2,2), 0.3f, assetManager.get("textures/body.png", Texture.class));
 		map.addInputListener(player);
 		map.addUpdateObject(player);
 		map.addDrawObject(player);
 		map.addCollisionListener(player);
+
+		Enemy enemy = new Enemy(map.getObjectID(), sideScrollGameV2, 1, 0.01f, 1, new Vector2(2,2), 0.3f, assetManager.get("textures/body.png", Texture.class));
+		map.addUpdateObject(enemy);
+		map.addDrawObject(enemy);
+		map.addCollisionListener(enemy);
+
 		return player;
 	}
 

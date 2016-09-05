@@ -87,7 +87,7 @@ public class GameCharacter implements Update, CollisionListener {
 		checkGroundSensor();
 		runHandler();
 		setGroundContactFriction();
-
+		checkKeys();
 	}
 
 	/**
@@ -123,6 +123,40 @@ public class GameCharacter implements Update, CollisionListener {
 			}
 			else if (direction == Direction.LEFT && body.getLinearVelocity().x > -maxVelocity.x){
 				body.applyForceToCenter(-acceleration.x / 10, 0, true);
+			}
+		}
+	}
+
+	/**
+	 * Checks the 'isKey' variables to see if a certain key is triggered then taking appropriate action.
+	 */
+	public void checkKeys(){
+		//If key is not disabled then do stuff
+		if (isLeftKey) {
+			if (!disableLeftKey) {
+				isRunning = true;
+				direction = Direction.LEFT;
+			}
+		}
+		//If key is not disabled then do stuff
+		if (isRightKey) {
+			if (!disableRightKey) {
+				isRunning = true;
+				direction = Direction.RIGHT;
+			}
+		}
+		//If key is not disabled then do stuff
+		if(isUpKey) {
+			if (!disableUpKey) {
+				if (isGrounded) {
+					jump();
+				}
+			}
+		}
+		//If key is not disabled then do stuff
+		if(isInteractKey) {
+			if (!disableInteractKey) {
+				notifyInteractObjects(true);
 			}
 		}
 	}

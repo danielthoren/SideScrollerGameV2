@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.sidescroller.Character.Inventory.Inventory;
 import com.sidescroller.Character.Inventory.InventoryItem;
 import com.sidescroller.Character.Inventory.TestItem;
@@ -17,10 +15,7 @@ import com.sidescroller.Map.Map;
 import java.util.Arrays;
 import java.util.Properties;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Player extends GameCharacter implements Draw, Update, InputListener, CollisionListener {
+public class Player extends GameCharacter implements Draw, InputListener {
 
     private Sprite sprite;
 	private Vector2 size;
@@ -39,8 +34,8 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
     private int currentHealth;
     private boolean isPlayerAlive;
 
-    public Player(long id, SideScrollGameV2 sideScrollGameV2, float bodyWidth, float density, float restitution, float friction,
-				  Vector2 position, Texture texture) {
+    public Player(long id, SideScrollGameV2 sideScrollGameV2, float density, float restitution, float friction,
+				  Vector2 position, float bodyWidth, Texture texture) {
 		super(id, sideScrollGameV2, density, restitution, friction);
         sprite = new Sprite(texture);
 		float bodyHeight;
@@ -109,28 +104,12 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
     public void keyDown(int keycode){
         if (keycode == leftKey){
             isLeftKey = true;
-            //If key is not disabled then do stuff
-            if (!disableLeftKey) {
-                isRunning = true;
-                direction = Direction.LEFT;
-            }
         }
         else if (keycode == rightKey){
             isRightKey = true;
-            //If key is not disabled then do stuff
-            if (!disableRightKey) {
-                isRunning = true;
-                direction = Direction.RIGHT;
-            }
         }
         else if (keycode == upKey) {
 			isUpKey = true;
-			//If key is not disabled then do stuff
-			if (!disableUpKey) {
-				if (isGrounded) {
-					jump();
-				}
-			}
 		}
 		else if (keycode == downKey){
 			isDownKey = true;
@@ -158,10 +137,6 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
         else if (keycode == interactKey){
             isInteractKey = true;
-            //If key is not disabled then do stuff
-            if (!disableInteractKey) {
-                notifyInteractObjects(true);
-            }
         }
 
     }
@@ -255,5 +230,4 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
     public int getUpKey() {return upKey;}
 
 	public void setUpKey(final int upKey) {this.upKey = upKey;}
-
 }
