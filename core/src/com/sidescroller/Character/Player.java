@@ -86,7 +86,6 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
     public void update() {
 		super.update();
         //Sets isPlayerAlive to true as long as the player has any health left.
-        isPlayerAlive = currentHealth != 0;
     }
 
     /**
@@ -127,9 +126,7 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
 			isUpKey = true;
 			//If key is not disabled then do stuff
 			if (!disableUpKey) {
-				if (isGrounded) {
-					jump();
-				}
+                jump();
 			}
 		}
 		else if (keycode == downKey){
@@ -202,40 +199,7 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
         }
     }
 
-    /**
-     * Equips the item from the inventory with the given ID.
-     * @param itemID The ID of the item in the inventory.
-     */
-    private void equipItem(int itemID){
-            currentItem = inventory.getItem(itemID);
-    }
 
-    private void toggleItem(){
-        System.out.println("current item");
-        //Gives the ID of the item currently equipped
-        int currentItemID = inventory.getItemID(currentItem);
-
-        currentItem = inventory.getNextItem(currentItemID);
-        System.out.println(currentItem);
-    }
-
-    private void dropItem(int itemIndex){
-        // Equips the default item if we can drop the item we are currently holding
-        if (inventory.removeItemFromInventory(itemIndex)){
-            currentItem = inventory.getDefaultItem();
-        }
-
-    }
-
-    /**oi
-     * Creates an item to be used for testing
-     */
-    private void createDummyItem(){
-
-        InventoryItem dummyItem = new TestItem(2, "test item");
-
-        inventory.addToInventory(dummyItem);
-    }
 
 	@Override
     public TypeOfGameObject getTypeOfGameObject(){return TypeOfGameObject.PLAYER;}

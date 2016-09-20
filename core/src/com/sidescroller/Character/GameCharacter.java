@@ -2,6 +2,9 @@ package com.sidescroller.Character;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.sidescroller.Character.Inventory.Inventory;
+import com.sidescroller.Character.Inventory.InventoryItem;
+import com.sidescroller.Character.Inventory.TestItem;
 import com.sidescroller.Map.Map;
 import com.sidescroller.game.*;
 
@@ -45,6 +48,17 @@ public class GameCharacter implements Update, CollisionListener {
 	private static final int DEFAULT_NUMBER_OF_JUMPS = 2;
 	private int numberOfJumpsLeft;
 
+	//Inventory
+	protected InventoryItem currentItem;
+	protected Inventory inventory;
+
+	//Player health
+	private int maxHealth;
+	private int currentHealth;
+	private boolean isPlayerAlive;
+
+
+
 	public GameCharacter(final long id, SideScrollGameV2 sideScrollGameV2, float density, float restitution, float friction) {
 		this.friction = friction;
 		this.sideScrollGameV2 = sideScrollGameV2;
@@ -76,9 +90,17 @@ public class GameCharacter implements Update, CollisionListener {
 		groundResetTimer = -1;
 		groundContact = null;
 		direction = Direction.RIGHT;
+
+
+		inventory = new Inventory(sideScrollGameV2,10, 100);
+		numberOfJumpsLeft = DEFAULT_NUMBER_OF_JUMPS;
+		currentItem = inventory.getDefaultItem();
+		maxHealth = 100;
+		currentHealth = maxHealth;
 	}
 
 	public void update(){
+		isPlayerAlive = currentHealth > 0;
 		if(isGrounded){
 			numberOfJumpsLeft = DEFAULT_NUMBER_OF_JUMPS;
 		}
@@ -401,41 +423,79 @@ public class GameCharacter implements Update, CollisionListener {
 		body.setSleepingAllowed(false);
 	}
 
+
+
+    /*
+    Makes the player take the given damage
+     */
+
+	public void takeDamage(int damage){
+		currentHealth -= damage;
+	}
+
+	/*
+     Adds the given health to the current health
+     if it doesn't exceed the max health.
+     */
+	public void giveHealth(int health){
+		if(maxHealth - currentHealth < health){
+			currentHealth = maxHealth;
+		}else{
+			currentHealth += health;
+		}
+	}
+
+
 	/**
-	 * Function that makes the character jump
+	 * Function that makes the player jump
 	 */
 	protected void jump(){
-		//TODO Change code the reset the jump. Update is delayed so the IsGrounded is still true after the jump.
-
-        if (isGrounded) {
-			float accY =  (float) (acceleration.y);
-			Vector2 impulse = new Vector2(0, accY);
-            body.applyLinearImpulse(impulse, body.getLocalCenter(), true);
-			numberOfJumpsLeft--;
-        }
-        //Does a double jump
-        else if(numberOfJumpsLeft > 0){
-            //This is used to make the second jump not care what direction the body is going
-            //i.e. if the body was going down the forces would have cancelled each other out.
-            body.setLinearVelocity(body.getLinearVelocity().x,0);
-
-			float accY =  (float) (acceleration.y);
-            Vector2 impulse = new Vector2(0, accY);
-            body.applyLinearImpulse(impulse, body.getLocalCenter(), true);
-			numberOfJumpsLeft--;
-        }
-        /*
 		if(numberOfJumpsLeft > 0){
 			//This is used to make the second jump not care what Y-direction the body is going
 			//i.e. if the body was going down the forces would have cancelled each other out.
 			body.setLinearVelocity(body.getLinearVelocity().x,0);
 
-			float accY =  (float) (acceleration.y);
+			float accY =  (float) (9.82 * body.getMass());
 			Vector2 impulse = new Vector2(0, accY);
 			body.applyLinearImpulse(impulse, body.getLocalCenter(), true);
-			numberOfJumpsLeft -= 1;
+			numberOfJumpsLeft--;
 		}
-		*/
+	}
+
+
+	/**
+	 * Equips the item from the inventory with the given ID.
+	 * @param itemID The ID of the item in the inventory.
+	 */
+	protected void equipItem(int itemID){
+		currentItem = inventory.getItem(itemID);
+	}
+
+	protected void toggleItem(){
+		System.out.println("current item");
+		//Gives the ID of the item currently equipped
+		int currentItemID = inventory.getItemID(currentItem);
+
+		currentItem = inventory.getNextItem(currentItemID);
+		System.out.println(currentItem);
+	}
+
+	protected void dropItem(int itemIndex){
+		// Equips the default item if we can drop the item we are currently holding
+		if (inventory.removeItemFromInventory(itemIndex)){
+			currentItem = inventory.getDefaultItem();
+		}
+
+	}
+
+	/**oi
+	 * Creates an item to be used for testing
+	 */
+	protected void createDummyItem(){
+
+		InventoryItem dummyItem = new TestItem(2,"test item");
+
+		inventory.addToInventory(dummyItem);
 	}
 
 	/**
@@ -486,4 +546,8 @@ public class GameCharacter implements Update, CollisionListener {
 	public boolean isDownKey() {return isDownKey;}
 
 	public void setDisableDownKey(boolean disableDownKey){this.disableDownKey = disableDownKey;}
+
+	public Inventory getInventory(){
+		return inventory;
+	}
 }

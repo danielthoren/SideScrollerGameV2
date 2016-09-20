@@ -1,6 +1,7 @@
 package com.sidescroller.Character.Inventory;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sidescroller.Character.Player;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.GameObject;
 import com.sidescroller.game.TypeOfGameObject;

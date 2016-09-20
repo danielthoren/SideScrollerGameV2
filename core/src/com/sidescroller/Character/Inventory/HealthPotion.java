@@ -1,4 +1,6 @@
-package com.sidescroller.player;
+package com.sidescroller.Character.Inventory;
+
+import com.sidescroller.Character.Player;
 
 /**
  * Created by alexander on 9/20/16.
