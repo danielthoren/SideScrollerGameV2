@@ -12,6 +12,7 @@ public class InventoryItem implements Draw, GameObject{
     protected int itemWeight;
     protected String description;
     protected boolean isDroppable;
+    protected Player player;
     //protected Sprite itemIcon;
 
     protected InventoryItem(int itemWeight, String description, boolean isDroppable){
@@ -25,8 +26,15 @@ public class InventoryItem implements Draw, GameObject{
     protected InventoryItem(int itemWeight, boolean isDroppable){
         this.itemWeight = itemWeight;
         this.isDroppable = isDroppable;
-
         //SideScrollerGameV2.getCurrentMap().addDrawObject(this);
+    }
+
+    protected InventoryItem(boolean isDroppable){
+        this.isDroppable = isDroppable;
+    }
+
+    protected InventoryItem(){
+
     }
 
     public String getDescription() {

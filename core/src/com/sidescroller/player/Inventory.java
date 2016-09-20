@@ -49,7 +49,7 @@ public class Inventory {
         //TODO throws NullPointerException when an item is dropped and you then toggle items.
         int resultId = -1;
         for (int i = 0; i < items.length; i++) {
-            if (items[i] != null && items[i].equals(item)){
+            if (items[i] != null && items[i] == item){
                 resultId = i;
                 break;
             }
@@ -74,7 +74,6 @@ public class Inventory {
     /**
      * Adds the given item to the inventory.
      * @param item The item to be added.
-     * @throws InventoryFullException should be thrown when the inventory is full
      * so it can be handled properly.
      * Returns true when the item can be added to the inventory, else false.
      */
@@ -101,6 +100,11 @@ public class Inventory {
         System.out.println("Item not droppable!");
 
         return false;
+    }
+
+    public boolean removeItemFromInventory(InventoryItem item){
+        int id = getItemID(item);
+        return removeItemFromInventory(id);
     }
 
     public boolean doesItemFit(InventoryItem item){

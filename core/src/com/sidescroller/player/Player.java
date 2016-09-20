@@ -269,9 +269,13 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      */
     public void update() {
         //Sets isPlayerAlive to true as long as the player has any health left.
-        isPlayerAlive = currentHealth != 0;
-
+        isPlayerAlive = currentHealth > 0;
+        System.out.println(currentHealth);
         runHandler();
+        if(!isPlayerAlive){
+            System.out.println("You are dead");
+        }
+
 
         //Ensures that the sensor value is not wrong. If velocity.y is 0 for two frames then the character is isGrounded
         if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !isGrounded){
@@ -387,6 +391,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
                 //Resets the jump counter
                 //TODO Change?
                 if(setValue){
+                    System.out.println(setValue);
                     numberOfJumpsLeft = DEFAULT_NUMBER_OF_JUMPS;
                 }
                 break;
@@ -422,10 +427,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             System.out.println(inventory.getSpaceUsed());
         }
         else if (isUpKey && keycode == upKey){
-            if(isGrounded) {
                 jump();
-            }
-
         }
         else if(keycode == Input.Keys.O){
             createDummyItem();
@@ -435,6 +437,12 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         }
         else if(keycode == Input.Keys.T){
             toggleItem();
+        }
+        else if(keycode == Input.Keys.K){
+            takeDamage(15);
+        }
+        else if(keycode == Input.Keys.L){
+            giveHealth(20);
         }
 
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
@@ -526,31 +534,30 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         }
     }
 
+    /*
+    Makes the player take the given damage
+     */
+
+    public void takeDamage(int damage){
+        currentHealth -= damage;
+    }
+
+    /*
+     Adds the given health to the current health
+     if it doesn't exceed the max health.
+     */
+    public void giveHealth(int health){
+        if(maxHealth - currentHealth < health){
+            currentHealth = maxHealth;
+        }else{
+            currentHealth += health;
+        }
+    }
+
     /**
      * Function that makes the player jump
      */
     private void jump(){
-        //TODO Change code the reset the jump. Update is delayed so the IsGrounded is still true after the jump.
-
-        /*
-        if (isGrounded) {
-            //Impulse is calculated by F = m * g (Force = mass * gravity) where g = 9.82
-            Vector2 impulse = new Vector2(0, (float) (9.82 * body.getMass()));
-            body.applyLinearImpulse(impulse, body.getLocalCenter(), true);
-            hasJumpLefts = true;
-        }
-        //Does a double jump
-        else if(hasJumpLefts){
-            //This is used to make the second jump not care what direction the body is going
-            //i.e. if the body was going down the forces would have cancelled each other out.
-            body.setLinearVelocity(body.getLinearVelocity().x,0);tttt
-
-            float accY =  (float) (9.82 * body.getMass());
-            Vector2 impulse = new Vector2(0, accY);
-            body.applyLinearImpulse(impulse, body.getLocalCenter(), true);
-            hasJumpLefts = false;
-        }
-        */
         if(numberOfJumpsLeft > 0){
             //This is used to make the second jump not care what Y-direction the body is going
             //i.e. if the body was going down the forces would have cancelled each other out.
@@ -559,9 +566,11 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
             float accY =  (float) (9.82 * body.getMass());
             Vector2 impulse = new Vector2(0, accY);
             body.applyLinearImpulse(impulse, body.getLocalCenter(), true);
-            numberOfJumpsLeft -= 1;
+            numberOfJumpsLeft--;
         }
     }
+
+
 
     /**
      * Equips the item from the inventory with the given ID.
@@ -649,4 +658,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     public void setIsLeftKey(final boolean leftKey) {this.isLeftKey = leftKey;}
 
     public void setIsInteractKey(final boolean interactKey) {this.isInteractKey = interactKey;}
+
+    public Inventory getInventory(){
+        return inventory;
+    }
 }
