@@ -1,39 +1,62 @@
 package com.sidescroller.player;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.sidescroller.game.*;
+import com.sidescroller.Map.Map;
+
+import java.util.Arrays;
+import java.util.Properties;
 
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by daniel on 2016-06-06.
- */
 public class Player implements Draw, Update, InputListener, CollisionListener {
 
     private Body body;
     private Sprite sprite;
     private Direction direction;
-    private ArrayList<Body> collidingBodies;
+    private List<Body> collidingBodies;
+	private SideScrollGameV2 sideScrollGameV2;
+    private Contact groundContact;
 
     private Vector2 acceleration, maxVelocity, deceleration;
-    private final long iD;
-    private static final TypeOfGameObject typeOfGameObject = TypeOfGameObject.PLAYER;
+    private final long id;
 
     private long groundResetTimer;
 
-    private boolean isBottomSensor, isRightSensor, isLeftSensor;
     private boolean isRunning, isGrounded, isCollisionLeft, isCollisionRight;
 
+    private float bodyWidth;
+    private float bodyHeight;
+    private float density;
+    private float restitution;
+    private float friction;
+    private float sensorThickness;
+
+    private int interactKey;
+    private int leftKey;
+    private int rightKey;
+    private int upKey;
+
+    private boolean isInteractKey;
+    private boolean isLeftKey;
+    private boolean isRightKey;
+    private boolean isUpKey;
+    private boolean clearCollidingBodies;
+
     //Default values
-    private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(1f, 5f);
+    private static final Vector2 DEFAULT_MAX_VELOCITY = new Vector2(1, 5);
+    private static final Vector2 ACCELERATION_DEFAULT = new Vector2(10, 0.6f);
+    private static final Vector2 DECELERATION_DEFAULT = new Vector2(100, 0);
     private static final float GROUNDED_THRESHOLD = 0.01f;
     private static final int GROUNDED_RESET_THRESHOLD = 50;
-
 
     //Jumping
     private static final int DEFAULT_NUMBER_OF_JUMPS = 2;
@@ -51,27 +74,44 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     private int currentHealth;
     private boolean isPlayerAlive;
 
-    public Player(long iD, World world, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
-        this.iD = iD;
-        collidingBodies = new ArrayList<>(1);
+    public Player(long id, Map map, SideScrollGameV2 sideScrollGameV2, Vector2 position, Texture texture, float friction, float density, float restitution, float bodyWidth) {
+        this.id = id;
+		this.sideScrollGameV2 = sideScrollGameV2;
+        this.friction = friction;
+        this.density = density;
+        this.restitution = restitution;
+        this.bodyWidth = bodyWidth;
+        sensorThickness = (float) (0.1 * bodyWidth);
+        collidingBodies = new ArrayList<Body>(1);
         direction = Direction.RIGHT;
         maxVelocity = DEFAULT_MAX_VELOCITY;
-        acceleration = new Vector2(10f, 20f);
-        deceleration = new Vector2(100f, 0f);
+        acceleration = ACCELERATION_DEFAULT;
+        deceleration = DECELERATION_DEFAULT;
         groundResetTimer = -1;
-        isBottomSensor = false;
-        isLeftSensor = false;
-        isRightSensor = false;
         isRunning = false;
         isGrounded = false;
         isCollisionLeft = false;
         isCollisionRight = false;
+        clearCollidingBodies = false;
         sprite = new Sprite(texture);
-        float bodyHeight = bodyWidth * ((float) texture.getHeight()/texture.getWidth());
+        bodyHeight = bodyWidth * ((float) texture.getHeight()/texture.getWidth());
         sprite.setSize(bodyWidth, bodyHeight);
         sprite.setOrigin(0,0);
-        createBody(world, position, new Vector2(bodyWidth, bodyHeight), density, friction, restitution, 0.1f);
+        createBody(position, new Vector2(bodyWidth, bodyHeight), map);
+        groundContact = null;
 
+        //setting default keybindings
+        interactKey = Keys.E;
+        leftKey = Keys.LEFT;
+        rightKey = Keys.RIGHT;
+        upKey = Keys.UP;
+
+        isInteractKey = true;
+        isLeftKey = true;
+        isRightKey = true;
+        isUpKey = true;
+
+        map.updateLayerDepth(SideScrollGameV2.PLAYER_DRAW_LAYER);
         body.setUserData(this);
 
         inventory = new Inventory(10, 100);
@@ -79,6 +119,17 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
         currentItem = inventory.getDefaultItem();
         maxHealth = 100;
         currentHealth = maxHealth;
+    }
+
+	/**
+	 * Reloads the body in to a specified map. This is used when loading a new map so that the player stays the same.
+     * @param map The map to load the player in to.
+     * @param position The position to load the player in to.
+     */
+    public void recreateBodoy(Map map, Vector2 position){
+        createBody(position, new Vector2(bodyWidth, bodyHeight), map);
+        clearCollidingBodies = true;
+        sideScrollGameV2.getCurrentMap().updateLayerDepth(SideScrollGameV2.PLAYER_DRAW_LAYER);
     }
 
     /**
@@ -92,9 +143,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
       *
       * !OBS: The function can be shorted but it would be pointless since all that happens in the function is the creation of the different parts
       * of the body, how the parts shoudl look, be sized and positioned relative to each other. Thus the function is left as it is.
-      * @param world The world in wich to create the player body.
       */
-     private void createBody(World world, Vector2 position, Vector2 size, float density, float friction, float restitution, float sensorThickness){
+     private void createBody(Vector2 position, Vector2 size, Map map) {
          FixtureDef upperCircle = new FixtureDef();
          FixtureDef middleBox = new FixtureDef();
          FixtureDef bottomCircle = new FixtureDef();
@@ -109,36 +159,31 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          CircleShape upperCircleShape = new CircleShape();
          CircleShape bottomCircleShape = new CircleShape();
 
-         //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
+         //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurements
          //out on both sides of the centerpoint (bodyposition). The height of each element is first divided by two
          //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
-         float radious;
+         float radius;
          boolean useMiddleBox;
          Vector2 middleBoxSize;
          Vector2 upperCirclePos;
          Vector2 bottomCirclePos;
          if (size.y >= size.x) {
-             radious = size.x / 2;
+             radius = size.x/2;
              useMiddleBox = (size.y / size.x > 2);
-             //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
-             middleBoxSize = new Vector2(size.x - size.x / 50, size.y - 2 * radious);
-             bottomCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ?
-                                               -((size.y - radious * 4) / 2) - radious :
-                                               -((size.y - 2 * radious) / 2)));
-             upperCirclePos = (new Vector2(0, (size.y - radious * 4) / 2 > 0 ?
-                                              (size.y - radious * 4) / 2 + radious :
-                                              (size.y - 2 * radious) / 2));
-         } else {
-             radious = size.y / 2;
-             useMiddleBox = (size.x / size.y > 2);
-             //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
-             middleBoxSize = new Vector2(size.y - size.y / 50, size.x - 2 * radious);
-             bottomCirclePos = (new Vector2(
-                     (size.x - radious * 4) / 2 > 0 ? -((size.x - radious * 4) / 2) - radious : -((size.x - 2 * radious) / 2), 0));
-             upperCirclePos = (new Vector2(
-                     (size.x - radious * 4) / 2 > 0 ? (size.x - radious * 4) / 2 + radious : ((size.x - 2 * radious) / 2), 0));
+             //imSize.x/50 is a scalable small number that is subtracted from the middle box to avoid an edge between the circle and the box.
+             middleBoxSize = new Vector2(size.x - size.x / 50 , size.y - 2*radius);
+             bottomCirclePos = (new Vector2(0, (size.y - radius * 4) / 2 > 0 ? -((size.y - radius * 4) / 2) - radius : -((size.y - 2*radius)/2)));
+             upperCirclePos = (new Vector2(0, (size.y - radius * 4) / 2 > 0 ? (size.y - radius * 4) / 2 + radius : (size.y - 2*radius)/2));
          }
-         Vector2 bottomSensorPos = new Vector2(0, bottomCirclePos.y - radious);
+         else{
+             radius = size.y/2;
+             useMiddleBox = (size.x / size.y > 2);
+             //imSize.x/50 is a scalable small number that is subtracted from the middle box to avoid an edge between the circle and the box.
+             middleBoxSize = new Vector2(size.y - size.y / 50, size.x - 2*radius);
+             bottomCirclePos = (new Vector2((size.x - radius * 4) / 2 > 0 ? -((size.x - radius * 4) / 2) - radius : -((size.x - 2*radius)/2), 0));
+             upperCirclePos = (new Vector2((size.x - radius * 4) / 2 > 0 ? (size.x - radius * 4) / 2 + radius : ((size.x - 2*radius)/2), 0));
+         }
+         Vector2 bottomSensorPos = new Vector2(0, bottomCirclePos.y - radius);
          Vector2 bottomSensorSize = new Vector2(size.x - size.x / 4, sensorThickness * 2);
          Vector2 leftSensorPos = new Vector2(-size.x / 2 - sensorThickness, 0);
          Vector2 leftSensorSize = new Vector2(sensorThickness, size.y - size.y / 5);
@@ -146,8 +191,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
          Vector2 rightSensorSize = new Vector2(sensorThickness, size.y - size.y / 5);
 
          //Initializing the shapes
-         upperCircleShape.setRadius(radious);
-         bottomCircleShape.setRadius(radious);
+         upperCircleShape.setRadius(radius);
+         bottomCircleShape.setRadius(radius);
          middleBoxShape.setAsBox(middleBoxSize.x / 2, middleBoxSize.y / 2);
          bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2, bottomSensorPos, 0);
          leftSensorShape.setAsBox(leftSensorSize.x / 2, leftSensorSize.y / 2, leftSensorPos, 0);
@@ -260,23 +305,22 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
     /**
      * The function that draws the object every frame
-     * @param batch The SpriteBatch with wich to draw
+     * @param batch The SpriteBatch with which to draw
      */
     @Override
     public void draw(SpriteBatch batch, int layer){
-        //TODO Fix so that player layer is loaded from file
-        if (layer == 1) {
+        if (layer == SideScrollGameV2.PLAYER_DRAW_LAYER) {
             sprite.setPosition(body.getPosition().x - (sprite.getWidth() / 2), body.getPosition().y - (sprite.getHeight() / 2));
-            sprite.setRotation(SideScrollerGameV2.radToDeg(body.getAngle()));
+            sprite.setRotation(SideScrollGameV2.radToDeg(body.getAngle()));
             sprite.draw(batch);
         }
     }
 
     /**
      * Handles the collision checks of the player. If a sensor collides with something then set the specific sensor
-     * collision statis to either true or false. This is used to determine if the player can jump or not (the bottom sensor
+     * collision status to either true or false. This is used to determine if the player can jump or not (the bottom sensor
      * must collide with something) among other things.
-     * @param contact A object containing the two bodies and fixtures that made contact. It also contains collision data
+     * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
     public void beginContact(Contact contact){
         Body otherBody = body;
@@ -304,8 +348,8 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
     /**
-     * Handles the collisionchecks of the player. If a sensor collides with something then set the specific sensor
-     * collision statis to either true or false. This is used to determine if the player can jump or not (the bottomsensor
+     * Handles the collision checks of the player. If a sensor collides with something then set the specific sensor
+     * collision status to either true or false. This is used to determine if the player can jump or not (the bottom sensor
      * must collide with something) among other things.
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
@@ -329,7 +373,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
     /**
-     * Checks wich sensor has collided and then sets the appropriate flag to the specified value.
+     * Checks which sensor has collided and then sets the appropriate flag to the specified value.
      * This is used to determine if the player is on the ground of not (among other things).
      * @param fixture The sensor Fixture that has collided.
      * @param setValue The value to set the flag to (false if collision has ended and true if collision has begun)
@@ -358,25 +402,30 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     /** Called when a key was pressed
      *
      * @param keycode one of the constants in {@link Keys}
-     * @return whether the input was processed */
+     */
     public void keyDown(int keycode){
-        if (keycode == Input.Keys.LEFT){
+
+        //@TODO fix variables for all of the keys.
+        if (isLeftKey && keycode == leftKey){
             isRunning = true;
             direction = Direction.LEFT;
         }
-        else if (keycode == Input.Keys.RIGHT){
+        else if (isRightKey && keycode == rightKey){
             isRunning = true;
             direction = Direction.RIGHT;
-        }
-        else if (keycode == Input.Keys.UP){
-            jump();
         }
         else if (keycode == Input.Keys.P){
             System.out.println(currentItem);
         }
-        else if(keycode == Input.Keys.I){
+        else if(keycode == Input.Keys.I) {
             System.out.println(Arrays.toString(inventory.getItems()));
             System.out.println(inventory.getSpaceUsed());
+        }
+        else if (isUpKey && keycode == upKey){
+            if(isGrounded) {
+                jump();
+            }
+
         }
         else if(keycode == Input.Keys.O){
             createDummyItem();
@@ -399,7 +448,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     /** Called when a key was released
      *
      * @param keycode one of the constants in {@link Keys}
-     * @return whether the input was processed */
+     */
     public void keyUp (int keycode){
         if ((isLeftKey && keycode == leftKey) || (isRightKey && keycode == rightKey)){
             isRunning = false;
@@ -417,7 +466,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * interacted with. All of the objects in the game world should implement the interface 'GameObject'. Thus we tre to
      * cast the bodies userdata value to a 'GameObject' then checks if it is of the type 'InteractGameObject'. If one or both
      * of these casts fails, the body is removed from the world.
-     * @param bodies The bodies the player is currently colliding with.
      * @param startInteract True if the interaction is now starting, otherwise false.
      */
     private void notifyInteractObjects(boolean startInteract){
@@ -442,7 +490,7 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
     }
 
     /**
-     * Handles the acceleration and deceleration of the character
+     * Handles the acceleration and decelerationCheck of the character
      */
     private void runHandler(){
         //Code that decelerates the player when going from running to not running.
@@ -482,7 +530,6 @@ public class Player implements Draw, Update, InputListener, CollisionListener {
      * Function that makes the player jump
      */
     private void jump(){
-
         //TODO Change code the reset the jump. Update is delayed so the IsGrounded is still true after the jump.
 
         /*

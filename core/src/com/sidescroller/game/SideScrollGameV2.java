@@ -2,7 +2,6 @@ package com.sidescroller.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,15 +13,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sidescroller.map.Map;
-import com.sidescroller.map.MapLoader;
+import com.sidescroller.Map.Map;
+import com.sidescroller.Map.MapLoader;
 import com.sidescroller.player.Player;
-import org.omg.CORBA.PRIVATE_MEMBER;
-
-import javax.swing.plaf.PanelUI;
 
 @SuppressWarnings("InstanceVariableMayNotBeInitialized")
 //Ignore warnings regarding fields not being initialized. Theese occur because there is no constructor. All fields are

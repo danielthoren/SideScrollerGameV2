@@ -1,9 +1,8 @@
-package com.sidescroller.map;
+package com.sidescroller.Map;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.sidescroller.game.InputListener;
-import com.sidescroller.map.Map;
 
 /**
  * This class is instanciated in the main class and added to the 'libGDX' library. Theese functions are then called

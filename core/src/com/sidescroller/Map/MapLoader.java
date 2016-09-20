@@ -1,4 +1,4 @@
-package com.sidescroller.map;
+package com.sidescroller.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -10,9 +10,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.sidescroller.game.SideScrollGameV2;
 import com.sidescroller.game.Update;
-import com.sidescroller.map.RubeLoader.gushikustudios.RubeScene;
-import com.sidescroller.map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
-import com.sidescroller.map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
+import com.sidescroller.Map.RubeLoader.gushikustudios.RubeScene;
+import com.sidescroller.Map.RubeLoader.gushikustudios.loader.RubeSceneLoader;
+import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.RubeImage;
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.InputListener;
 import com.sidescroller.objects.Door;

@@ -1,4 +1,4 @@
-package com.sidescroller.map;
+package com.sidescroller.Map;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

@@ -1,4 +1,4 @@
-package com.sidescroller.map;
+package com.sidescroller.Map;
 
 import com.sidescroller.game.GameObject;
 import com.sidescroller.objects.actions.Action;

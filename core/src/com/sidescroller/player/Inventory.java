@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.sidescroller.game.Draw;
-import com.sidescroller.game.SideScrollerGameV2;
 
 import java.util.Arrays;
 import java.util.Hashtable;

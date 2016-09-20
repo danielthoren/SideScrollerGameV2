@@ -1,11 +1,10 @@
-package com.sidescroller.map;
+package com.sidescroller.Map;
 
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.sidescroller.game.CollisionListener;
-import com.sidescroller.map.Map;
 
 /**
  * The contactlistener iterates over all of the objects implementing the 'gamelogic.CollisionListener' interface, informing them
