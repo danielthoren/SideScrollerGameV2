@@ -1,4 +1,4 @@
-package com.sidescroller.player;
+package com.sidescroller.Character.Inventory;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sidescroller.game.Draw;

@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sidescroller.Map.Map;
 import com.sidescroller.Map.MapLoader;
-import com.sidescroller.player.Player;
+import com.sidescroller.Character.Player;
 
 @SuppressWarnings("InstanceVariableMayNotBeInitialized")
 //Ignore warnings regarding fields not being initialized. Theese occur because there is no constructor. All fields are
@@ -33,7 +33,7 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 	private Player playerCameraLock;
 
 	private static float updateInterval;
-	public static final Vector2 WINDOW_VIEW = new Vector2(16, 9);  //The constant camera size (the window in to the world)
+	public static final Vector2 WINDOW_VIEW = new Vector2(10, 5);  //The constant camera size (the window in to the world)
 
 	private static final boolean DEBUGRENDERER = true;
 	public static final short ENVIROMENT_CATEGORY = 0x0001;
@@ -49,13 +49,13 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 	public void create () {
 		cameraPosition = new Vector2(0,0);
 		camera = new OrthographicCamera(WINDOW_VIEW.x, WINDOW_VIEW.y);
-		viewport = new FillViewport(16, 9, camera);
+		viewport = new FillViewport(WINDOW_VIEW.x, WINDOW_VIEW.y, camera);
 		viewport.apply();
 		assetManager = new AssetManager();
 
 		mapLoader = new MapLoader(this);
 		batch = new SpriteBatch();
-		loadMap("jsonFiles/world1.json");
+		loadMap("jsonFiles/world2.json");
 		playerCameraLock = mapLoader.loadPlayer(currentMap);
 	}
 
@@ -109,9 +109,9 @@ public class SideScrollGameV2 extends ApplicationAdapter {
 	}
 
 	/**
-	 * Loads a new map.
-	 * @param mapFilePath The path to the map file.
-	 * @return Returns true if the map was already loaded, else false.
+	 * Loads a new Map.
+	 * @param mapFilePath The path to the Map file.
+	 * @return Returns true if the Map was already loaded, else false.
 	 */
 	public boolean loadMap(String mapFilePath){
 		boolean preloaded = true;

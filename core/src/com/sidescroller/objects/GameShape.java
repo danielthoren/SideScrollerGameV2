@@ -14,7 +14,7 @@ import com.sidescroller.game.TypeOfGameObject;
 
 /**
  * Creates a 'GameShape' object that contains a physical body with fixtures etc. Also may contain many textures in the form of
- * 'RubeSprite' that is drawn on the map.
+ * 'RubeSprite' that is drawn on the Map.
  */
 public class GameShape implements Draw {
 

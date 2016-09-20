@@ -1,13 +1,15 @@
-package com.sidescroller.player;
+package com.sidescroller.Character.Inventory;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.sidescroller.game.SideScrollGameV2;
 
 import java.util.Arrays;
-import java.util.Hashtable;
 
 /**
  * Inventory class
@@ -20,11 +22,16 @@ public class Inventory {
     private InventoryItem defaultItem;
 	private Sprite inventorySprite;
 
-    public Inventory(int size, int maxWeight) {
+    public Inventory(SideScrollGameV2 sideScrollGameV2, int size, int maxWeight) {
         this.size = size;
         this.maxWeight = maxWeight;
-		//Creates a sprite to draw and adds this object to the drawobjects of the map
-		inventorySprite = new Sprite(new Texture(Gdx.files.internal("inventory.jpg")));
+		//Creates a sprite to draw and adds this object to the drawobjects of the Map
+		AssetManager assetManager = sideScrollGameV2.getAssetManager();
+		if (!assetManager.isLoaded("textures/inventory.jpg")){
+			assetManager.load("textures/inventory.jpg", Texture.class);
+			assetManager.finishLoading();
+		}
+		inventorySprite = new Sprite(assetManager.get("textures/inventory.jpg", Texture.class));
         items = new InventoryItem[size];
         //Creates a default item for the player to use
         createDefaultItem();

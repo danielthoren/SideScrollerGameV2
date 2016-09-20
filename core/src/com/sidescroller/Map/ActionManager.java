@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The actionmanager manages all of the actions and triggers of the map. It updates the triggers and calls the act method
+ * The actionmanager manages all of the actions and triggers of the Map. It updates the triggers and calls the act method
  * on the actions if the trigger with that id number is triggered.
  */
 public class ActionManager

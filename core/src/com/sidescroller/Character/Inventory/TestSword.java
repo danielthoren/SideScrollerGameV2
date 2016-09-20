@@ -1,4 +1,4 @@
-package com.sidescroller.player;
+package com.sidescroller.Character.Inventory;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

@@ -2,11 +2,12 @@ package com.sidescroller.objects;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.sidescroller.Character.GameCharacter;
 import com.sidescroller.game.GameObject;
 import com.sidescroller.game.InteractGameObject;
 import com.sidescroller.game.SideScrollGameV2;
 import com.sidescroller.game.TypeOfGameObject;
-import com.sidescroller.player.Player;
+import com.sidescroller.Character.Player;
 
 public class Door implements InteractGameObject
 {
@@ -29,41 +30,40 @@ public class Door implements InteractGameObject
 	/**
 	 * Function called when a interaction starts. A interaction is started when the player presses the key mapped to interact
 	 * with other objects.
-	 * @param player The player that interacts with the object.
+	 * @param object: Can only be a GameCharacter or a subclass of it. Use the 'GameObject.getTypeOfGameObject' to check
+	 *              for specific types then cast to said type (safe casting).* @param character The character that interacts with the object.
 	 */
-	public void startInteract(Player player){
-		/*
-		sideScrollGameV2.getCurrentMap().removeDrawObject(player);
-		sideScrollGameV2.getCurrentMap().removeCollisionListener(player);
-		sideScrollGameV2.getCurrentMap().removeInputListener(player);
-		sideScrollGameV2.getCurrentMap().removeUpdateObject(player);
-		*/
-		sideScrollGameV2.getCurrentMap().removeBody(player.getBody());
+	public void startInteract(GameObject object){
+		if (object.getTypeOfGameObject() == TypeOfGameObject.PLAYER) {
+			Player player = (Player) object;
 
-		boolean preLoaded = sideScrollGameV2.loadMap(worldFile);
+			sideScrollGameV2.getCurrentMap().removeBody(player.getBody());
 
-		if(!preLoaded) {
-			sideScrollGameV2.getCurrentMap().addUpdateObject(player);
-			sideScrollGameV2.getCurrentMap().addCollisionListener(player);
-			sideScrollGameV2.getCurrentMap().addInputListener(player);
-			sideScrollGameV2.getCurrentMap().addDrawObject(player);
-		}
+			boolean preLoaded = sideScrollGameV2.loadMap(worldFile);
 
-		Vector2 loadPosition = null;
-		for (Body body : sideScrollGameV2.getCurrentMap().getBodies()) {
-			GameObject gameObject = (GameObject) body.getUserData();
-			if (gameObject.getTypeOfGameObject() == TypeOfGameObject.DOOR && !gameObject.equals(this)) {
-				Door otherDoor = (Door) gameObject;
-				if (otherDoor.getDoorId() == doorId) {
-					loadPosition = otherDoor.getShape().getBody().getPosition();
+			if (!preLoaded) {
+				sideScrollGameV2.getCurrentMap().addUpdateObject(player);
+				sideScrollGameV2.getCurrentMap().addCollisionListener(player);
+				sideScrollGameV2.getCurrentMap().addInputListener(player);
+				sideScrollGameV2.getCurrentMap().addDrawObject(player);
+			}
+
+			Vector2 loadPosition = null;
+			for (Body body : sideScrollGameV2.getCurrentMap().getBodies()) {
+				GameObject gameObject = (GameObject) body.getUserData();
+				if (gameObject.getTypeOfGameObject() == TypeOfGameObject.DOOR && !gameObject.equals(this)) {
+					Door otherDoor = (Door) gameObject;
+					if (otherDoor.getDoorId() == doorId) {
+						loadPosition = otherDoor.getShape().getBody().getPosition();
+					}
 				}
 			}
-		}
-		if (loadPosition != null) {
-			player.recreateBodoy(sideScrollGameV2.getCurrentMap(), loadPosition);
-		} else {
-			player.recreateBodoy(sideScrollGameV2.getCurrentMap(), new Vector2(0, 0));
-			System.out.println("No door with the same doorId found, setting spawnpoint at origin!");
+			if (loadPosition != null) {
+				player.recreateBodoy(sideScrollGameV2.getCurrentMap(), loadPosition);
+			} else {
+				player.recreateBodoy(sideScrollGameV2.getCurrentMap(), new Vector2(0, 0));
+				System.out.println("No door with the same doorId found, setting spawnpoint at origin!");
+			}
 		}
 	}
 
@@ -72,7 +72,7 @@ public class Door implements InteractGameObject
 	 * other objects.
 	 * @param player the player that interacts with the object.
 	 */
-	public void endInteract(Player player){
+	public void endInteract(GameObject object){
 	}
 
 	public int getDoorId(){return doorId;}

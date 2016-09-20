@@ -1,24 +1,21 @@
 package com.sidescroller.objects.turret;
 
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
+import com.sidescroller.Character.GameCharacter;
 import com.sidescroller.game.*;
 import com.sidescroller.game.Update;
 import com.sidescroller.objects.GameShape;
-import com.sidescroller.player.Player;
 
 /**
  * A subclass to turret that enables players to control the turret.
  */
-public class PlayerTurret extends Turret implements InteractGameObject, Update, InputListener
+public class PlayerTurret extends Turret implements InteractGameObject, Update
 {
-    private int leftKey;
-    private int rightKey;
-    private int upKey;
-	private int interactKey;
     private boolean isActivated;
 	private boolean hasReset;
-	private Player player;
+	private GameCharacter character;
+
+	private boolean upPressed, interactPressed;
 
 	/**
      * Creates a turret that players can control.
@@ -32,87 +29,84 @@ public class PlayerTurret extends Turret implements InteractGameObject, Update, 
         super(id, sideScrollGameV2, barrel, turretBase, barrelJoint);
         turretBase.getBody().setUserData(this);
         barrel.getBody().setUserData(this);
-		player = null;
+		character = null;
         isActivated = false;
 		hasReset = true;
+		upPressed = false;
+		interactPressed = false;
     }
 
     /**
      * Function called when a interaction starts. A interaction is started when the player presses the key mapped to interact
      * with other objects.
-     * @param player The player that interacts with the object.
+	 * @param object: Can only be a GameCharacter or a subclass of it. Use the 'GameObject.getTypeOfGameObject' to check
+	 *              for specific types then cast to said type (safe casting).
      */
-    public void startInteract(Player player){
-        isActivated = !isActivated;
-        if (isActivated && hasReset) {
-			this.player = player;
-            player.setIsLeftKey(false);
-            player.setIsRightKey(false);
-            player.setIsUpKey(false);
-			player.setIsInteractKey(false);
+    public void startInteract(GameObject object){
+		isActivated = !isActivated;
+		if (isActivated && hasReset && character == null) {
+			character = (GameCharacter) object;
+			character.setDisableLeftKey(true);
+			character.setDisableRightKey(true);
+			character.setDisableUpKey(true);
+			character.setDisableInteractKey(true);
 
-            upKey = player.getUpKey();
-            leftKey = player.getLeftKey();
-            rightKey = player.getRightKey();
-			interactKey = player.getInteractKey();
-            player.setIsRunning(false);
-        }
-        else{
-            player.setIsLeftKey(true);
-            player.setIsRightKey(true);
-            player.setIsUpKey(true);
-			player.setIsInteractKey(true);
+			character.setIsRunning(false);
+		} else if (character != null) {
+			character.setDisableLeftKey(false);
+			character.setDisableRightKey(false);
+			character.setDisableUpKey(false);
+			character.setDisableInteractKey(false);
 
-			interactKey = Keys.UNKNOWN;
-            upKey = Keys.UNKNOWN;
-            leftKey = Keys.UNKNOWN;
-            rightKey = Keys.UNKNOWN;
-			this.player = null;
+			this.character = null;
 			hasReset = false;
-        }
+		}
     }
 
     /**
      * Function called when a interaction ends. A interaction ends when the player releases the key mapped to interact with
      * other objects.
-     * @param player
+	 * @param object: Can only be a GameCharacter or a subclass of it. Use the 'GameObject.getTypeOfGameObject' to check
+	 *              for specific types then cast to said type (safe casting).
      */
-    public void endInteract(Player player){}
+    public void endInteract(GameObject object){}
 
-    /** Called when a key was pressed
-     *
-     * @param keycode one of the constants in {@link Keys}
-     * @return whether the input was processed */
-    public void keyDown(int keycode){
-        if (keycode == leftKey){
-            rotateBarrel(Direction.LEFT);
-        }
-        else if (keycode == rightKey){
-            rotateBarrel(Direction.RIGHT);
-        }
-        else if (keycode == upKey){
-            shoot(10);
-        }
-		else if (keycode == interactKey){
-			System.out.println("interactkey pressed");
-			startInteract(player);
-		}
-    }
-
-    /** Called when a key was released
-     * @param keycode one of the constants in {@link Keys}
+	/**
+	 * checks for the characters keys to be pressed and taking appropriate action.
 	 */
-    public void keyUp (int keycode){
-        if (keycode == leftKey || keycode == rightKey){
-            rotateBarrel(Direction.NONE);
-        }
-    }
+	private void checkKeys(){
+		//Resetting toggle-booleans if keys are not pressed anymore.
+		if (!character.isUpKey()){upPressed = false;}
+		if (!character.isInteractKey()){interactPressed = false;}
+
+		if (character.isLeftKey()){
+			rotateBarrel(Direction.LEFT);
+		}
+		else if (character.isRightKey()){
+			rotateBarrel(Direction.RIGHT);
+		}
+		else{
+			rotateBarrel(Direction.NONE);
+		}
+
+		if (character.isUpKey() && !upPressed){
+			upPressed = true;
+			shoot(10);
+		}
+		if (character.isInteractKey() && !interactPressed){
+			interactPressed = true;
+			startInteract(character);
+		}
+	}
 
 	/**
 	 * The function that updates the object every frame
 	 */
 	public void update(){
 		hasReset = true;
+		if(character != null) {
+			checkKeys();
+		}
 	}
 
     /**

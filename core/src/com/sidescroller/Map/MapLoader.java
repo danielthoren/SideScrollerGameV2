@@ -16,6 +16,7 @@ import com.sidescroller.Map.RubeLoader.gushikustudios.loader.serializers.utils.R
 import com.sidescroller.game.Draw;
 import com.sidescroller.game.InputListener;
 import com.sidescroller.objects.Door;
+import com.sidescroller.objects.Ladder;
 import com.sidescroller.objects.actions.ButtonTrigger;
 import com.sidescroller.objects.actions.BodyAction;
 import com.sidescroller.objects.actions.BodyAction.TypeOfBodyAction;
@@ -25,7 +26,7 @@ import com.sidescroller.objects.JointData;
 import com.sidescroller.objects.turret.PlayerTurret;
 import com.sidescroller.objects.RubeSprite;
 import com.sidescroller.objects.turret.Turret;
-import com.sidescroller.player.Player;
+import com.sidescroller.Character.Player;
 
 import java.util.HashMap;
 
@@ -65,7 +66,7 @@ public final class MapLoader {
 		loadedMaps.clear();
 
 		sideScrollGameV2.getAssetManager().load(ERROR_SQUARE, Texture.class);
-        //If the map is not yet loaded, then load it
+        //If the Map is not yet loaded, then load it
         if (!loadedMaps.containsKey(mapPath)){
             RubeScene scene = loader.loadScene(Gdx.files.internal(mapPath));
 
@@ -74,11 +75,11 @@ public final class MapLoader {
 
 			setJointData(scene, map);
 
-            //Adding all of the bodies to the map
+            //Adding all of the bodies to the Map
             for (int x = 0; x < scene.getBodies().size; x++){
                 Body body = scene.getBodies().get(x);
                 Array<RubeImage> rubeImages = scene.getMappedImage(body);
-                //Creating the arrays for the hashmap and adding images to the map if there are images then creating a GameShape.
+                //Creating the arrays for the hashmap and adding images to the Map if there are images then creating a GameShape.
                 GameShape gameShape;
                 if (rubeImages != null) {
 					gameShape = new GameShape(map.getObjectID(), body, createRubeSprites(rubeImages, map));
@@ -119,6 +120,9 @@ public final class MapLoader {
 				else if (type.toLowerCase().equals("door")){
 					createDoor(gameShape, scene, map);
 				}
+				else if (type.toLowerCase().equals("ladder")){
+					createLadder(gameShape, map);
+				}
                 else{
                     map.addDrawObject(gameShape);
                 }
@@ -153,12 +157,12 @@ public final class MapLoader {
 
 	/**
 	 * Loads a player in to the world. Currently only one specific player.
-	 * @param map The map to load the player to.
+	 * @param map The Map to load the player to.
 	 */
 	public Player loadPlayer(Map map){
 		//adding a player at specific position
 		//@TODO Load playerinformation from file
-		Player player = new Player(map.getObjectID(), map, sideScrollGameV2, new Vector2(2, 2), new Texture(Gdx.files.internal("textures/body.png")), 1, 1, 0.01f, 0.3f);
+		Player player = new Player(map.getObjectID(), sideScrollGameV2, 0.3f, 1, 0.01f, 1, new Vector2(2,2), new Texture(Gdx.files.internal("textures/body.png")));
 		map.addInputListener(player);
 		map.addUpdateObject(player);
 		map.addDrawObject(player);
@@ -170,7 +174,7 @@ public final class MapLoader {
 	 * Creating a 'JointData' container for those joinst that have an id assigned to them. This is used when creating actions
      * relating to joints.
 	 * @param scene The scene containing the joints.
-	 * @param map The map to add the joints with a 'id' parameter to.
+	 * @param map The Map to add the joints with a 'id' parameter to.
 	 */
 	private void setJointData(RubeScene scene, Map map){
 		if (scene.getJoints() != null) {
@@ -186,10 +190,10 @@ public final class MapLoader {
 						jointData.setJointId((Integer) id);
 						joint.setUserData(jointData);
 
-						//TODO add theese joints to the actionManager in the map (create a system for joint actions in the ActionManager)
+						//TODO add theese joints to the actionManager in the Map (create a system for joint actions in the ActionManager)
 					} catch (ClassCastException e) {
 						System.out.println(
-								"Error corrected. ClassCastException when getting custom property! (joint id. Wrong input in map editor!)");
+								"Error corrected. ClassCastException when getting custom property! (joint id. Wrong input in Map editor!)");
 					}
 				}
 				if (name != null) {
@@ -198,7 +202,7 @@ public final class MapLoader {
 						joint.setUserData(jointData);
 					} catch (ClassCastException e) {
 						System.out.println(
-								"Error corrected. ClassCastException when getting custom property! (joint name. Wrong input in map editor!)");
+								"Error corrected. ClassCastException when getting custom property! (joint name. Wrong input in Map editor!)");
 					}
 				}
 			}
@@ -223,7 +227,7 @@ public final class MapLoader {
 	 * Creates an array of 'RubeSprites' from a array of 'RubeImages'. Used when creating shapes and other things that
 	 * needs drawing.
 	 * @param rubeImages RubeImages loaded from json file, one of the parameters contained in a 'RubeSprite'.
-	 * @param map The map so that the layer depth can be updated.
+	 * @param map The Map so that the layer depth can be updated.
 	 * @return Returns an array of 'RubeSprites'.
 	 */
 	private Array<RubeSprite> createRubeSprites(Iterable<RubeImage> rubeImages, Map map){
@@ -242,7 +246,7 @@ public final class MapLoader {
 
 	/**
 	 * Creates a turret object.
-	 * @param map The map to add the object to.
+	 * @param map The Map to add the object to.
 	 * @param gameShape The gameShape created with the body specifying this objects creation.
 	 * @param scene The scene from wich to create the object.
 	 */
@@ -331,9 +335,7 @@ public final class MapLoader {
 				Turret turret = new Turret(map.getObjectID(), sideScrollGameV2, barrel, turretBase, barrelRevoluteJoint);
 			}
 			else if (subType.equals("manual")){
-				InputListener playerTurret = new PlayerTurret(map.getObjectID(), sideScrollGameV2, barrel, turretBase, barrelRevoluteJoint);
-				map.addInputListener(playerTurret);
-				//TODO fix this without casting!!!!!
+				Update playerTurret = new PlayerTurret(map.getObjectID(), sideScrollGameV2, barrel, turretBase, barrelRevoluteJoint);
 				map.addUpdateObject((Update) playerTurret);
 			}
 			else{
@@ -376,7 +378,7 @@ public final class MapLoader {
      * Creates a 'ButtonTrigger' of specified type and adding it to the world.
      * @param gameShape The gameShape that belongs to the object.
      * @param scene The scene from wich to create the object.
-     * @param map The map to add the object to.
+     * @param map The Map to add the object to.
      */
     private void createButtonTrigger(GameShape gameShape, RubeScene scene, Map map){
 
@@ -422,7 +424,7 @@ public final class MapLoader {
      * Creating a object of type 'BodyAction' and adding it to the world.
      * @param gameShape The gameShape that belongs to the object.
      * @param scene The scene from wich to construct the object.
-     * @param map The map to add the object to.
+     * @param map The Map to add the object to.
      */
     private void createBodyAction(GameShape gameShape, RubeScene scene, Map map){
 
@@ -468,6 +470,17 @@ public final class MapLoader {
             map.addDrawObject(gameShape);
         }
     }
+
+	/**
+	 * creates a ladder.
+	 * @param gameShape
+	 * @param map
+	 */
+	private void createLadder(GameShape gameShape, Map map){
+		Ladder ladder = new Ladder(map.getObjectID(), sideScrollGameV2, gameShape);
+		map.addUpdateObject(ladder);
+		map.addCollisionListener(ladder);
+	}
 }
 
 
