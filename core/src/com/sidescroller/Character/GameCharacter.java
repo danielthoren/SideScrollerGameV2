@@ -100,6 +100,8 @@ public class GameCharacter implements Update, CollisionListener {
 	}
 
 	public void update(){
+		//Sets isPlayerAlive to true as long as the player has any health left.
+		System.out.println(currentHealth);
 		isPlayerAlive = currentHealth > 0;
 		if(isGrounded){
 			numberOfJumpsLeft = DEFAULT_NUMBER_OF_JUMPS;

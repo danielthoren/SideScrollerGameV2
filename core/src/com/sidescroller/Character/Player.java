@@ -25,7 +25,10 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
     private Sprite sprite;
 	private Vector2 size;
 
-    private int interactKey, upKey, rightKey, leftKey, downKey;
+    private int interactKey, upKey, rightKey, leftKey, downKey, showInventoryKey, toggleItemKey, dropItemKey;
+
+    //Debug keys
+    private int addHPKey, reduceHPKey;
 
     //Inventory
     private InventoryItem currentItem;
@@ -49,12 +52,7 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
         sprite.setOrigin(0,0);
 		size = new Vector2(bodyWidth, bodyHeight);
 
-        //setting default keybindings
-        interactKey = Keys.E;
-        leftKey = Keys.LEFT;
-        rightKey = Keys.RIGHT;
-        upKey = Keys.UP;
-		downKey = Keys.DOWN;
+        initDefaultKeys();
 
         sideScrollGameV2.getCurrentMap().updateLayerDepth(SideScrollGameV2.PLAYER_DRAW_LAYER);
 
@@ -66,6 +64,21 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
 
 		createBody(position, size, sideScrollGameV2.getCurrentMap());
 		body.setUserData(this);
+    }
+
+    private void initDefaultKeys(){
+
+        //setting default key bindings
+        interactKey = Keys.E;
+        leftKey = Keys.LEFT;
+        rightKey = Keys.RIGHT;
+        upKey = Keys.UP;
+        downKey = Keys.DOWN;
+        showInventoryKey = Keys.I;
+        toggleItemKey = Keys.T;
+        dropItemKey = Keys.Q;
+        addHPKey = Keys.L;
+        reduceHPKey = Keys.K;
     }
 
 	/**
@@ -85,7 +98,7 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
 	@Override
     public void update() {
 		super.update();
-        //Sets isPlayerAlive to true as long as the player has any health left.
+
     }
 
     /**
@@ -132,24 +145,25 @@ public class Player extends GameCharacter implements Draw, Update, InputListener
 		else if (keycode == downKey){
 			isDownKey = true;
 		}
-
-		else if (keycode == Input.Keys.P){
-			System.out.println(currentItem);
-		}
-		else if(keycode == Input.Keys.I) {
+		else if(keycode == showInventoryKey) {
 			System.out.println(Arrays.toString(inventory.getItems()));
 			System.out.println(inventory.getSpaceUsed());
 		}
-		//@TODO fix variables for all keys
-		else if(keycode == Input.Keys.O){
+		else if(keycode == toggleItemKey){
 			createDummyItem();
 		}
-		else if(keycode == Input.Keys.Q){
+		else if(keycode == dropItemKey){
 			dropItem(inventory.getItemID(currentItem));
 		}
-		else if(keycode == Input.Keys.T){
+		else if(keycode == toggleItemKey){
 			toggleItem();
 		}
+        else if(keycode == addHPKey){
+            giveHealth(20);
+        }
+        else if(keycode == reduceHPKey){
+            takeDamage(15);
+        }
 
         //If keycode is interactkey then check if any of the colliding bodies belongs to a interactobject. If so then
         //notify that object that the interaction has started. Can be used for levers, moving rocks osv.
